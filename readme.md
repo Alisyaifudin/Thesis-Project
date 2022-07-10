@@ -10,6 +10,9 @@ This is my thesis repo! Follow this repo to reproduce my thesis report.
 ### 1.2 RAVE6
 [this](<1. Collecting Data/1.2. RAVE6.ipynb>)
 ### 1.3 APOGEE (SDSS13)
+[this](<1. Collecting Data/1.3. APOGEE (SDSS13).ipynb>)
 ### 1.4 GALAH DR3
-### 1.5 LAMOST DR2
+[this](<1. Collecting Data/1.4. GALAH DR3.ipynb>)
+### 1.5 LAMOST DR7
+[this](<1. Collecting Data/1.5. LAMOST DR7.ipynb>)
 
