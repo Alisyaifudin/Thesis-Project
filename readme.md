@@ -1,6 +1,6 @@
 # Thesis Project
 Title: \<Title> \
-Last updated: 10 July 2022 
+Last updated: 11 July 2022 
 
 This is my thesis repo! Follow this repo to reproduce my thesis report.
 
