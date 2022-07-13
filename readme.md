@@ -1,6 +1,6 @@
 # Thesis Project
 Title: \<Title> \
-Last updated: 12 July 2022 
+Last updated: 13 July 2022 
 
 This is my thesis repo! Follow this repo to reproduce my thesis report.
 
@@ -19,6 +19,12 @@ This is my thesis repo! Follow this repo to reproduce my thesis report.
 </details>
 
 ## 2. Vertical Number Density Distribution
+<details>
+<summary>Click to expand!</summary>
+
+* [2.1. Spectral Class](<2. Vertical Number Density/2.1. Spectral Class.ipynb>)
+* [2.2. Cutting](<2. Vertical Number Density/2.2. Cutting.ipynb>)
+</details>
 
 ## 3. Vertical Velocity Distribution
 
