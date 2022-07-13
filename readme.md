@@ -1,6 +1,6 @@
 # Thesis Project
 Title: \<Title> \
-Last updated: 13 July 2022 
+Last updated: 14 July 2022 
 
 This is my thesis repo! Follow this repo to reproduce my thesis report.
 
@@ -16,6 +16,7 @@ This is my thesis repo! Follow this repo to reproduce my thesis report.
 * [1.6. Combine](<1. Collecting Data/1.6. Combine.ipynb>)
 * [1.7. Filter rvs](<1. Collecting Data/1.7. Filter rvs.ipynb>)
 * [1.8. Best RV](<1. Collecting Data/1.8. Best RV.ipynb>)
+* [1.9. simple 2MASS](<1. Collecting Data/1.9. simple 2MASS.ipynb>)
 </details>
 
 ## 2. Vertical Number Density Distribution
