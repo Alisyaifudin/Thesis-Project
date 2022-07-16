@@ -1,8 +1,29 @@
 # Thesis Project
 Title: \<Title> \
-Last updated: 14 July 2022 
+Last updated: 16 July 2022 
 
 This is my thesis repo! Follow this repo to reproduce my thesis report.
+
+## Project Structure
+```
+- 1. Collecting Data
+  |- 1.1. Gaia DR3 and 2MASS.ipynb
+  |- 1.2. RAVE6.ipynb
+  |- 1.3. APOGEE (SDSS17).ipynb
+  |- 1.4. GALAH DR3.ipynb
+  |- 1.5. LAMOST DR7.ipynb
+  |- 1.6. Combine.ipynb
+  |- 1.7. Filter rvs.ipynb
+  |- 1.8. Best RV.ipynb
+  |- 1.9. simple 2MASS.ipynb
+- 2. Vertical Number Density
+  |- 2.1. Spectral Class.ipynb
+  |- 2.2. Cutting.ipynb
+  |- 2.3. Survey Completeness.ipynb
+- Data    // Not included in this repo, download by yourself
+  |-
+  |-
+```
 
 ## 1. Collecting Data
 <details>
