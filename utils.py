@@ -2,6 +2,7 @@ import signal
 from time import time
 from requests import HTTPError
 from time import sleep
+import subprocess
 
 # progress bar
 def progressbar(percent=0, width=50) -> None:
@@ -61,9 +62,24 @@ def timeout(func, args=(), kwargs={}, timeout_duration=1, default=None, minVal=1
     
     return result
 
+# add AS
 def appendName(element, name):
     string = element.split(" AS ")
     if(len(string) == 1):
         return f"{name}.\"{element}\""
     else:
         return f"{name}.\"{string[0]}\" AS {string[1]}"
+
+def runcmd(cmd, verbose = False, *args, **kwargs):
+
+    process = subprocess.Popen(
+        cmd,
+        stdout = subprocess.PIPE,
+        stderr = subprocess.PIPE,
+        text = True,
+        shell = True
+    )
+    std_out, std_err = process.communicate()
+    if verbose:
+        print(std_out.strip(), std_err)
+    pass
