@@ -22,58 +22,58 @@ This is my thesis repo! Follow this repo to reproduce my thesis report.
   |- 2.3. Survey Completeness.ipynb
 - Data    // Not included in this repo, follow the steps to download them
   |- APOGEE-2
-     |- allStar-dr17-synspec_rev1.fits
-     |- apogee.hdf5
+  |  |- allStar-dr17-synspec_rev1.fits
+  |  |- apogee.hdf5
   |- Best-Pars
-     |-
+  |  |-
   |- Combine
-     |- rave
-        |- gaia-000-001.hdf5
-        ...
-        |- gaia-365-360.hdf5
-     |- rave-galah
-        |- gaia-000-001.hdf5
-        ...
-        |- gaia-365-360.hdf5
-     |- rave-galah-lamost
-        |- gaia-000-001.hdf5
-        ...
-        |- gaia-365-360.hdf5
-     |- rave-galah-lamost-apogee
-        |- gaia-000-001.hdf5
-        ...
-        |- gaia-365-360.hdf5
+  |  |- rave
+  |  |  |- gaia-000-001.hdf5
+  |  |  ...
+  |  |  |- gaia-365-360.hdf5
+  |  |- rave-galah
+  |  |  |- gaia-000-001.hdf5
+  |  |  ...
+  |  |  |- gaia-365-360.hdf5
+  |  |- rave-galah-lamost
+  |  |  |- gaia-000-001.hdf5
+  |  |  ...
+  |  |  |- gaia-365-360.hdf5
+  |  |- rave-galah-lamost-apogee
+  |  |  |- gaia-000-001.hdf5
+  |  |  ...
+  |  |  |- gaia-365-360.hdf5
   |- Gaia-2MASS
-        |- gaia-000-001.hdf5
-        ...
-        |- gaia-365-360.hdf5
+  |  |  |- gaia-000-001.hdf5
+  |  |  ...
+  |  |  |- gaia-365-360.hdf5
   |- GALAH
-     |- 0-180.fits
-     |- 180-300.fits
-     |- 300-360.fits
-     |- galah.hdf5
+  |  |- 0-180.fits
+  |  |- 180-300.fits
+  |  |- 300-360.fits
+  |  |- galah.hdf5
   |- LAMOST
-     |- lamost.fits
-     |- lamost.hdf5
+  |  |- lamost.fits
+  |  |- lamost.hdf5
   |- RAVE6
-     |- rave-000-040.fits
-     ...
-     |- rave-320-360.fits
-     |- rave6.hdf5
+  |  |- rave-000-040.fits
+  |  ...
+  |  |- rave-320-360.fits
+  |  |- rave6.hdf5
   |- RV
-     |- rv1
-        |- gaia-000-020.fits
-        ...
-        |- gaia-340-360.fits
-     |- 1rv.hdf5
-     |- 2rv.hdf5
-     |- 2rv.fits
-     |- 3rv.hdf5
-     |- 3rv.fits
-     |- 4rv.hdf5
-     |- 4rv.fits
-     |- 5rv.hdf5
-     |- 5rv.fits
+  |  |- rv1
+  |  |  |- gaia-000-020.fits
+  |  |  ...
+  |  |  |- gaia-340-360.fits
+  |  |- 1rv.hdf5
+  |  |- 2rv.hdf5
+  |  |- 2rv.fits
+  |  |- 3rv.hdf5
+  |  |- 3rv.fits
+  |  |- 4rv.hdf5
+  |  |- 4rv.fits
+  |  |- 5rv.hdf5
+  |  |- 5rv.fits
   |- TWOMASS
      |- tmass-000-010.hdf5
      ...
