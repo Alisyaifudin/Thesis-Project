@@ -20,7 +20,7 @@ This is my thesis repo! Follow this repo to reproduce my thesis report.
   |- 2.1. Spectral Class.ipynb
   |- 2.2. Cutting.ipynb
   |- 2.3. Survey Completeness.ipynb
-- Data    // Not included in this repo, follow the steps to download them
+- Data    // Contains not included in this repo, follow the steps to download them
   |- APOGEE-2
   |  |- allStar-dr17-synspec_rev1.fits
   |  |- apogee.hdf5

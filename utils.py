@@ -3,6 +3,13 @@ from time import time
 from requests import HTTPError
 from time import sleep
 import subprocess
+from os.path import join, abspath
+from os import pardir, mkdir
+import vaex
+import numpy as np
+from scipy import interpolate
+
+root_data_dir = abspath(join(pardir, "Data"))
 
 # progress bar
 def progressbar(percent=0, width=50) -> None:
@@ -83,3 +90,40 @@ def runcmd(cmd, verbose = False, *args, **kwargs):
     if verbose:
         print(std_out.strip(), std_err)
     pass
+
+####################################################################################
+####################################################################################
+####################################################################################
+# need mamajek-spectral-class.hdf5, created at "2. Vertical Number Density/2.3. Survey Completeness.ipynb"
+def load_spectral_types():
+    file_spectral_class = join(root_data_dir, "mamajek-spectral-class.hdf5")
+    df_spectral_class = vaex.open(file_spectral_class)
+    df_filtered = df_spectral_class[["SpT", "M_J", "J-H", "H-Ks"]]
+    mask = (df_filtered["M_J"] == df_filtered["M_J"])*(df_filtered["H-Ks"] == df_filtered["H-Ks"])*(df_filtered["J-H"] == df_filtered["J-H"])
+    df_filtered_good = df_filtered[mask].to_pandas_df()
+    df_filtered_good['J-K'] = df_filtered_good['J-H']+df_filtered_good['H-Ks']
+    return df_filtered_good
+
+sp = load_spectral_types()
+sp_indx = np.array([(not 'O' in s)*(not 'L' in s)\
+                        *(not 'T' in s)*(not 'Y' in s)\
+                        *(not '.5V' in s) for s in sp['SpT']],
+                    dtype='bool')
+# Cut out the small part where the color decreases
+sp_indx *= (np.roll((sp['J-K']),1)-(sp['J-K'])) <= 0.
+
+main_locus = interpolate.UnivariateSpline((sp['J-K'])[sp_indx],
+                                    sp['M_J'][sp_indx],k=3,s=1.)
+
+def main_sequence_cut_r(jk,low=False):
+    """Main-sequence cut, based on MJ, high as in low"""
+    j_locus= main_locus(jk)
+    if low:
+        dj = 0.4
+    else:
+        dj= 0.4-0.1*(j_locus-5.)
+        dj*= -1.
+    return j_locus+dj
+####################################################################################
+####################################################################################
+####################################################################################
