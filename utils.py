@@ -215,9 +215,12 @@ def double_gaussian_pdf(x, sigma1, sigma2, w0):
   b = 2*sigma2/(sigma1+sigma2)
   return np.heaviside(w0-x, 0)*norm.pdf(x, loc=w0, scale=sigma1)*a + np.heaviside(x-w0, 1)*norm.pdf(x, loc=w0, scale=sigma2)*b
 
-def asymmerty_uncertainties(func, theta, dist, zz):
-  popt, _ = curve_fit(double_gaussian_cum, dist, np.linspace(0, 1, len(dist)), p0=(1,1,0))
-  sigma_v1, sigma_v2, w0 = popt
+def asymmerty_uncertainties(func, theta, zz, tipe="A"):
+  data_dir = join(root_data_dir, "Spectral-Class-Velocity")
+  df_popt = vaex.open(join(data_dir, "assy.hdf5"))
+  index = 0 if tipe=="A" else 1 if tipe=="F" else 2
+  sigma_v1 = df_popt["sigma_v1"].to_numpy()[index]
+  sigma_v2 = df_popt["sigma_v2"].to_numpy()[index]
   Zs1, Nus1 = func(zz, theta, sigma_v1)
   Zs2, Nus2 = func(zz, theta, sigma_v2)
   sigma_sys = np.abs(Nus1-Nus2)/2
