@@ -8,7 +8,7 @@ from os import pardir, mkdir
 import vaex
 import numpy as np
 from scipy import interpolate
-from scipy.stats import norm
+from scipy.stats import norm, uniform
 from scipy.integrate import quad, odeint
 from operator import itemgetter
 from scipy.optimize import curve_fit
@@ -251,6 +251,52 @@ def nu_mod_total(zz, theta, tipe="A", res=1000):
   sigma_v = df_velocity["sigma"].to_numpy()[index]
   logNu_sys, logNu_sys_std = asymmerty_uncertainties(zz, theta, tipe=tipe)
   logNu_stat, logNu_stat_std = nu_bootstrap(zz, theta, tipe=tipe, res=res)
-  logNu_mean = (logNu_stat*logNu_stat_std**2+logNu_sys*logNu_sys_std**2)/(logNu_stat_std**2+logNu_sys_std**2)
+  above = logNu_stat*logNu_stat_std**2+logNu_sys*logNu_sys_std**2
+  below = logNu_stat_std**2+logNu_sys_std**2
+  logNu_mean = safe_div(above, below)
   logNu_std = np.sqrt(logNu_stat_std**2+logNu_sys_std**2)
   return logNu_mean, logNu_std
+
+def safe_div(x, y):
+  c = np.divide(x, y, out=np.zeros_like(x), where=(y!=0))
+  return c
+
+def log_prior(theta, pars):
+  args = ('rhos', 'sigmaz', 'rhoDM', 'sigmaDD', 'hDD', 'Nv', 'zsun')
+  rhos, sigmaz, rhoDM, sigmaDD, hDD, Nv, zsun = itemgetter(*args)(theta)
+  args = ('rhos_mean', 'rhos_std', 'sigmaz_mean', 'sigmaz_std', 'rhoDM_loc', 
+          'rhoDM_scale', 'sigmaDD_loc', 'sigmaDD_scale', 'hDD_loc', 'hDD_scale', 
+          'Nv_loc', 'Nv_scale', 'zsun_loc', 'zsun_scale')
+  rhos_mean, rhos_std, sigmaz_mean, sigmaz_std, rhoDM_loc, rhoDM_scale, sigmaDD_loc, sigmaDD_scale, hDD_loc, hDD_scale, Nv_loc, Nv_scale, zsun_loc, zsun_scale = itemgetter(*args)(pars)
+  uni_loc = np.array([rhoDM_loc, sigmaDD_loc, hDD_loc, Nv_loc, zsun_loc])
+  uni_scale = np.array([rhoDM_scale, sigmaDD_scale, hDD_scale, Nv_scale, zsun_scale])
+  uni_val = rhoDM, sigmaDD, hDD, Nv, zsun
+  log_uni = np.sum(uniform.logpdf(uni_val, loc=uni_loc, scale=uni_scale))
+  result = np.sum(norm.logpdf(rhos, loc=rhos_mean, scale=rhos_std))+np.sum(norm.logpdf(sigmaz, loc=sigmaz_mean, scale=sigmaz_std))+log_uni
+  return result
+
+def log_likelihood(theta, nu_data, tipe='A'):
+  args = ('rhos', 'sigmaz', 'rhoDM', 'sigmaDD', 'hDD', 'Nv', 'zsun')
+  rhos, sigmaz, rhoDM, sigmaDD, hDD, Nv, zsun = itemgetter(*args)(theta)
+  zz, Nv_data, e_Nv = itemgetter('z','logNv', 'e_Nv')(nu_data)
+  logNv_model, logNv_model_std = nu_mod_total(zz, theta, tipe=tipe)
+  tot_err = np.sqrt(logNv_model_std**2 + e_Nv**2)
+  result = np.sum(norm.logpdf(Nv+logNv_model, loc=Nv_data, scale=tot_err))
+  return result
+
+def log_posterior(x, priors, tipe='A'):
+  theta = dict(rhos=x[0:12], sigmaz=x[12:24], rhoDM=x[24], sigmaDD=x[25], hDD=x[26], Nv=x[27], zsun=x[28])
+  locs, scales = itemgetter('locs', 'scales')(priors)
+  pars = dict(rhos_mean=locs[0:12], rhos_std=scales[0:12], sigmaz_mean=locs[12:24], sigmaz_std=scales[12:24], 
+              rhoDM_loc=locs[24], rhoDM_scale=scales[24], sigmaDD_loc=locs[25], sigmaDD_scale=scales[25], 
+              hDD_loc=locs[26], hDD_scale=scales[26], Nv_loc=locs[27], Nv_scale=scales[27], zsun_loc=locs[28], 
+              zsun_scale=scales[28])
+  log_prior_ = log_prior(theta, pars)
+  if not np.isfinite(log_prior_):
+      return -np.inf
+  data_number_dir = join(root_data_dir, "Number-Density")
+  df = vaex.open(join(data_number_dir, "density.hdf5"))
+  nu_data = dict(z=df.z.to_numpy(), logNv=np.log(df[tipe].to_numpy()), e_Nv=df["e_"+tipe].to_numpy()/df[tipe].to_numpy())
+  log_likelihood_ = log_likelihood(theta, nu_data, tipe=tipe)
+  # return log_prior(theta, pars) + log_likelihood(theta, nu_data, tipe=tipe)
+  return log_prior_ + log_likelihood_
