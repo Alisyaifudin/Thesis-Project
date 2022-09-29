@@ -51,20 +51,20 @@ def main():
   priors = dict(locs=locs, scales=scales)
   sampler = emcee.EnsembleSampler(nwalkers, ndim, log_posterior, args=[priors, tipe], backend=backend)
 
-  state = sampler.run_mcmc(p0, 1000, progress=True)
+  state = sampler.run_mcmc(p0, 5000, progress=True)
   run2_backend = emcee.backends.HDFBackend(filename, name="mcmc_second_prior")
   sampler = emcee.EnsembleSampler(nwalkers, ndim, log_posterior, args=[priors, tipe], backend=run2_backend)
   sampler.reset()
-  sampler.run_mcmc(state, 10000, progress=True)
+  sampler.run_mcmc(state, 30000, progress=True)
   print(
     "Mean acceptance fraction: {0:.3f}".format(
         np.mean(sampler.acceptance_fraction)
     )
   )
   print(
-      "Mean autocorrelation time: {0:.3f} steps".format(
-          np.mean(sampler.get_autocorr_time())
-      )
+    "Mean autocorrelation time: {0:.3f} steps".format(
+        np.mean(sampler.get_autocorr_time())
+    )
   )
 
 
