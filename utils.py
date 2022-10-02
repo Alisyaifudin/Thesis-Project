@@ -160,13 +160,13 @@ def log_nu_mod(zz, theta, res=1000):
   Kz0 = 0 # pc (km/s)^2
 
   y0 = [Kz0, phi0]
-  zmax = np.max(np.abs(zz+zsun))*1000 # change to pc
+  zmax = np.max(np.abs(zz-zsun))*1000 # change to pc
   zs = np.linspace(0, zmax, res)
   us = odeint(f, y0, zs, args=(rhos, sigmaz, rhoDM, sigmaDD, hDD, R))
   phi = us[:, 0]
   phi_interp_pos = interpolate.interp1d(zs, phi, kind='cubic')
   phi_interp = lambda z: phi_interp_pos(np.abs(z)*1000) # change to pc
-  phii = phi_interp(zz+zsun)
+  phii = phi_interp(zz-zsun)
   logNu = -phii/sigma_w**2
   return logNu+logNu0
 
@@ -252,17 +252,17 @@ def fdist_pdf(w, sigma, w0):
 #   return c
 
 def log_prior(theta, locs, scales):
-    args = ('rhos', 'sigmaz', 'rhoDM', 'sigmaDD', 'hDD', 'logNu0', 'zsun', 'R', 'sigma_w', 'w0')
-    rhos, sigmaz, rhoDM, sigmaDD, hDD, logNu0, zsun, R, sigma_w, w0 = itemgetter(*args)(theta)
+    args = ('rhos', 'sigmaz', 'rhoDM', 'sigmaDD', 'hDD', 'logNu0', 'zsun', 'R', 'sigma_w', 'w0', 'N0')
+    rhos, sigmaz, rhoDM, sigmaDD, hDD, logNu0, zsun, R, sigma_w, w0, N0 = itemgetter(*args)(theta)
     args = ('rhos_loc', 'sigmaz_loc', 'rhoDM_loc', 'sigmaDD_loc',  'hDD_loc', 'logNu0_loc', 
-            'zsun_loc', 'R_loc', 'sigma_w_loc', 'w0_loc')
-    rhos_loc, sigmaz_loc, rhoDM_loc, sigmaDD_loc, hDD_loc, logNu0_loc, zsun_loc, R_loc, sigma_w_loc, w0_loc = itemgetter(*args)(locs)
+            'zsun_loc', 'R_loc', 'sigma_w_loc', 'w0_loc', 'N0_loc')
+    rhos_loc, sigmaz_loc, rhoDM_loc, sigmaDD_loc, hDD_loc, logNu0_loc, zsun_loc, R_loc, sigma_w_loc, w0_loc, N0_loc = itemgetter(*args)(locs)
     args = ('rhos_scale', 'sigmaz_scale', 'rhoDM_scale', 'sigmaDD_scale', 'hDD_scale', 'logNu0_scale',
-            'zsun_scale', 'R_scale', 'sigma_w_scale', 'w0_scale')
-    rhos_scale, sigmaz_scale, rhoDM_scale, sigmaDD_scale, hDD_scale, logNu0_scale, zsun_scale, R_scale, sigma_w_scale, w0_scale = itemgetter(*args)(scales)
-    uni_loc = np.array([rhoDM_loc, sigmaDD_loc, hDD_loc, logNu0_loc, zsun_loc, sigma_w_loc, w0_loc])
-    uni_scale = np.array([rhoDM_scale, sigmaDD_scale, hDD_scale, logNu0_scale, zsun_scale, sigma_w_scale, w0_scale])
-    uni_val = rhoDM, sigmaDD, hDD, logNu0, zsun, sigma_w, w0
+            'zsun_scale', 'R_scale', 'sigma_w_scale', 'w0_scale', 'N0_scale')
+    rhos_scale, sigmaz_scale, rhoDM_scale, sigmaDD_scale, hDD_scale, logNu0_scale, zsun_scale, R_scale, sigma_w_scale, w0_scale, N0_scale = itemgetter(*args)(scales)
+    uni_loc = np.array([rhoDM_loc, sigmaDD_loc, hDD_loc, logNu0_loc, zsun_loc, sigma_w_loc, w0_loc, N0_loc])
+    uni_scale = np.array([rhoDM_scale, sigmaDD_scale, hDD_scale, logNu0_scale, zsun_scale, sigma_w_scale, w0_scale, N0_scale])
+    uni_val = rhoDM, sigmaDD, hDD, logNu0, zsun, sigma_w, w0, N0
     log_uni = np.sum(uniform.logpdf(uni_val, loc=uni_loc, scale=uni_scale))
     result = (np.sum(norm.logpdf(rhos, loc=rhos_loc, scale=rhos_scale))
             +np.sum(norm.logpdf(sigmaz, loc=sigmaz_loc, scale=sigmaz_scale))
@@ -276,14 +276,13 @@ def log_likelihood(theta, z, w, comp_z):
     integral_nu = simps(nu_f(zz), zz)
     log_nu = np.sum(log_nu_mod(z, theta)+np.log(comp_z(z)))
 
-    mu_f = lambda x: norm.pdf(x, loc=theta['w0'], scale=theta['sigma_w'])
+    mu_f = lambda x: theta['N0']*norm.pdf(x, loc=theta['w0'], scale=theta['sigma_w'])
     integral_mu, _ = quad(mu_f, np.min(w), np.max(w))
-    log_mu = np.sum(norm.logpdf(w, loc=theta['w0'], scale=theta['sigma_w']))
+    log_mu = np.sum(norm.logpdf(w, loc=theta['w0'], scale=theta['sigma_w'])+np.log(theta['N0']))
     return log_nu-integral_nu+log_mu-integral_mu
  
 def log_posterior(x, priors, data, comp_z):
-    theta = dict(rhos=x[0:12], sigmaz=x[12:24], rhoDM=x[24], sigmaDD=x[25], hDD=x[26], 
-                 logNu0=x[27], zsun=x[28], R=x[29], sigma_w=x[30], w0=x[31])
+    theta = dict(rhos=x[0:12], sigmaz=x[12:24], rhoDM=x[24], sigmaDD=x[25], hDD=x[26], logNu0=x[27], zsun=x[28], R=x[29], sigma_w=x[30], w0=x[31], N0=x[32])
     locs, scales = itemgetter('locs', 'scales')(priors)
     z, w = itemgetter('z', 'w')(data)
     log_prior_ = log_prior(theta, locs, scales)
