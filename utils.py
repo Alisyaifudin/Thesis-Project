@@ -12,6 +12,7 @@ from scipy.stats import norm, uniform
 from scipy.integrate import quad, odeint, simps
 from operator import itemgetter
 from scipy.optimize import curve_fit
+from scipy import optimize
 
 root_data_dir = abspath(join(pardir, "Data"))
 
@@ -290,3 +291,34 @@ def log_posterior(x, priors, data, comp_z):
         return -np.inf
     log_likelihood_ = log_likelihood(theta, z, w, comp_z)
     return log_prior_ + log_likelihood_
+
+
+##############################################################3
+
+def hdi_interval(func, a, b, ymax, xmax, std, level=10, hdi=0.68):
+    yup = ymax*0.999
+    ydown = 0
+    lower = a
+    upper = b
+    for i in range(level):
+        dy = (yup-ydown)/10
+        for ynew in np.arange(yup, ydown, -dy):
+            sol = optimize.root(lambda y: func(y) - ynew, [xmax-std, xmax+std])
+            area = quad(func, sol.x[0], sol.x[1])[0]
+            if area > hdi:
+                yup = ynew+dy
+                ydown = ynew
+                lower = sol.x[0]
+                upper = sol.x[1]
+                break
+    return lower, upper
+
+def inference_bayesian(post, x, hdi=0.68, level=10):
+    interp_raw = interpolate.interp1d(x, post, kind='cubic', fill_value='extrapolate')
+    norm = np.trapz(interp_raw(x), x)
+    interp = lambda x: interp_raw(x)/norm
+    xmax = optimize.fmin(lambda x: -1*interp(x), x[np.argmax(interp(x))])
+    mean = quad(lambda x: x*interp(x), np.min(x), np.max(x))[0]
+    std = np.sqrt(quad(lambda x: (x-mean)**2*interp(x), np.min(x), np.max(x))[0])
+    lower, upper = hdi_interval(interp, x[0], x[-1], interp(xmax), xmax, std, level=level, hdi=hdi)
+    return xmax, lower, upper
