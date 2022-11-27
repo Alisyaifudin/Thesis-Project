@@ -36,7 +36,7 @@ def main():
     ndim, nwalkers, priors, data, p0 = initialization(tipe)
      
     sampler_ = 0
-    labels = ["rhoDM", "sigmaDD", 'hDD', "Nu0", 'zsun', 'R', 'sigma_w', 'w0', 'N0']
+    labels = ["rhoDM", "Nu0", 'zsun', 'R', 'sigma_w', 'w0', 'N0']
     with Pool() as pool:
         sampler = emcee.EnsembleSampler(nwalkers, ndim, log_posterior, args=[priors, data], pool=pool)
         state = sampler.run_mcmc(p0, burn, progress=True)
@@ -79,14 +79,12 @@ def main():
             'sigmaz11': chain[:, i, 22],
             'sigmaz12': chain[:, i, 23],
             'rhoDM': chain[:, i, 24],
-            'sigmaDD': chain[:, i, 25],
-            'hDD': chain[:, i, 26],
-            'Nu0': chain[:, i, 27],
-            'zsun': chain[:, i, 28],
-            'R': chain[:, i, 29],
-            'sigma_w': chain[:, i, 30],
-            'w0': chain[:, i, 31],
-            'N0': chain[:, i, 32],
+            'Nu0': chain[:, i, 25],
+            'zsun': chain[:, i, 26],
+            'R': chain[:, i, 27],
+            'sigma_w': chain[:, i, 28],
+            'w0': chain[:, i, 29],
+            'N0': chain[:, i, 30],
             'walker': np.repeat(i, len(chain))
         })
         if len(df) == 0:
@@ -100,17 +98,17 @@ def main():
     print(name)
 
 def log_prior(theta, locs, scales):
-    args = ('rhos', 'sigmaz', 'rhoDM', 'sigmaDD', 'hDD', 'Nu0', 'zsun', 'R', 'sigma_w', 'w0', 'N0')
-    rhos, sigmaz, rhoDM, sigmaDD, hDD, Nu0, zsun, R, sigma_w, w0, N0 = itemgetter(*args)(theta)
-    args = ('rhos_loc', 'sigmaz_loc', 'rhoDM_loc', 'sigmaDD_loc',  'hDD_loc', 'Nu0_loc', 
+    args = ('rhos', 'sigmaz', 'rhoDM', 'Nu0', 'zsun', 'R', 'sigma_w', 'w0', 'N0')
+    rhos, sigmaz, rhoDM, Nu0, zsun, R, sigma_w, w0, N0 = itemgetter(*args)(theta)
+    args = ('rhos_loc', 'sigmaz_loc', 'rhoDM_loc', 'Nu0_loc',
             'zsun_loc', 'R_loc', 'sigma_w_loc', 'w0_loc', 'N0_loc')
-    rhos_loc, sigmaz_loc, rhoDM_loc, sigmaDD_loc, hDD_loc, Nu0_loc, zsun_loc, R_loc, sigma_w_loc, w0_loc, N0_loc = itemgetter(*args)(locs)
-    args = ('rhos_scale', 'sigmaz_scale', 'rhoDM_scale', 'sigmaDD_scale', 'hDD_scale', 'Nu0_scale',
+    rhos_loc, sigmaz_loc, rhoDM_loc, Nu0_loc, zsun_loc, R_loc, sigma_w_loc, w0_loc, N0_loc = itemgetter(*args)(locs)
+    args = ('rhos_scale', 'sigmaz_scale', 'rhoDM_scale', 'Nu0_scale', 
             'zsun_scale', 'R_scale', 'sigma_w_scale', 'w0_scale', 'N0_scale')
-    rhos_scale, sigmaz_scale, rhoDM_scale, sigmaDD_scale, hDD_scale, Nu0_scale, zsun_scale, R_scale, sigma_w_scale, w0_scale, N0_scale = itemgetter(*args)(scales)
-    uni_loc = np.array([rhoDM_loc, sigmaDD_loc, hDD_loc, Nu0_loc, zsun_loc, sigma_w_loc, w0_loc, N0_loc])
-    uni_scale = np.array([rhoDM_scale, sigmaDD_scale, hDD_scale, Nu0_scale, zsun_scale, sigma_w_scale, w0_scale, N0_scale])
-    uni_val = rhoDM, sigmaDD, hDD, Nu0, zsun, sigma_w, w0, N0
+    rhos_scale, sigmaz_scale, rhoDM_scale, Nu0_scale, zsun_scale, R_scale, sigma_w_scale, w0_scale, N0_scale = itemgetter(*args)(scales)
+    uni_loc = np.array([rhoDM_loc, Nu0_loc, zsun_loc, sigma_w_loc, w0_loc, N0_loc])
+    uni_scale = np.array([rhoDM_scale, Nu0_scale, zsun_scale, sigma_w_scale, w0_scale, N0_scale])
+    uni_val = rhoDM, Nu0, zsun, sigma_w, w0, N0
     log_uni = np.sum(uniform.logpdf(uni_val, loc=uni_loc, scale=uni_scale))
     result = (np.sum(norm.logpdf(rhos, loc=rhos_loc, scale=rhos_scale))
             +np.sum(norm.logpdf(sigmaz, loc=sigmaz_loc, scale=sigmaz_scale))
@@ -136,7 +134,7 @@ def log_likelihood(theta, z, w):
     return resultz+resultw
  
 def log_posterior(x, priors, data):
-    theta = dict(rhos=x[:12], sigmaz=x[12:24], rhoDM=x[24], sigmaDD=x[25], hDD=x[26], Nu0=x[27], zsun=x[28], R=x[29], sigma_w=x[30], w0=x[31], N0=x[32])
+    theta = dict(rhos=x[:12], sigmaz=x[12:24], rhoDM=x[24], sigmaDD=0, hDD=1, Nu0=x[25], zsun=x[26], R=x[27], sigma_w=x[28], w0=x[29], N0=x[30])
     locs, scales = itemgetter('locs', 'scales')(priors)
     z, w = itemgetter('z', 'w')(data)
     log_prior_ = log_prior(theta, locs, scales)
@@ -182,7 +180,7 @@ def initialization(tipe):
             index.append(i)
     wnum, werr, ws = np.delete(wnum, index), np.delete(werr, index), np.delete(ws, index)
 
-    ndim = 33
+    ndim = 31
     nwalkers = ndim*3
 
     df_baryon = vaex.open(join(data_baryon_dir, "baryon.hdf5"))
@@ -194,16 +192,10 @@ def initialization(tipe):
     #initial guess
     rhos_0 = np.random.normal(loc=rhos, scale=e_rhos, size=(nwalkers, 12))
     sigmaz_0 = np.random.normal(loc=sigmaz, scale=e_sigmaz, size=(nwalkers, 12))
-
+    
     rhoDM_loc, rhoDM_scale = 0, 0.15
     rhoDM_0 = np.random.uniform(low=rhoDM_loc, high=rhoDM_loc+rhoDM_scale, size=nwalkers)
-
-    sigmaDD_loc, sigmaDD_scale = 0, 100
-    sigmaDD_0 = np.random.uniform(low=sigmaDD_loc, high=sigmaDD_loc+sigmaDD_scale, size=nwalkers)
-
-    hDD_loc, hDD_scale = 0.01, 100
-    hDD_0 = np.random.uniform(low=hDD_loc, high=hDD_loc+hDD_scale, size=nwalkers)
-
+    
     Nu0_loc, Nu0_scale = 50000, 100000
     Nu0_0 = np.random.uniform(low=Nu0_loc, high=Nu0_loc+Nu0_scale, size=nwalkers)
 
@@ -213,7 +205,7 @@ def initialization(tipe):
     R_loc, R_scale = 3.4E-3, 0.6E-3
     R_0 = np.random.normal(loc=R_loc, scale=R_scale, size=nwalkers)
 
-    sigma_w_loc, sigma_w_scale = 1, 20
+    sigma_w_loc, sigma_w_scale = 1, 15
     sigma_w_0 = np.random.uniform(low=sigma_w_loc, high=sigma_w_loc+sigma_w_scale, size=nwalkers)
 
     w0_loc, w0_scale = -20, 40
@@ -222,12 +214,12 @@ def initialization(tipe):
     N0_loc, N0_scale = 900, 1100
     N0_0 = np.random.uniform(low=N0_loc, high=N0_loc+N0_scale, size=nwalkers)
 
-    p0 = np.array([*rhos_0.T, *sigmaz_0.T, rhoDM_0, sigmaDD_0, hDD_0, Nu0_0, zsun_0, R_0, sigma_w_0, w0_0, N0_0]).T
+    p0 = np.array([*rhos_0.T, *sigmaz_0.T, rhoDM_0, Nu0_0, zsun_0, R_0, sigma_w_0, w0_0, N0_0]).T
 
-    locs = dict(rhos_loc=rhos, sigmaz_loc=sigmaz, rhoDM_loc=rhoDM_loc, sigmaDD_loc=sigmaDD_loc, hDD_loc=hDD_loc, 
+    locs = dict(rhos_loc=rhos, sigmaz_loc=sigmaz, rhoDM_loc=rhoDM_loc,
             Nu0_loc=Nu0_loc, zsun_loc=zsun_loc, R_loc=R_loc, sigma_w_loc=sigma_w_loc, w0_loc=w0_loc, N0_loc=N0_loc)
-    scales = dict(rhos_scale=e_rhos, sigmaz_scale=e_sigmaz, rhoDM_scale=rhoDM_scale, sigmaDD_scale=sigmaDD_scale, 
-                  hDD_scale=hDD_scale, Nu0_scale=Nu0_scale, zsun_scale=zsun_scale, R_scale=R_scale, 
+    scales = dict(rhos_scale=e_rhos, sigmaz_scale=e_sigmaz, rhoDM_scale=rhoDM_scale,
+                  Nu0_scale=Nu0_scale, zsun_scale=zsun_scale, R_scale=R_scale, 
                   sigma_w_scale=sigma_w_scale, w0_scale=w0_scale, N0_scale=N0_scale)
 
     priors = dict(locs=locs, scales=scales)

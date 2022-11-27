@@ -17,20 +17,24 @@ from scipy import optimize
 root_data_dir = abspath(join(pardir, "Data"))
 
 # progress bar
-def progressbar(percent=0, width=50) -> None:
+def progressbar(percent=0, width=50, info="", path="", flush=False) -> None:
     left = int((width * percent) // 100)
     right = width - left
     
     tags = "#" * left
     spaces = " " * right
     percents = f"{percent:.0f}%"
-    
-    print("\r[", tags, spaces, "]", percents, sep="", end="", flush=True)
-
+    text = f"\r[{tags}{spaces}] {percents} {info}"
+    if(flush):
+        print(text, end="", flush=True)
+    else:
+        print(text)
+    if(path != ""):
+        with open(path, 'a') as f:
+            f.write(f"{text}")
 
 # add timeout, such that sending request again after some period of time
-def timeout(func, args=(), kwargs={}, timeout_duration=1, default=None, minVal=1):
-
+def timeout(func, args=(), kwargs={}, timeout_duration=1, default=None, minVal=1, path=""):
     class TimeoutError(Exception):
         pass
 
@@ -46,29 +50,43 @@ def timeout(func, args=(), kwargs={}, timeout_duration=1, default=None, minVal=1
     except TimeoutError as exc:
         result = default
         t1 = time()
-        print("too long, requesting again...")
-        print(f"time = {round(t1-t0,2)}s")
+        text = f"too long, requesting again...\ntime = {round(t1-t0,2)}s"
+        if(path != ""):
+            with open(path, 'a') as f:
+                f.write(f"{text}")
+        print(text)
     except HTTPError:
         result = default
         t1 = time()
         # a litte hacky, need some fixes
         if(t1-t0 < minVal):
-            print("service unavailable, sleep for 300s")
-            print(f"time = {round(t1-t0,2)}s")
+            text = f"service unavailable, sleep for 300s\ntime = {round(t1-t0,2)}s"
+            if(path != ""):
+                with open(path, 'a') as f:
+                    f.write(f"{text}")
+            print(text)
             sleep(300)
-            print("continue")
+            text = "continue"
+            if(path != ""):
+                with open(path, 'a') as f:
+                    f.write(f"{text}")
+            print(text)
         else:
-            print("server not responding, try again")
-            print("message", HTTPError)
-            print(f"time = {round(t1-t0,2)}s")
+            text = f"server not responding, try again\nmessage: attr: {HTTPError.__dict__}\ntime = {round(t1-t0,2)}s"
+            print(text)
+            if(path != ""):
+                with open(path, 'a') as f:
+                    f.write(f"{text}")
     except KeyboardInterrupt:
         raise KeyboardInterrupt
     except Exception:
         result = default
         t1 = time()
-        print("some error")
-        print(Exception)
-        print(f"time = {round(t1-t0,2)}s")
+        text = f"some error\ntime = {round(t1-t0,2)}s"
+        print(text)
+        if(path != ""):
+                with open(path, 'a') as f:
+                    f.write(f"{text}")
     finally:
         signal.alarm(0)
     
@@ -103,24 +121,24 @@ def runcmd(cmd, verbose = False, *args, **kwargs):
 def load_spectral_types():
     file_spectral_class = join(root_data_dir, "mamajek-spectral-class.hdf5")
     df_spectral_class = vaex.open(file_spectral_class)
+    print("HELLOOO", vaex.open(file_spectral_class))
     df_filtered = df_spectral_class[["SpT", "M_J", "J-H", "H-Ks"]]
     mask = (df_filtered["M_J"] == df_filtered["M_J"])*(df_filtered["H-Ks"] == df_filtered["H-Ks"])*(df_filtered["J-H"] == df_filtered["J-H"])
     df_filtered_good = df_filtered[mask].to_pandas_df()
     df_filtered_good['J-K'] = df_filtered_good['J-H']+df_filtered_good['H-Ks']
     return df_filtered_good
 
-sp = load_spectral_types()
-sp_indx = np.array([(not 'O' in s)*(not 'L' in s)\
-                        *(not 'T' in s)*(not 'Y' in s)\
-                        *(not '.5V' in s) for s in sp['SpT']],
-                    dtype='bool')
-# Cut out the small part where the color decreases
-sp_indx *= (np.roll((sp['J-K']),1)-(sp['J-K'])) <= 0.
-
-main_locus = interpolate.UnivariateSpline((sp['J-K'])[sp_indx],
-                                    sp['M_J'][sp_indx],k=3,s=1.)
-
 def main_sequence_cut_r(jk,low=False):
+    sp = load_spectral_types()
+    sp_indx = np.array([(not 'O' in s)*(not 'L' in s)\
+                            *(not 'T' in s)*(not 'Y' in s)\
+                            *(not '.5V' in s) for s in sp['SpT']],
+                        dtype='bool')
+    # Cut out the small part where the color decreases
+    sp_indx *= (np.roll((sp['J-K']),1)-(sp['J-K'])) <= 0.
+
+    main_locus = interpolate.UnivariateSpline((sp['J-K'])[sp_indx],
+                                        sp['M_J'][sp_indx],k=3,s=1.)
     """Main-sequence cut, based on MJ, high as in low"""
     j_locus= main_locus(jk)
     if low:
@@ -154,22 +172,22 @@ def f(u, z, rhos, sigmaz, rhoDM, sigmaDD, hDD, R=3.4E-3):
 #   return -phi/sigma_w**2
 
 def log_nu_mod(zz, theta, res=1000):
-  args = ('rhos', 'sigmaz', 'rhoDM', 'sigmaDD', 'hDD', 'Nu0', 'zsun', 'R', 'sigma_w', 'w0', "N0")
-  rhos, sigmaz, rhoDM, sigmaDD, hDD, Nu0, zsun, R, sigma_w, w0, N0 = itemgetter(*args)(theta)
+    args = ('rhos', 'sigmaz', 'rhoDM', 'sigmaDD', 'hDD', 'Nu0', 'zsun', 'R', 'sigma_w', 'w0', "N0")
+    rhos, sigmaz, rhoDM, sigmaDD, hDD, Nu0, zsun, R, sigma_w, w0, N0 = itemgetter(*args)(theta)
 
-  phi0 = 0 # (km/s)^2
-  Kz0 = 0 # pc (km/s)^2
+    phi0 = 0 # (km/s)^2
+    Kz0 = 0 # pc (km/s)^2
 
-  y0 = [Kz0, phi0]
-  zmax = np.max(np.abs(zz-zsun))*1000 # change to pc
-  zs = np.linspace(0, zmax, res)
-  us = odeint(f, y0, zs, args=(rhos, sigmaz, rhoDM, sigmaDD, hDD, R))
-  phi = us[:, 0]
-  phi_interp_pos = interpolate.interp1d(zs, phi, kind='cubic')
-  phi_interp = lambda z: phi_interp_pos(np.abs(z)*1000) # change to pc
-  phii = phi_interp(zz-zsun)
-  logNu = -phii/sigma_w**2
-  return logNu+np.log(Nu0)
+    y0 = [Kz0, phi0]
+    zmax = np.max(np.abs(zz-zsun))*1000 # change to pc
+    zs = np.linspace(0, zmax, res)
+    us = odeint(f, y0, zs, args=(rhos, sigmaz, rhoDM, sigmaDD, hDD, R))
+    phi = us[:, 0]
+    phi_interp_pos = interpolate.interp1d(zs, phi, kind='cubic')
+    phi_interp = lambda z: phi_interp_pos(np.abs(z)*1000) # change to pc
+    phii = phi_interp(zz-zsun)
+    logNu = -phii/sigma_w**2
+    return logNu+np.log(Nu0)
 
 def fdist_cum(w, sigma, w0):
   return norm.cdf(w, loc=w0, scale=sigma)
