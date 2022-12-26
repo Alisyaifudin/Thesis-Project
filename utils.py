@@ -121,7 +121,6 @@ def runcmd(cmd, verbose = False, *args, **kwargs):
 def load_spectral_types():
     file_spectral_class = join(root_data_dir, "mamajek-spectral-class.hdf5")
     df_spectral_class = vaex.open(file_spectral_class)
-    print("HELLOOO", vaex.open(file_spectral_class))
     df_filtered = df_spectral_class[["SpT", "M_J", "J-H", "H-Ks"]]
     mask = (df_filtered["M_J"] == df_filtered["M_J"])*(df_filtered["H-Ks"] == df_filtered["H-Ks"])*(df_filtered["J-H"] == df_filtered["J-H"])
     df_filtered_good = df_filtered[mask].to_pandas_df()
@@ -171,21 +170,22 @@ def f(u, z, rhos, sigmaz, rhoDM, sigmaDD, hDD, R=3.4E-3):
 # def log_nu(phi, sigma_w):
 #   return -phi/sigma_w**2
 
-def log_nu_mod(zz, theta, res=1000):
-    args = ('rhos', 'sigmaz', 'rhoDM', 'sigmaDD', 'hDD', 'Nu0', 'zsun', 'R', 'sigma_w', 'w0', "N0")
-    rhos, sigmaz, rhoDM, sigmaDD, hDD, Nu0, zsun, R, sigma_w, w0, N0 = itemgetter(*args)(theta)
-
+def log_nu_mod(zz, **theta):
+    res = 1000
+    args = ('rhos', 'sigmaz', 'rhoDM', 'sigmaDD', 'hDD', 'Nu0', 'zsun', 'R', 'sigma_w')
+    rhos, sigmaz, rhoDM, sigmaDD, hDD, Nu0, zsun, R, sigma_w = itemgetter(*args)(theta)
+    if 'res' in theta.keys(): res = theta['res']
     phi0 = 0 # (km/s)^2
     Kz0 = 0 # pc (km/s)^2
-
     y0 = [Kz0, phi0]
-    zmax = np.max(np.abs(zz-zsun))*1000 # change to pc
+    zmax = np.max(np.abs(zz+zsun)) 
     zs = np.linspace(0, zmax, res)
     us = odeint(f, y0, zs, args=(rhos, sigmaz, rhoDM, sigmaDD, hDD, R))
     phi = us[:, 0]
     phi_interp_pos = interpolate.interp1d(zs, phi, kind='cubic')
-    phi_interp = lambda z: phi_interp_pos(np.abs(z)*1000) # change to pc
-    phii = phi_interp(zz-zsun)
+    phi_interp = lambda z: phi_interp_pos(np.abs(z))
+    phii = phi_interp(zz+zsun)
+    # print(phii)
     logNu = -phii/sigma_w**2
     return logNu+np.log(Nu0)
 
