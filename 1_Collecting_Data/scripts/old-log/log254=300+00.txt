@@ -1,0 +1,33 @@
+[################                                  ] 33% 254-255 | [-30]-[-20] | 191.17 s | join = 399526 | tmass = 399526 | gaia = 228595| TOP = 50000000[#################################                 ] 67% 254-255 | [-20]-[-10] | 146.05 s | join = 166224 | tmass = 166224 | gaia = 204703| TOP = 50000000[##################################################] 100% 254-255 | [-10]-[0] | 140.64 s | join = 94587 | tmass = 94587 | gaia = 245284| TOP = 50000000some error
+time = 122.2sfail to fetch gaia
+some error
+time = 61.18sfail to fetch gaia
+some error
+time = 108.3sfail to fetch gaia
+some error
+time = 61.15sfail to fetch gaia
+some error
+time = 61.23sfail to fetch gaia
+some error
+time = 61.2sfail to fetch gaia
+some error
+time = 61.29sfail to fetch gaia
+some error
+time = 61.3sfail to fetch gaia
+some error
+time = 61.22sfail to fetch gaia
+some error
+time = 61.22sfail to fetch gaia
+some error
+time = 61.2sfail to fetch gaia
+some error
+time = 61.23sfail to fetch gaia
+some error
+time = 61.23sfail to fetch gaia
+some error
+time = 61.24sfail to fetch gaia
+some error
+time = 61.17sfail to fetch gaia
+some error
+time = 61.25sfail to fetch gaia
+too many tries, raise error

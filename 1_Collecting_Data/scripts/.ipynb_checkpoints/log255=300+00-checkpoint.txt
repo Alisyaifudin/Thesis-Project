@@ -1,0 +1,33 @@
+some error
+time = 122.12sfail to fetch gaia
+some error
+time = 61.18sfail to fetch gaia
+some error
+time = 61.11sfail to fetch gaia
+some error
+time = 122.35sfail to fetch gaia
+some error
+time = 122.23sfail to fetch gaia
+some error
+time = 61.13sfail to fetch gaia
+some error
+time = 61.25sfail to fetch gaia
+some error
+time = 115.99sfail to fetch gaia
+some error
+time = 61.25sfail to fetch gaia
+some error
+time = 61.25sfail to fetch gaia
+some error
+time = 61.14sfail to fetch gaia
+some error
+time = 106.79sfail to fetch gaia
+some error
+time = 104.16sfail to fetch gaia
+some error
+time = 61.1sfail to fetch gaia
+some error
+time = 104.72sfail to fetch gaia
+some error
+time = 61.12sfail to fetch gaia
+too many tries, raise error
