@@ -82,7 +82,7 @@ def timeout(func, args=(), kwargs={}, timeout_duration=1, default=None, minVal=1
     except Exception:
         result = default
         t1 = time()
-        text = f"some error\ntime = {round(t1-t0,2)}s"
+        text = f"some error\ntime = {round(t1-t0,2)}s" 
         print(text)
         if(path != ""):
                 with open(path, 'a') as f:
