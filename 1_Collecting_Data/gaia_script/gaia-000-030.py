@@ -5,7 +5,7 @@ from os.path import join, abspath
 # Initial position
 ra0 = 0
 ra1 = 30
-start_dec = -999
+start_dec = -1
 
 ras = np.arange(ra0,ra1+0.1, 1).astype(int)
 decs = np.arange(-90,90+0.1,1).astype(int)
