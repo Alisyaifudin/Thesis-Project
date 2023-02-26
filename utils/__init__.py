@@ -10,3 +10,4 @@ from .query_gaia_tmass import iterate_job
 from .completeness import compjk, window
 from .load_spectral import load_spectral_types
 from .gravity import nu_mod, phi_mod
+from .n_gaussian import n_gaussian
