@@ -11,3 +11,4 @@ from .completeness import compjk, window
 from .load_spectral import load_spectral_types
 from .gravity import nu_mod, phi_mod
 from .n_gaussian import n_gaussian
+from .vvd import fzw, fw
