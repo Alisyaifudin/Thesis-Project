@@ -12,3 +12,7 @@ from .load_spectral import load_spectral_types
 from .gravity import nu_mod, phi_mod
 from .n_gaussian import n_gaussian
 from .vvd import fzw, fw
+from .mcmc import (plot_chain, load_data, plot_data, 
+                   initialize_prior_dm, initialize_walkers_dm,
+                   run_mcmc, plot_corner_dm, plot_fitting_dm)
+from .probability import (log_prior, log_posterior_simple_DM, log_likelihood, log_posterior_dm)
