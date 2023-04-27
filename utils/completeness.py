@@ -1,8 +1,9 @@
 import numpy as np
 import vaex
-from os.path import join, abspath
+from os.path import join, abspath, dirname
 
-root_dir = abspath("..")
+current_dir = dirname(abspath(__file__))
+root_dir = abspath(join(current_dir, ".."))
 
 root_data_dir = join(root_dir, "Data")
 data_dir = join(root_data_dir, "Completeness")

@@ -1,0 +1,254 @@
+.
+├── 1_Collecting_Data
+│   ├── 1.0. Galaxya?.ipynb
+│   ├── 1.1. Gaia DR3 and 2MASS.ipynb
+│   ├── 1.2. RAVE6.ipynb
+│   ├── 1.3. APOGEE (SDSS17).ipynb
+│   ├── 1.4. GALAH DR3.ipynb
+│   ├── 1.5. LAMOST DR7.ipynb
+│   ├── gaia_script
+│   │   └── gaia-000-030.py
+│   ├── images
+│   │   ├── galah-query-page.png
+│   │   ├── lamost-catalog.png
+│   │   └── rave-query-page.png
+│   └── old
+│       └── scripts
+│           ├── 240-330.txt
+│           ├── gaia.py
+│           ├── gums.py
+│           ├── gums.txt
+│           ├── log000-030.txt
+│           ├── log030-060.
+│           ├── log060-090.txt
+│           ├── log090-120.txt
+│           ├── log120-150.txt
+│           ├── log150-180.txt
+│           ├── log180-210.txt
+│           ├── log210-240.txt
+│           ├── log240-270.txt
+│           ├── log270-300.txt
+│           ├── log300-330.txt
+│           ├── log330-360.txt
+│           └── old-log
+│               ├── log-000-060.txt
+│               ├── log060+00.txt
+│               ├── log-060-120.txt
+│               ├── log060-30.txt
+│               ├── log060+30.txt
+│               ├── log060-60.txt
+│               ├── log060+60.txt
+│               ├── log060+90.txt
+│               ├── log120+00.txt
+│               ├── log-120-180.txt
+│               ├── log120-30.txt
+│               ├── log120+30.txt
+│               ├── log120-60.txt
+│               ├── log120+60.txt
+│               ├── log120+90.txt
+│               ├── log156+60.txt
+│               ├── log180+00.txt
+│               ├── log-180-240.txt
+│               ├── log180-30.txt
+│               ├── log180+30.txt
+│               ├── log180-60.txt
+│               ├── log180+60.txt
+│               ├── log180+90.txt
+│               ├── log240+00.txt
+│               ├── log-240-300.txt
+│               ├── log240-30.txt
+│               ├── log240+30.txt
+│               ├── log240-60.txt
+│               ├── log240+60.txt
+│               ├── log240+90.txt
+│               ├── log254=300+00.txt
+│               ├── log255=300+00.txt
+│               ├── log256=300-30.txt
+│               ├── log300+00.txt
+│               ├── log300-30.txt
+│               ├── log300+30.txt
+│               ├── log-300-360.txt
+│               ├── log300-60.txt
+│               ├── log300+60.txt
+│               ├── log300+90.txt
+│               ├── log311=360+30.txt
+│               ├── log360+00.txt
+│               ├── log360-30.txt
+│               ├── log360+30.txt
+│               ├── log360-60.txt
+│               ├── log360+60.txt
+│               ├── log360+90.txt
+│               ├── log-left-028-029.txt
+│               └── log-left-083-084.txt
+├── 2_Cleaning
+│   ├── 2.0. Preprocessing-gaia.ipynb
+│   ├── 2.1. Combine.ipynb
+│   ├── 2.2. Best Parameters.ipynb
+│   ├── 2.3. Machine Learning.ipynb
+│   ├── 2.4. Neighbour.ipynb
+│   ├── 2.5. Cutting.ipynb
+│   ├── 2.6. Clusters.ipynb
+│   ├── 2.7. Gums.ipynb
+│   ├── 2.8. ML.ipynb
+│   ├── 2.9. Cutting-2.ipynb
+│   ├── best.py
+│   ├── cmd.pdf
+│   ├── confusion_matrix_main.png
+│   ├── confusion_matrix.png
+│   ├── ml-main.py
+│   ├── ml.py
+│   ├── model-disk.pth
+│   ├── model-main.pth
+│   ├── old
+│   │   ├── 2.3. Machine Learning.ipynb
+│   │   ├── 2.4. Neighbour.ipynb
+│   │   └── 2.5. Cutting.ipynb
+│   ├── roc-main.png
+│   ├── roc.png
+│   ├── script
+│   │   └── best-pars.py
+│   └── TD_D.pdf
+├── 3_Vertical_Number
+│   ├── 3.1. Survey Completeness.ipynb
+│   ├── 3.2. Effective Completeness.ipynb
+│   ├── 3.3. Effective Volume.ipynb
+│   ├── completeness.pdf
+│   ├── Jmag-count.pdf
+│   ├── old
+│   │   ├── 2.3. Survey Completeness.ipynb
+│   │   ├── 2.3. Survey Completeness single.ipynb
+│   │   ├── 2.4. Effective Completeness.ipynb
+│   │   ├── 2.4. Effective Completeness single.ipynb
+│   │   ├── 2.5. Effective Volume.ipynb
+│   │   ├── 2.5. Effective Volume single.ipynb
+│   │   ├── 2.5. Vertical Number Density.ipynb
+│   │   ├── 3.1. Survey Completeness.ipynb
+│   │   ├── 3.2. Effective Completeness.ipynb
+│   │   ├── 3.2. Effective Completeness-new.ipynb
+│   │   ├── 3.3. Effective Volume.ipynb
+│   │   └── 3.4. Vertical Number.ipynb
+│   └── vertical-number.pdf
+├── 3_Vertical_Velocity
+│   ├── 3.5. Middleplane Vertical Velocity Distribution.ipynb
+│   └── old
+│       ├── 3.1. Combine.ipynb
+│       ├── 3.2. Filter rvs.ipynb
+│       ├── 3.3. Best parameters.ipynb
+│       ├── 3.4. Cutting.ipynb
+│       ├── 3.5. Vertical Velocity Distribution copy.ipynb
+│       └── 3.5. Vertical Velocity Distribution.ipynb
+├── 4_Gravity
+│   ├── 4.1a. boundary.ipynb
+│   ├── 4.1. LogNu (Dark).ipynb
+│   ├── 4.2. VVD.ipynb
+│   ├── 4.3a. MCMC.ipynb
+│   ├── 4.3b. MCMC-Full.ipynb
+│   ├── 4.3c. MCMC-dm.ipynb
+│   ├── 4.4. LogNu(MOND).ipynb
+│   ├── 4.5. VVD-mond.ipynb
+│   ├── 4.6. MCMC-mond-full.ipynb
+│   ├── 4.7. MCMC-mond.ipynb
+│   ├── mcmc-dm-full-script.py
+│   ├── mcmc-dm-script-2.py
+│   ├── mcmc-dm-script.py
+│   ├── mcmc-mond-full-script.py
+│   └── old
+│       ├── 4.1. LogNu (Dark).ipynb
+│       ├── 4.3. MCMC.ipynb
+│       ├── 4.4. Post-MCMC.ipynb
+│       ├── 4.x. Baryon.ipynb
+│       ├── corner.png
+│       ├── job.sh
+│       ├── mcmc-DD-DM.py
+│       ├── mcmc-DD.py
+│       ├── mcmc-DM.py
+│       ├── mcmc-model.py
+│       ├── mcmc-no.py
+│       └── mcmc.py
+├── Intro_to_Deep
+│   ├── data_apogee.csv
+│   ├── data_gaia.csv
+│   ├── How_to_Build_A_Neural_Network.ipynb
+│   ├── images
+│   │   ├── calculus.jpeg
+│   │   ├── cat_dog.jpeg
+│   │   ├── compgraph_ic.png
+│   │   ├── coolimage.gif
+│   │   ├── gradient_descent_demystified.png
+│   │   ├── gradient.jpg
+│   │   ├── gradient.png
+│   │   ├── graph.png
+│   │   ├── graph_torch.png
+│   │   ├── libraries.png
+│   │   ├── sgd_insight.jpg
+│   │   ├── supervised.png
+│   │   ├── tinygraph.png
+│   │   └── torch.gif
+│   ├── mymodel.pth
+│   ├── PyTorch_Basics.ipynb
+│   ├── tes.ipynb
+│   └── What_is_Gradient_Descent.ipynb
+├── LICENSE
+├── note.md
+├── output.png
+├── __pycache__
+│   ├── utils.cpython-36.pyc
+│   ├── utils.cpython-38.pyc
+│   └── utils.cpython-39.pyc
+├── readme.md
+├── tes.ipynb
+├── tes.py
+├── tree.txt
+├── utils
+│   ├── append_name.py
+│   ├── completeness.py
+│   ├── delete_directory.py
+│   ├── gravity_mond.py
+│   ├── gravity.py
+│   ├── __init__.py
+│   ├── latex_style.py
+│   ├── launch_job.py
+│   ├── load_spectral.py
+│   ├── mcmc_dddm.py
+│   ├── mcmc_dd.py
+│   ├── mcmc_dm.py
+│   ├── mcmc_mond.py
+│   ├── mcmc.py
+│   ├── n_gaussian.py
+│   ├── print_or_write.py
+│   ├── probability.py
+│   ├── progressbar.py
+│   ├── __pycache__
+│   │   ├── append_name.cpython-38.pyc
+│   │   ├── completeness.cpython-38.pyc
+│   │   ├── delete_directory.cpython-38.pyc
+│   │   ├── gravity.cpython-38.pyc
+│   │   ├── gravity_mond.cpython-38.pyc
+│   │   ├── __init__.cpython-38.pyc
+│   │   ├── latex_style.cpython-38.pyc
+│   │   ├── launch_job.cpython-38.pyc
+│   │   ├── load_spectral.cpython-38.pyc
+│   │   ├── mcmc.cpython-38.pyc
+│   │   ├── mcmc_dd.cpython-38.pyc
+│   │   ├── mcmc_dddm.cpython-38.pyc
+│   │   ├── mcmc_dm.cpython-38.pyc
+│   │   ├── mcmc_mond.cpython-38.pyc
+│   │   ├── n_gaussian.cpython-38.pyc
+│   │   ├── print_or_write.cpython-38.pyc
+│   │   ├── probability.cpython-38.pyc
+│   │   ├── progressbar.cpython-38.pyc
+│   │   ├── query_gaia_tmass.cpython-38.pyc
+│   │   ├── safe_mkdir.cpython-38.pyc
+│   │   ├── timeout.cpython-38.pyc
+│   │   ├── vvd.cpython-38.pyc
+│   │   ├── vvd_mond.cpython-38.pyc
+│   │   └── write_to.cpython-38.pyc
+│   ├── query_gaia_tmass.py
+│   ├── safe_mkdir.py
+│   ├── timeout.py
+│   ├── vvd_mond.py
+│   ├── vvd.py
+│   └── write_to.py
+└── utils.py
+
+81 directories, 3855 files
