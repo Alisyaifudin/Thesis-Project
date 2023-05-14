@@ -3,12 +3,9 @@ __pycache__/
 note.md
 Intro_to_Deep/
 rust/*
-4a_mcmc/dddm
-4a_mcmc/no
-4a_mcmc/mond
-4a_mcmc/dm/*.pdf
-4a_mcmc/dm/*.txt
-4a_mcmc/dm/*.sh
+4a_mcmc/**/*.pdf
+4a_mcmc/**/*.txt
+4a_mcmc/**/*.sh
 *.pdf
 *.png
 *.pkl

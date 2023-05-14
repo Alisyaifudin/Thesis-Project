@@ -46,6 +46,9 @@ zdata = (zmid, znum, zerr)
 wdata = (wmid, wnum, werr)
 
 probs = calculate_probs(dm, chain, ndim, zdata, wdata, locs, scales, batch=10000)
+
+np.save(join(data_dir, 'data', f'probs-{model}-{data}.npy'), probs)
+
 likelihood = probs[:, 1]
 max_likelihood = np.max(likelihood)
 
