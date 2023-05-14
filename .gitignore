@@ -3,6 +3,7 @@ __pycache__/
 note.md
 Intro_to_Deep/
 rust/*
+1_Collecting_Data/**/*.txt
 4a_mcmc/**/*.pdf
 4a_mcmc/**/*.txt
 4a_mcmc/**/*.sh
