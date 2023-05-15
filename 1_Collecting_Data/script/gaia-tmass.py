@@ -16,7 +16,8 @@ current = pathlib.Path(__file__).parent.resolve()
 root_dir = join(current, "..", "..")
 if not root_dir in sys.path:
     sys.path.insert(0, root_dir)
-from utils import (launch_job, append_name, safe_mkdir, delete_directory, check_df)
+from utils import (launch_job, append_name, safe_mkdir,
+                   delete_directory, check_df)
 ###################################################################
 # get the root of data directory
 root_data_dir = abspath(join(root_dir, "Data"))
@@ -81,7 +82,7 @@ column_tmass = list(map(lambda x: append_name(x, tmass_table), columns_tmass))
 
 
 def iterate_job(ras, decs, gen_gaia_query, gen_tmass_query, path_gaia, path_tmass,
-                columns_tmass_names, gaia_top=100_000, tmass_top=100_000, timeout=300,
+                columns_tmass_names, gaia_top=100_000, tmass_top=100_000, timeout=600,
                 start_dec=-999, num_tries=10):
     """
     Iterate through the RAs and Decs to query the Gaia and TMASS databases
@@ -198,6 +199,11 @@ def iterate_job(ras, decs, gen_gaia_query, gen_tmass_query, path_gaia, path_tmas
                 df_tmass_only = df_tmass.filter(f"ra > {ra0}").filter(
                     f"ra < {ra1}").filter(f"dec > {dec0}").filter(f"dec < {dec1}")
                 df_tmass_only = df_tmass_only.extract()
+                # to avoid this random stup*d error
+                # RuntimeError: Oops, get an empty chunk, from 1024 to 1024, that should not happen
+                # convert to pandas, then back to vaex
+                a = df_tmass_only.to_pandas_df()
+                df_tmass_only = vaex.from_pandas(a)
                 # ===========================
                 # join the gaia and tmass
                 df_join = df_gaia.join(
@@ -251,7 +257,6 @@ def iterate_job(ras, decs, gen_gaia_query, gen_tmass_query, path_gaia, path_tmas
             break
         print(
             f"tmass only RA:{ra0:03}-{ra1:03} is complete with rows {len(df_tmass_only)}\n")
-
 
         # point_in_time(time0)
         # loop again over the next ra
