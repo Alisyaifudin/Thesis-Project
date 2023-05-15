@@ -82,7 +82,7 @@ column_tmass = list(map(lambda x: append_name(x, tmass_table), columns_tmass))
 
 
 def iterate_job(ras, decs, gen_gaia_query, gen_tmass_query, path_gaia, path_tmass,
-                columns_tmass_names, gaia_top=100_000, tmass_top=100_000, timeout=600,
+                columns_tmass_names, gaia_top=100_000, tmass_top=100_000, timeout=1200,
                 start_dec=-999, num_tries=10):
     """
     Iterate through the RAs and Decs to query the Gaia and TMASS databases
