@@ -6,106 +6,85 @@ This is my thesis repo! Follow this repo to reproduce my thesis report.
 
 ## Project Structure
 ```
-- 1. Collecting Data
-  |- 1.1. Gaia DR3 and 2MASS.ipynb
-  |- 1.2. RAVE6.ipynb
-  |- 1.3. APOGEE (SDSS17).ipynb
-  |- 1.4. GALAH DR3.ipynb
-  |- 1.5. LAMOST DR7.ipynb
-  |- 1.6. simple 2MASS.ipynb
-- 2. Vertical Number Density
-  |- 2.1. Spectral Class.ipynb
-  |- 2.2. Cutting.ipynb
-  |- 2.3. Survey Completeness.ipynb
-  |- 2.4. Effective Completeness.ipynb
-  |- 2.5. Vertical Number Density.ipynb
-- 3. Vertical Velocity Distribution
-  |- 3.1. Combine.ipynb
-  |- 3.2. Filter rvs.ipynb
-  |- 3.3. Best Parameters.ipynb
-  |- 3.4. Cutting.ipynb
-  |- 3.5. Vertical Velocity Distribution.ipynb
-- Data    // Contents are not included in this repo, follow the steps to download/reproduce them
-  |- APOGEE-2
-  |  |- allStar-dr17-synspec_rev1.fits
-  |  |- apogee.hdf5
-  |- Best-Pars
-  |  |- clean-060-120.hdf5
-  |  |- clean-120-180.hdf5
-  |  |- clean-180-240.hdf5
-  |  |- clean-240-300.hdf5
-  |  |- clean-300-360.hdf5
-  |- Combine
-  |  |- rave
-  |  |  |- gaia-000-001.hdf5
-  |  |  ...
-  |  |  |- gaia-365-360.hdf5
-  |  |- rave-galah
-  |  |  |- gaia-000-001.hdf5
-  |  |  ...
-  |  |  |- gaia-365-360.hdf5
-  |  |- rave-galah-lamost
-  |  |  |- gaia-000-001.hdf5
-  |  |  ...
-  |  |  |- gaia-365-360.hdf5
-  |  |- rave-galah-lamost-apogee
-  |  |  |- gaia-000-001.hdf5
-  |  |  ...
-  |  |  |- gaia-365-360.hdf5
-  |- Completeness
-  |  |-comp-A.hdf5
-  |  |-comp-F.hdf5
-  |  |-comp-G.hdf5
-  |  |-comp.hdf5
-  |- Effective-Volume
-  |  |-comp.hdf5
-  |- Gaia-2MASS
-  |  |  |- gaia-000-001.hdf5
-  |  |  ...
-  |  |  |- gaia-365-360.hdf5
-  |- GALAH
-  |  |- 0-180.fits
-  |  |- 180-300.fits
-  |  |- 300-360.fits
-  |  |- galah.hdf5
-  |- LAMOST
-  |  |- lamost.fits
-  |  |- lamost.hdf5
-  |- Number-Density
-  |  |-density.hdf5
-  |- RAVE6
-  |  |- rave-000-040.fits
-  |  ...
-  |  |- rave-320-360.fits
-  |  |- rave6.hdf5
-  |- RV
-  |  |- rv1
-  |  |  |- gaia-000-020.fits
-  |  |  ...
-  |  |  |- gaia-340-360.fits
-  |  |- 1rv.hdf5
-  |  |- 2rv.hdf5
-  |  |- 2rv.fits
-  |  |- 3rv.hdf5
-  |  |- 3rv.fits
-  |  |- 4rv.hdf5
-  |  |- 4rv.fits
-  |  |- 5rv.hdf5
-  |  |- 5rv.fits
-  |- Spectral-Class
-  |  |- A-type.hdf5
-  |  |- F-type.hdf5
-  |  |- G-type.hdf5
-  |- Spectral-Class-Velocity
-  |  |- A-type.hdf5
-  |  |- F-type.hdf5
-  |  |- G-type.hdf5
-  |- TWOMASS
-  |  |- tmass-000-010.hdf5
-  |  ...
-  |  |- tmass-350-360.hdf5
-  |- EEM_dwarf_UBVIJHK_colors_Teff.txt
-  |- mamajek-spectral-class.hdf5
+.
+├── 1_Collecting_Data
+│   ├── 1.1. Gaia DR3 and 2MASS.ipynb
+│   ├── 1.2. RAVE6.ipynb
+│   ├── 1.3. APOGEE (SDSS17).ipynb
+│   ├── 1.4. GALAH DR3.ipynb
+│   ├── 1.5. LAMOST DR7.ipynb
+│   ├── gaia_script
+│   │   └── ...
+│   ├── images
+│   │   └── ...
+│   └── script
+│       ├── create_procedure.py
+│       ├── gaia-tmass.py
+│       └── procedures
+│           └── ...
+├── 2_Cleaning
+│   ├── 2.0. Preprocessing-gaia.ipynb
+│   ├── 2.1. Combine.ipynb
+│   ├── 2.2. Best Parameters.ipynb
+│   ├── 2.3. Neighbour.ipynb
+│   ├── 2.4. GUMS.ipynb
+│   ├── 2.5. Color-Class.ipynb
+│   ├── 2.6. Clusters.ipynb
+│   └── script
+│       ├── best-pars.py
+│       └── combine.py
+├── 3_Vertical_Number
+│   ├── 3.1. Survey Completeness.ipynb
+│   ├── 3.2. Effective Completeness.ipynb
+│   ├── 3.3. Effective Volume.ipynb
+│   └── img
+│       └── ...
+├── 4_Vertical_Velocity
+│   ├── 4.1. Middleplane Vertical Velocity Distribution.ipynb
+│   └── img
+│       └── ...
+├── 5_mcmc
+│   ├── 1_mock_dm
+│   │   ├── 5.1. gravity.ipynb
+│   │   ├── 5.2 density.ipynb
+│   │   ├── 5.3. fit.ipynb
+│   │   ├── 5.4. figures.ipynb
+│   │   ├── img
+│   │   │   └── ...
+│   │   └── script
+│   │       ├── generate_mock.py
+│   │       └── procedure
+│   │           └── ...
+│   ├── dddm
+│   │   └── ...
+│   ├── dm
+│   │   └── ...
+│   ├── mond
+│   │   └── ...
+│   └── no
+│       └── ...
+├── 6_Analisis
+│   └── ...
+├── LICENSE
+├── note.md
+├── readme.md
+├── tes.ipynb
+├── tree.txt
+├── undefined_Gravity
+│   └── gravity.md
+└── utils
+    ├── __init__.py
+    ├── append_name.py
+    ├── check_df.py
+    ├── completeness.py
+    ├── delete_directory.py
+    ├── launch_job.py
+    ├── load_spectral_types.py
+    ├── runcmd.py
+    ├── rust_utils.py
+    ├── safe_mkdir.py
+    ├── style.py
+    └── timeout.py
 ```
 
 ## 1. Collecting Data
