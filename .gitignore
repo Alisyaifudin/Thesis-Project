@@ -4,9 +4,12 @@ note.md
 Intro_to_Deep/
 rust/*
 1_Collecting_Data/**/*.txt
-4a_mcmc/**/*.pdf
-4a_mcmc/**/*.txt
-4a_mcmc/**/*.sh
+2_Cleaning/**/*.txt
+undefined_Gravity/**/*.txt
+undefined_Gravity/logs
+5_mcmc/**/*.pdf
+5_mcmc/**/*.txt
+5_mcmc/**/*.sh
 *.pdf
 *.png
 *.pkl
