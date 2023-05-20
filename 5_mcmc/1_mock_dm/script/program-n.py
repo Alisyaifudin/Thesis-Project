@@ -21,9 +21,9 @@ default_props = {
     'labels': labels,
     'labs': labs,
     'indexes': [12] + list(range(24, len(labs)+23)),
-    'root_path': join(root_data_path, 'MCMC', 'dm'),
-    'zpath': join(root_data_path, 'Effective-Volume'),
-    'wpath': join(root_data_path, 'Velocity-Distribution'),
+    'root_path': join(root_data_path, 'MCMC', 'dm_mock', 'n'),
+    'zpath': join(root_data_path, 'MCMC', 'dm_mock', 'mock', 'n'),
+    'wpath': join(root_data_path, 'MCMC', 'dm_mock', 'mock', 'n'),
 }
 
 if __name__ == '__main__':

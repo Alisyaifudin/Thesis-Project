@@ -6,7 +6,7 @@ from time import time
 from os.path import join
 from scipy.stats import median_abs_deviation as mad
 from scipy.integrate import simps
-from .rust_utils import calculate_probs
+from .plot_mcmc import calculate_probs
 from .style import style
 from datetime import datetime
 
