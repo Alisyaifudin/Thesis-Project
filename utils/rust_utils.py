@@ -3,9 +3,9 @@ from corner import corner
 from tqdm import tqdm
 import numpy as np
 
-def plot_chain(chain, labels, burn=0, figsize=(10, 5), path=None, dpi=100):
+def plot_chain(params, labels, burn=0, figsize=(10, 5), path=None, dpi=100):
     fig, axes = plt.subplots(len(labels), figsize=figsize, sharex=True)
-    chain_burn = chain[burn:]
+    chain_burn = params[burn:]
     for i in tqdm(range(len(labels))):
         ax = axes[i]
         ax.plot(chain_burn[:, :, i], "k", alpha=0.1)
@@ -16,13 +16,16 @@ def plot_chain(chain, labels, burn=0, figsize=(10, 5), path=None, dpi=100):
         fig.savefig(path, dpi=dpi)
     axes[-1].set_xlabel("step number")
 
-def plot_corner(chain, labels, burn=0, path=None, dpi=100, ran=None):
-    fig = corner(chain[burn:].reshape((-1, len(labels))), labels=labels, 
+def plot_corner(params, labels, burn=0, path=None, dpi=100):
+    fig = corner(params[burn:].reshape((-1, len(labels))), labels=labels, 
                  quantiles=[0.16, 0.5, 0.84],
-                 show_titles=True, title_fmt=".2f", title_kwargs={"fontsize": 12},
-                 range=ran)
+                 show_titles=True, title_fmt=".2f", title_kwargs={"fontsize": 12})
     if path is not None:
         fig.savefig(path, dpi=dpi)
+
+sigma_68_3 = 1
+sigma_95_4 = 2
+sigma_99_7 = 3
 
 def plot_fit(func, zdata, wdata, chain, ndim, n=50000, alpha=0.2, path=None, dpi=100):
     zmid, znum, zerr = zdata
@@ -49,9 +52,9 @@ def plot_fit(func, zdata, wdata, chain, ndim, n=50000, alpha=0.2, path=None, dpi
 
     fig, axes = plt.subplots(2, 1, figsize=(10, 10))
     axes[0].errorbar(zmid, znum, yerr=zerr, color='k', alpha=0.5, capsize=2, fmt=".")
-    axes[0].fill_between(zs, np.exp(fz_log_mean - 3*fz_log_std), np.exp(fz_log_mean + 3*fz_log_std), alpha=alpha, color="C0")
-    axes[0].fill_between(zs, np.exp(fz_log_mean - 2*fz_log_std), np.exp(fz_log_mean + 2*fz_log_std), alpha=alpha, color="C0")
-    axes[0].fill_between(zs, np.exp(fz_log_mean - fz_log_std), np.exp(fz_log_mean + fz_log_std), alpha=alpha, color="C0")
+    axes[0].fill_between(zs, np.exp(fz_log_mean - sigma_99_7*fz_log_std), np.exp(fz_log_mean + sigma_99_7*fz_log_std), alpha=alpha, color="C0")
+    axes[0].fill_between(zs, np.exp(fz_log_mean - sigma_95_4*fz_log_std), np.exp(fz_log_mean + sigma_95_4*fz_log_std), alpha=alpha, color="C0")
+    axes[0].fill_between(zs, np.exp(fz_log_mean - sigma_68_3*fz_log_std), np.exp(fz_log_mean + sigma_68_3*fz_log_std), alpha=alpha, color="C0")
     axes[0].plot(zs, fz_mean, c="C0", ls="--")
     axes[0].set_ylabel(r'$\nu(z)$')
     axes[0].set_xlabel(r'$z$ [pc]')
