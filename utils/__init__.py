@@ -12,3 +12,4 @@ from .plot_mcmc import plot_chain, plot_corner, plot_fit, calculate_probs
 from .mcmc import get_data, get_params, run_mcmc, run_calculate_bic_aic
 from .program import Program
 from .hdi import hdi, find_max
+from .interpolation_function import simple, standard, inv_simple, inv_standard
