@@ -9,12 +9,10 @@ undefined_Gravity/**/*.txt
 undefined_Gravity/logs
 5_mcmc/**/*.pdf
 5_mcmc/**/*.txt
-5_mcmc/**/*.sh
 *.pdf
 *.png
 *.pkl
 *.pth
-*.sh
 4_Gravity/logs
 4_Gravity/dddm-0
 4_Gravity/*.txt

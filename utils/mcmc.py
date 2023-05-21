@@ -6,7 +6,7 @@ from time import time
 from os.path import join
 from scipy.stats import median_abs_deviation as mad
 from scipy.integrate import simps
-from .rust_utils import calculate_probs
+from .plot_mcmc import calculate_probs
 from .style import style
 from datetime import datetime
 
@@ -124,7 +124,7 @@ def get_initial_position(labs, chain=None, indexes=None):
     scales = np.array(list(scales.values()))
     return locs, scales
 
-def run_mcmc(func, labs, indexes, data, index, output_path, steps0=1000, steps=2000, burn=500, model=2):
+def run_mcmc(func, labs, indexes, data, output_path, steps0=1000, steps=2000, burn=500, model=2):
     # get data
     zdata, wdata = data
     # initial position
@@ -154,7 +154,7 @@ def run_mcmc(func, labs, indexes, data, index, output_path, steps0=1000, steps=2
     chain = func.mcmc(steps, nwalkers, p0, zdata, wdata, locs,
                       scales, dz=1, verbose=True, parallel=True)
     print(time() - t0, "s")
-    np.save(join(output_path, f'chain-{model}-{index}.npy'), chain)
+    np.save(output_path, chain)
 
 
 def run_calculate_bic_aic(func, labs, data, index, chain, output_file, model=2):
