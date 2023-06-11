@@ -3,7 +3,7 @@ from scipy import integrate
 from scipy.optimize import fmin
 
 # Highest density interval of {perc}% of normalized distribution
-def hdi(func, perc=0.68, res=1E3, min=0.0, max=1.0):
+def hdi(func_un, perc=0.68, res=1E3, min=0.0, max=1.0):
   r""" Highest density interval of {perc}% of normalized distribution
   perc: percentile
   res: resolution, number of sampling from distributiion
@@ -11,10 +11,13 @@ def hdi(func, perc=0.68, res=1E3, min=0.0, max=1.0):
   max: max x-value
   """
   x = np.linspace(min, max, int(res))
+  # normalize func to 1
+  area, _ = integrate.quad(func_un, a=min, b=max)
+  func = lambda x: func_un(x)/area
   y = func(x)
   upper = np.max(y)*0.99
   below = 0
-  for k in range(10):
+  for _ in range(10):
     ys = np.linspace(upper, below, 10)
     for i in range(10):
       mask = y > ys[i]

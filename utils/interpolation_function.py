@@ -1,12 +1,12 @@
 import numpy as np
 
-
+ 
 # interpolation function
 def simple(x):
     return x/(1+x)
 
-def standard(mu):
-    return mu/np.sqrt(1+mu**2)
+def standard(x):
+    return x/np.sqrt(1+x**2)
 
 
 # invers interpolation function

@@ -15,6 +15,7 @@ from utils import (get_data, get_params, run_mcmc as mcmc,
 # initilization
 parser = argparse.ArgumentParser(description='Run mcmc in seperate process')
 
+
 def validate_args(args):
     i = args.data
     try:
@@ -22,6 +23,7 @@ def validate_args(args):
     except:
         raise ValueError('data must be integer')
     return i
+
 
 def timestamp_decorator(func):
     def wrapper(*args, **kwargs):
@@ -33,10 +35,13 @@ def timestamp_decorator(func):
             f"[{datetime.now()}] Finished {func.__name__} in {np.round(time() - t0, 2)} seconds")
         return result
     return wrapper
-    
+
+
 default_props = {
     'steps0': 1_500,
-    'steps': 20_000,   
+    'burn0': 500,
+    'steps': 20_000,
+    'burn': 5_000,
     'labels': None,
     'labs': None,
     'indexes': None,
@@ -52,9 +57,10 @@ class Program:
         self.props = default_props
         self.func = func
         print('Program initilized')
+
     def add(self, key, val):
         self.props[key] = val
-        
+
     def ready(self):
         return None not in self.props.values()
 
@@ -67,41 +73,46 @@ class Program:
         print(f'\tzpath: {zpath}')
         print(f'\twpath: {wpath}')
         data = get_data(zpath, wpath, i)
-        output_path = join(self.props['root_path'], 'data', f'chain-2-{i}.npy')
-        mcmc(self.func, self.props['labs'], self.props['indexes'], 
-             data, steps0=self.props['steps0'],
-             steps=self.props['steps'], output_path=output_path)
+        output_path = join(self.props['root_path'],
+                           'data', f'chain-{i:02d}.npy')
+        mcmc(self.func, self.props['labs'], self.props['indexes'],
+             data, steps0=self.props['steps0'], burn0=self.props['burn0'],
+             steps=self.props['steps'], burn=self.props['burn'],
+             output_path=output_path)
         print(f'\tChain saved to {output_path}')
-
 
     @timestamp_decorator
     def plot_chain(self, args):
         i = validate_args(args)
-        chain_path = join(self.props['root_path'], 'data', f'chain-2-{i}.npy')
+        chain_path = join(self.props['root_path'],
+                          'data', f'chain-{i:02d}.npy')
         chain = np.load(chain_path)
         print(f'\tLoading chain from\n\t{chain_path}')
-        output_path = join(self.props['root_path'], 'plots', f'chain-2-{i}.pdf')
+        output_path = join(self.props['root_path'],
+                           'plots', f'chain-{i:02d}.pdf')
         params = get_params(chain, self.props['indexes'], self.props['labs'])
         pchain(params, self.props['labels'], figsize=(10, 10),
-            path=output_path)
+               path=output_path, alpha=0.01)
         print(f'\tChain plot saved to {output_path}')
-
 
     @timestamp_decorator
     def plot_corner(self, args):
         i = validate_args(args)
-        chain_path = join(self.props['root_path'], 'data', f'chain-2-{i}.npy')
+        chain_path = join(self.props['root_path'],
+                          'data', f'chain-{i:02d}.npy')
         chain = np.load(chain_path)
         print(f'\tLoading chain from\n\t{chain_path}')
-        output_path = join(self.props['root_path'], 'plots', f'corner-2-{i}.pdf')
+        output_path = join(self.props['root_path'],
+                           'plots', f'corner-{i:02d}.pdf')
         params = get_params(chain, self.props['indexes'], self.props['labs'])
         pcorner(params, self.props['labels'], path=output_path)
         print(f'\tCorner plot saved to {output_path}')
 
     @timestamp_decorator
-    def plot_fit(self,args):
+    def plot_fit(self, args):
         i = validate_args(args)
-        chain_path = join(self.props['root_path'], 'data', f'chain-2-{i}.npy')
+        chain_path = join(self.props['root_path'],
+                          'data', f'chain-{i:02d}.npy')
         chain = np.load(chain_path)
         print(f'\tLoading chain from\n\t{chain_path}')
         zpath = self.props['zpath']
@@ -109,21 +120,24 @@ class Program:
         data = get_data(zpath, wpath, i)
         ndim = chain.shape[2]
         zdata, wdata = data
-        output_path = join(self.props['root_path'], 'plots', f'fit-2-{i}.pdf')
+        output_path = join(self.props['root_path'],
+                           'plots', f'fit-{i:02d}.pdf')
         pfit(self.func, zdata, wdata, chain, ndim, path=output_path)
         print(f'\tFit plot saved to {output_path}')
 
     @timestamp_decorator
     def calculate_prob(self, args):
         i = validate_args(args)
-        chain_path = join(self.props['root_path'], 'data', f'chain-2-{i}.npy')
+        chain_path = join(self.props['root_path'],
+                          'data', f'chain-{i:02d}.npy')
         chain = np.load(chain_path)
         print(f'\tLoading chain from\n\t{chain_path}')
         output_file = join(self.props['root_path'], f'stats.txt')
         zpath = self.props['zpath']
         wpath = self.props['wpath']
         data = get_data(zpath, wpath, i)
-        run_calculate_bic_aic(self.func, self.props['labs'], data, i, chain, output_file)
+        run_calculate_bic_aic(
+            self.func, self.props['labs'], data, i, chain, output_file)
         print(f'\tProbabilities saved to {output_file}')
 
     @timestamp_decorator
@@ -134,10 +148,9 @@ class Program:
         self.plot_fit(args)
         self.calculate_prob(args)
 
-
     def main(self):
         if not self.ready():
-            for k,v in self.props.items():
+            for k, v in self.props.items():
                 if v is None:
                     print(f'{k} is not set')
             raise ValueError('Program not ready yet')
@@ -146,7 +159,8 @@ class Program:
 
         parser.add_argument(
             '-d', '--data', help='data index (check data folder)', required=True)
-        subparsers = parser.add_subparsers(title='Subcommands', dest='subcommand')
+        subparsers = parser.add_subparsers(
+            title='Subcommands', dest='subcommand')
 
         run_mcmc_parser = subparsers.add_parser(
             'run_mcmc', help='run_mcmc program')

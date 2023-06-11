@@ -7,14 +7,12 @@ rust/*
 2_Cleaning/**/*.txt
 undefined_Gravity/**/*.txt
 undefined_Gravity/logs
-5_mcmc/**/*.pdf
-5_mcmc/**/*.txt
+6_mcmc/**/*.pdf
+6_mcmc/**/*.txt
 *.pdf
 *.png
 *.pkl
 *.pth
-4_Gravity/logs
-4_Gravity/dddm-0
-4_Gravity/*.txt
 *.jpeg
 .ipynb_checkpoints
+tes.ipynb
