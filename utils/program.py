@@ -4,14 +4,12 @@ import pathlib
 from os.path import abspath, join
 from time import time
 import argparse
-import numpy as np
+import numpy as np 
 import sys
 current = pathlib.Path(__file__).parent.resolve()
 root_dir = abspath(join(current, '..'))
 sys.path.append(root_dir)
-from utils import (get_data, get_params, run_mcmc as mcmc,
-                   run_calculate_bic_aic, plot_chain as pchain,
-                   plot_corner as pcorner, plot_fit as pfit)
+import utils
 # initilization
 parser = argparse.ArgumentParser(description='Run mcmc in seperate process')
 
@@ -38,18 +36,21 @@ def timestamp_decorator(func):
 
 
 default_props = {
-    'steps0': 1_500,
-    'burn0': 500,
-    'steps': 20_000,
-    'burn': 5_000,
+    'step0': 1_500,
+    'step': 20_000,
+    'it': 2,
+    'thin': 100,
     'labels': None,
     'labs': None,
     'indexes': None,
     'root_path': None,
-    'zpath': None,
-    'wpath': None,
+    'z_dir_path': None,
+    'phi_dir_path': None,
+    'alpha': 0.01,
+    'model': None
 }
 
+models = ['DM', 'DDDM', 'no']
 
 class Program:
     def __init__(self, func):
@@ -59,6 +60,8 @@ class Program:
         print('Program initilized')
 
     def add(self, key, val):
+        if key == "model" and not val in models:
+            raise ValueError("model must be 'DM', 'DDDM', or 'no'")  
         self.props[key] = val
 
     def ready(self):
@@ -67,18 +70,25 @@ class Program:
     @timestamp_decorator
     def run_mcmc(self, args):
         i = validate_args(args)
-        zpath = self.props['zpath']
-        wpath = self.props['wpath']
+        z_dir_path = self.props['z_dir_path']
+        phi_dir_path = self.props['phi_dir_path']
         print(f'\tLoading data for from')
-        print(f'\tzpath: {zpath}')
-        print(f'\twpath: {wpath}')
-        data = get_data(zpath, wpath, i)
+        print(f'\tz_dir_path: {z_dir_path}')
+        print(f'\tz_dir_path: {phi_dir_path}')
+        zdata = utils.get_data(z_dir_path, i, "z")
         output_path = join(self.props['root_path'],
                            'data', f'chain-{i:02d}.npy')
-        mcmc(self.func, self.props['labs'], self.props['indexes'],
-             data, steps0=self.props['steps0'], burn0=self.props['burn0'],
-             steps=self.props['steps'], burn=self.props['burn'],
-             output_path=output_path)
+        result = (utils.mcmc() 
+                          .index(i)
+                          .z_dir_path(z_dir_path)
+                          .phi_dir_path(phi_dir_path)
+                          .model("DM")
+                          .step0(self.props['step0'])
+                          .step(self.props['step'])
+                          .thin(self.props['thin'])
+                          .run(self.props['it'])
+                 )
+        np.save(output_path, result['chain'])
         print(f'\tChain saved to {output_path}')
 
     @timestamp_decorator
@@ -90,9 +100,14 @@ class Program:
         print(f'\tLoading chain from\n\t{chain_path}')
         output_path = join(self.props['root_path'],
                            'plots', f'chain-{i:02d}.pdf')
-        params = get_params(chain, self.props['indexes'], self.props['labs'])
-        pchain(params, self.props['labels'], figsize=(10, 10),
-               path=output_path, alpha=0.01)
+        params = utils.get_params(chain, self.props['indexes'], self.props['labs'])
+        (utils.plot_chain()
+          .params(params)
+          .labels(self.props['labels'])
+          .alpha(self.props['alpha'])
+          .path(output_path)
+          .run()
+        )
         print(f'\tChain plot saved to {output_path}')
 
     @timestamp_decorator
@@ -104,8 +119,13 @@ class Program:
         print(f'\tLoading chain from\n\t{chain_path}')
         output_path = join(self.props['root_path'],
                            'plots', f'corner-{i:02d}.pdf')
-        params = get_params(chain, self.props['indexes'], self.props['labs'])
-        pcorner(params, self.props['labels'], path=output_path)
+        params = utils.get_params(chain, self.props['indexes'], self.props['labs'])
+        (utils.plot_corner() 
+          .params(params) 
+          .labels(self.props['labels']) 
+          .path(output_path)
+          .run()
+        )
         print(f'\tCorner plot saved to {output_path}')
 
     @timestamp_decorator
@@ -115,14 +135,23 @@ class Program:
                           'data', f'chain-{i:02d}.npy')
         chain = np.load(chain_path)
         print(f'\tLoading chain from\n\t{chain_path}')
-        zpath = self.props['zpath']
-        wpath = self.props['wpath']
-        data = get_data(zpath, wpath, i)
         ndim = chain.shape[2]
-        zdata, wdata = data
+        flat_sample = chain.reshape((-1, ndim))
+        zdata = utils.get_data(self.props['z_dir_path'], i, "z")
+        zmid = zdata[0]
+        zmax = np.max(np.abs(zmid))*2
         output_path = join(self.props['root_path'],
                            'plots', f'fit-{i:02d}.pdf')
-        pfit(self.func, zdata, wdata, chain, ndim, path=output_path)
+        (utils.plot_fit_z()
+          .index(i)
+          .z_dir_path(self.props['z_dir_path'])
+          .phi_dir_path(self.props['phi_dir_path']) 
+          .flat(flat_sample)
+          .zmax(zmax)
+          .model(self.props['model'])
+          .path(output_path)
+          .run()
+        )
         print(f'\tFit plot saved to {output_path}')
 
     @timestamp_decorator
@@ -133,11 +162,17 @@ class Program:
         chain = np.load(chain_path)
         print(f'\tLoading chain from\n\t{chain_path}')
         output_file = join(self.props['root_path'], f'stats.txt')
-        zpath = self.props['zpath']
-        wpath = self.props['wpath']
-        data = get_data(zpath, wpath, i)
-        run_calculate_bic_aic(
-            self.func, self.props['labs'], data, i, chain, output_file)
+        ndim = chain.shape[2]
+        flat_sample = chain.reshape((-1, ndim))
+        (utils.calculate_prob()
+          .index(i)
+          .z_dir_path(self.props['z_dir_path'])
+          .phi_dir_path(self.props['phi_dir_path'])
+          .model(self.props['model'])
+          .flat(flat_sample) 
+          .path(output_file) 
+          .run()
+        )
         print(f'\tProbabilities saved to {output_file}')
 
     @timestamp_decorator

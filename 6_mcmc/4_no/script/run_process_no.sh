@@ -1,5 +1,5 @@
 #!/bin/bash
-for ((i=0; i<13; i++))
+for ((i=0; i<12; i++))
 do
     current_time=$(date +"%Y-%m-%dT%H:%M:%S")
     echo "Running $i at $current_time"

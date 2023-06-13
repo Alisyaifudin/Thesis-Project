@@ -9,22 +9,23 @@ sys.path.append(root_dir)
 from utils import Program
 # initilization
 labels = [r'$\rho_b\times 10^2$', r'$\rho_{\textup{DM}}\times 10^2$', r'$\log \nu_0$', 
-          r'$R\times 10^3$', r'$z_{\odot}$', r'$w_0$', 
-          r'$\log \sigma_{w}$', r'$q_{\sigma,w}$', r'$\log a$', r'$q_a$']
-labs = ['rhob', 'rhoDM', 'log_nu0', 'R', 'zsun', 'w0', 'log_sigmaw', 'q_sigmaw', 'log_a', 'q_a']
+          r'$R\times 10^3$', r'$z_{\odot}$']
+labs = ['rhob', 'rhoDM', 'log_nu0', 'R', 'zsun']
 root_data_path = join(root_dir, 'Data')
 
 default_props = {
-    'steps0': 1_500,
-    'burn0': 500,
-    'steps': 22_000,
-    'burn': 2_000,  
+    'step0': 300,
+    'step': 20_000,
+    'it': 5,
+    'thin': 200,
     'labels': labels,
     'labs': labs,
     'indexes': [12] + list(range(24, len(labs)+23)),
-    'root_path': join(root_data_path, 'MCMC', 'dm', 'comp'),
-    'zpath': join(root_data_path, 'MCMC', 'dm_mock', 'mock', 'comp'),
-    'wpath': join(root_data_path, 'MCMC', 'dm_mock', 'mock', 'comp'),
+    'root_path': join(root_data_path, 'MCMC-no', 'dm', 'mock'),
+    'z_dir_path': join(root_data_path, 'MCMC-no', 'mock', 'data', 'mock'),
+    'phi_dir_path': join(root_data_path, 'MCMC-no', 'mock', 'data', 'mock'),
+    'alpha': 0.01,
+    'model': "DM"
 }
 
 if __name__ == '__main__':
