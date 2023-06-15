@@ -1,4 +1,5 @@
 from datetime import datetime
+from glob import glob
 import sys
 import pathlib
 from os.path import abspath, join
@@ -9,7 +10,8 @@ import sys
 current = pathlib.Path(__file__).parent.resolve()
 root_dir = abspath(join(current, '..'))
 sys.path.append(root_dir)
-import utils
+from .mcmc import mcmc, get_data, Model, get_params, generate_init, calculate_prob
+from .plot_mcmc import plot_chain, plot_corner, plot_fit
 # initilization
 parser = argparse.ArgumentParser(description='Run mcmc in seperate process')
 
@@ -36,32 +38,33 @@ def timestamp_decorator(func):
 
 
 default_props = {
-    'step0': 1_500,
-    'step': 20_000,
-    'it': 2,
-    'thin': 100,
-    'labels': None,
-    'labs': None,
-    'indexes': None,
-    'root_path': None,
+    'burn': 1000,
+    'step0': 500,
+    'step': 2000,
+    'it': 3,
+    'thin': 20,
+    'm': 10,
+    'log': True,
+    'result_path': None,
     'z_dir_path': None,
-    'phi_dir_path': None,
+    'w_dir_path': None,
     'alpha': 0.01,
-    'model': None
+    'model': None,
+    'nsample': 5_000,
 }
 
-models = ['DM', 'DDDM', 'no']
+bs =  {
+    'DM': 5,
+    'DDDM': 7,
+    'NO': 4
+}
 
 class Program:
-    def __init__(self, func):
-        self._ready = False
+    def __init__(self):
         self.props = default_props
-        self.func = func
         print('Program initilized')
 
     def add(self, key, val):
-        if key == "model" and not val in models:
-            raise ValueError("model must be 'DM', 'DDDM', or 'no'")  
         self.props[key] = val
 
     def ready(self):
@@ -69,109 +72,151 @@ class Program:
 
     @timestamp_decorator
     def run_mcmc(self, args):
-        i = validate_args(args)
+        index = validate_args(args)
         z_dir_path = self.props['z_dir_path']
-        phi_dir_path = self.props['phi_dir_path']
-        print(f'\tLoading data for from')
-        print(f'\tz_dir_path: {z_dir_path}')
-        print(f'\tz_dir_path: {phi_dir_path}')
-        zdata = utils.get_data(z_dir_path, i, "z")
-        output_path = join(self.props['root_path'],
-                           'data', f'chain-{i:02d}.npy')
-        result = (utils.mcmc() 
-                          .index(i)
-                          .z_dir_path(z_dir_path)
-                          .phi_dir_path(phi_dir_path)
-                          .model("DM")
-                          .step0(self.props['step0'])
-                          .step(self.props['step'])
-                          .thin(self.props['thin'])
-                          .run(self.props['it'])
-                 )
+        z_files = glob(join(z_dir_path, "z*"))
+        z_files.sort()
+        w_dir_path = self.props['w_dir_path']
+        w_files = glob(join(w_dir_path, "w*"))
+        w_files.sort()
+        name = z_files[index].split("/")[-1].replace(".hdf5", "").replace("z_", "")
+        w_dir_path = self.props['w_dir_path']
+        output_path = join(self.props['result_path'],
+                           'data', f'chain-{name}.npy')
+        result = mcmc(
+            model=self.props['model'],
+            z_path=z_files[index],
+            w_path=w_files[index],
+            step0=self.props['step0'],
+            step=self.props['step'],
+            burn=self.props['burn'],
+            it=self.props['it'],
+            thin=self.props['thin'],
+            m=self.props['m'],
+        )
         np.save(output_path, result['chain'])
         print(f'\tChain saved to {output_path}')
 
     @timestamp_decorator
     def plot_chain(self, args):
-        i = validate_args(args)
-        chain_path = join(self.props['root_path'],
-                          'data', f'chain-{i:02d}.npy')
+        index = validate_args(args)
+        z_dir_path = self.props['z_dir_path']
+        z_files = glob(join(z_dir_path, "z*"))
+        z_files.sort()
+        name = z_files[index].split("/")[-1].replace(".hdf5", "").replace("z_", "")
+        chain_path = join(self.props['result_path'],
+                          'data', f'chain-{name}.npy')
         chain = np.load(chain_path)
         print(f'\tLoading chain from\n\t{chain_path}')
-        output_path = join(self.props['root_path'],
-                           'plots', f'chain-{i:02d}.pdf')
-        params = utils.get_params(chain, self.props['indexes'], self.props['labs'])
-        (utils.plot_chain()
-          .params(params)
-          .labels(self.props['labels'])
-          .alpha(self.props['alpha'])
-          .path(output_path)
-          .run()
+        output_path = join(self.props['result_path'],
+                           'plots', f'chain-{name}.pdf')
+        init = generate_init(self.props['model'])
+        indexes = init['indexes']
+        labs = init['labs']
+        labels = init['labels']
+        params = get_params(chain, indexes, labs)
+
+        plot_chain(
+            params=params,
+            labels=labels,
+            alpha=0.01, 
+            path=output_path
         )
         print(f'\tChain plot saved to {output_path}')
 
     @timestamp_decorator
     def plot_corner(self, args):
-        i = validate_args(args)
-        chain_path = join(self.props['root_path'],
-                          'data', f'chain-{i:02d}.npy')
+        index = validate_args(args)
+        z_dir_path = self.props['z_dir_path']
+        z_files = glob(join(z_dir_path, "z*"))
+        z_files.sort()
+        name = z_files[index].split("/")[-1].replace(".hdf5", "").replace("z_", "")
+        chain_path = join(self.props['result_path'],
+                          'data', f'chain-{name}.npy')
         chain = np.load(chain_path)
         print(f'\tLoading chain from\n\t{chain_path}')
-        output_path = join(self.props['root_path'],
-                           'plots', f'corner-{i:02d}.pdf')
-        params = utils.get_params(chain, self.props['indexes'], self.props['labs'])
-        (utils.plot_corner() 
-          .params(params) 
-          .labels(self.props['labels']) 
-          .path(output_path)
-          .run()
+        output_z_path = join(self.props['result_path'],
+                           'plots', f'corner-z-{name}.pdf')
+        output_w_path = join(self.props['result_path'],
+                           'plots', f'corner-w-{name}.pdf')
+        init = generate_init(self.props['model'])
+        indexes = init['indexes']
+        labs = init['labs']
+        labels = init['labels']
+        params = get_params(chain, indexes, labs)
+        b = bs[self.props['model'].value]
+        # z
+        plot_corner(
+            params=params[:,:,:b],
+            labels=labels[:b],
+            path=output_z_path
         )
-        print(f'\tCorner plot saved to {output_path}')
+        # w
+        plot_corner(
+            params=params[:,:,b:-1],
+            labels=labels[b:-1],
+            path=output_w_path
+        )
+        print(f'\tCorner plot saved to {output_z_path} and {output_w_path}')
 
     @timestamp_decorator
     def plot_fit(self, args):
-        i = validate_args(args)
-        chain_path = join(self.props['root_path'],
-                          'data', f'chain-{i:02d}.npy')
+        index = validate_args(args)
+        z_dir_path = self.props['z_dir_path']
+        z_files = glob(join(z_dir_path, "z*"))
+        z_files.sort()
+        w_dir_path = self.props['w_dir_path']
+        w_files = glob(join(w_dir_path, "w*"))
+        w_files.sort()
+        name = z_files[index].split("/")[-1].replace(".hdf5", "").replace("z_", "")
+        chain_path = join(self.props['result_path'],
+                          'data', f'chain-{name}.npy')
+        output_path = join(self.props['result_path'],
+                           'plots', f'fit-{name}.pdf')
         chain = np.load(chain_path)
         print(f'\tLoading chain from\n\t{chain_path}')
         ndim = chain.shape[2]
-        flat_sample = chain.reshape((-1, ndim))
-        zdata = utils.get_data(self.props['z_dir_path'], i, "z")
-        zmid = zdata[0]
-        zmax = np.max(np.abs(zmid))*2
-        output_path = join(self.props['root_path'],
-                           'plots', f'fit-{i:02d}.pdf')
-        (utils.plot_fit_z()
-          .index(i)
-          .z_dir_path(self.props['z_dir_path'])
-          .phi_dir_path(self.props['phi_dir_path']) 
-          .flat(flat_sample)
-          .zmax(zmax)
-          .model(self.props['model'])
-          .path(output_path)
-          .run()
+        flat_chain = chain.reshape((-1, ndim))
+
+        plot_fit(
+            model=self.props['model'],
+            flat_chain=flat_chain,
+            z_path=z_files[index],
+            w_path=w_files[index],
+            log=self.props['log'],
+            nsample=self.props['nsample'],
+            res=100,
+            path=output_path
         )
         print(f'\tFit plot saved to {output_path}')
 
     @timestamp_decorator
     def calculate_prob(self, args):
-        i = validate_args(args)
-        chain_path = join(self.props['root_path'],
-                          'data', f'chain-{i:02d}.npy')
+        index = validate_args(args)
+        z_dir_path = self.props['z_dir_path']
+        z_files = glob(join(z_dir_path, "z*"))
+        z_files.sort()
+        w_dir_path = self.props['w_dir_path']
+        w_files = glob(join(w_dir_path, "w*"))
+        w_files.sort()
+        name = z_files[index].split("/")[-1].replace(".hdf5", "").replace("z_", "")
+        chain_path = join(self.props['result_path'],
+                          'data', f'chain-{name}.npy')
         chain = np.load(chain_path)
         print(f'\tLoading chain from\n\t{chain_path}')
-        output_file = join(self.props['root_path'], f'stats.txt')
+        output_file = join(self.props['result_path'], f'stats.txt')
         ndim = chain.shape[2]
-        flat_sample = chain.reshape((-1, ndim))
-        (utils.calculate_prob()
-          .index(i)
-          .z_dir_path(self.props['z_dir_path'])
-          .phi_dir_path(self.props['phi_dir_path'])
-          .model(self.props['model'])
-          .flat(flat_sample) 
-          .path(output_file) 
-          .run()
+        flat_chain = chain.reshape((-1, ndim))
+        zdata = get_data(z_files[index])
+        wdata = get_data(w_files[index])
+
+        calculate_prob(
+            model=self.props['model'], 
+            zdata=zdata,
+            wdata=wdata,
+            flat_chain=flat_chain,
+            name=name,
+            path=output_file,
         )
         print(f'\tProbabilities saved to {output_file}')
 
@@ -222,4 +267,9 @@ class Program:
         all_parser.set_defaults(func=self.all)
 
         args = parser.parse_args()
-        args.func(args)
+
+        try:
+            args.func(args)
+        except AttributeError:
+            parser.error("You need to choose a subcommand: run_mcmc, plot_chain, plot_corner, plot_fit, calculate_prob, all")
+        

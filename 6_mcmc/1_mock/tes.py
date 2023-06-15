@@ -1,60 +1,48 @@
 from matplotlib import pyplot as plt
 import numpy as np
-from time import time
-from os.path import abspath, join
+from hammer import Model
+from os.path import join, abspath, pardir
 import sys
-from glob import glob
 import vaex
-from tqdm import tqdm
-from hammer import vel
-from scipy.stats import median_abs_deviation as mad_func
-root_dir = abspath(join('..', '..'))
-root_data_dir = join(root_dir, 'Data')
-sys.path.append(root_dir)
-from utils import concat, get_data, generate_init
+root_dir = abspath(join(pardir,pardir))
+if sys.path is not root_dir:
+    sys.path.append(root_dir)
 
-root_data_dir = abspath(join(root_dir, "Data"))
+from utils import concat, style
+style()
+root_data_dir = join(root_dir, 'Data')
 baryon_dir = join(root_data_dir, "Baryon")
+# load baryons components
 df_baryon = vaex.open(join(baryon_dir, "baryon.hdf5"))
 
-# init
 # Baryonic density, check table 1 from this https://journals.aps.org/prl/pdf/10.1103/PhysRevLett.121.081101
 rhob = df_baryon["rho"].to_numpy()  # Msun/pc^3
-sigmaz = df_baryon["sigma_z"].to_numpy()  # km/s
-rhoDM = 0.02
+sigmaz = df_baryon["sigma_z"].to_numpy() # km/s
+# dark matter density
+rhoDM = 0.016
+# normalisation of vertical density profile
 log_nu0 = 0
+# the rotation curve term
 R = 3.4E-3
+# the solar offset
 zsun = 30
 
-theta = concat(rhob, sigmaz, rhoDM, log_nu0, R, zsun)
+w0 = -7
+sigmaw1 = 5
+sigmaw2 = 10
+log_sigmaw = np.log(sigmaw1)
+q_sigmaw = sigmaw1/sigmaw2
+a1 = 1
+a2 = 0.1
+log_a = np.log(a1)
+q_a = a2/a1
+log_phi_b = 5
 
-w0 = -7.
-sigma1 = 10.
-sigma2 = 15.
-log_sigmaw1 = np.log(sigma1)
-log_sigmaw2 = np.log(sigma2)
+theta = concat(rhob, sigmaz, rhoDM, log_nu0, R, zsun, w0, log_sigmaw, q_sigmaw, log_a, q_a, log_phi_b)
 
-a1 = 1.
-a2 = 0.2
-log_a1 = np.log(a1)
-log_a2 = np.log(a2)
-psi = concat(w0, log_sigmaw1, log_sigmaw2, log_a1, log_a2)
+# integration limits
+z_start = 0
+z_end = 200
 
-zpath = join(root_data_dir, 'MCMC-no', 'mock', 'data', 'z')
-wpath = join(root_data_dir, 'MCMC-no', 'mock', 'data', 'z')
-ind = 0
-zdata, wdata = get_data(zpath, wpath, ind)
-files = glob(join(zpath, "z*"))
-files.sort()
-name_pred = files[ind].split(
-    "/")[-1].split(".")[0].replace("z", "pred") + ".npy"
-name_phi = files[ind].split("/")[-1].split(".")[0].replace("z", "phi") + ".npy"
-
-psi, locs, scales, labels, labs = generate_init("kin")
-ndim = len(labs)
-nwalker = 10*ndim
-p0 = vel.generate_p0(nwalker, locs, scales)
-indexes = list(range(ndim))
-
-chain = vel.mcmc(50, p0, wdata, locs, scales, parallel=True, verbose=True)
-print(chain)
+dz = 1
+z, phi, Kz = Model.DM.solve_potential(theta, z_start, z_end, dz)
