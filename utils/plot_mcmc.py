@@ -1,13 +1,13 @@
-from typing import List
+from typing import List, Tuple
 from matplotlib import pyplot as plt
 from corner import corner
 from tqdm import tqdm
 import numpy as np
-import sys
 from .mcmc import get_data, Model, func_dict
+from scipy.stats import median_abs_deviation as mad
 import numpy as np
-from enum import Enum
 from hammer import Model as MCMC_Model
+from hammer import vel
 
 sigma_68 = 0.994458
 sigma_90 = 1.644854
@@ -15,13 +15,9 @@ sigma_95 = 1.959964
 
 
 def plot_chain(params: np.ndarray, labels: List[str], **options: dict):
-    """
-    Plot the chains of the parameters.
-
-    Parameters
-    ----------
-        params: `ndarray(shape=(nstep, nwalker, nparam))` (from `get_params`) \n
-        labels: `List[str]` \n
+    """required:
+            params: `ndarray(shape=(nstep, nwalker, nparam))` (from `get_params`) \n
+            labels: `List[str]` \n
         options:
             burn: `int` = 0 \n
             figsize: `Tuple[int, int]` = (10, 10) \n
@@ -145,6 +141,125 @@ def plot_fit(model: Model, flat_chain: np.ndarray, z_path: str, w_path: str, **o
                         np.exp(log_mean + sigma_95*log_std).max()*1.5)
         else:
             ax.set_ylim(0)
+    if path is not None:
+        fig.savefig(path, dpi=dpi)
+    plt.show()
+
+
+def plot_fit_z(model: Model, flat_chains: np.ndarray, zdata: Tuple[np.ndarray,np.ndarray,np.ndarray], psi: np.ndarray, **options: dict):
+    """required: 
+            model: `Model` = Model.DM \n
+            flat_chain: `ndarray(shape=(n_mcmc, nsample, nparam))`\n
+            zdata: `Tuple[np.ndarray,np.ndarray,np.ndarray]` = (zmid, znum, zerr) \n
+            psi: `np.ndarray(shape(n_mcmc, 30))` = psi \n
+        options:
+            res: `int` = 100 \n
+            nsample: `int` = 5_000 \n
+            figsize: `Tuple[int, int]` = (10, 10) \n
+            alpha: `float` = 0.1 \n
+            c: `str` = C0 \n
+            log: `bool` = False \n
+            dpi: `int` = 70 \n
+            path: `str` = None \n
+            fig_kw: `Dict` = All additional keyword arguments for `.pyplot.figure`.
+            """
+    res = options.get('res', 100)
+    nsample = options.get('nsample', 5_000)
+    figsize = options.get('figsize', (10, 6))
+    alpha = options.get('alpha', 0.1)
+    c = options.get('c', "C0")
+    log = options.get('log', False)
+    dpi = options.get('dpi', 70)
+    path = options.get('path', None)
+    fig_kw  = options.get('fig_kw', {})
+    func = func_dict.get(model.value, MCMC_Model.DM)
+    
+    zmid, znum, zerr = zdata
+    zs: np.ndarray[np.float64] = np.linspace(zmid.min()*1.1, zmid.max()*1.1, res)
+    log_fzs = np.empty((nsample, len(zs)))
+    for i in tqdm(range(nsample)):
+        psi_ind = np.random.randint(len(flat_chains))
+        ind = np.random.randint(flat_chains.shape[1])
+        theta = flat_chains[psi_ind, ind]
+        ind = np.random.randint(len(psi))
+        ps = psi[psi_ind]
+        log_fzs[i] = np.log(func.fz(zs, theta, ps))
+
+    fz_log_mean = np.median(log_fzs,axis=0)
+    fz_log_std = mad(log_fzs, axis=0)
+
+    fig, ax = plt.subplots(1, 1, figsize=figsize, **fig_kw)
+    ax.errorbar(zmid, znum, yerr=zerr, color='k',
+                alpha=1, capsize=2, fmt=".")
+    ax.plot(zs, np.exp(fz_log_mean), c=c, ls="--")
+    for sigma in [sigma_95, sigma_90, sigma_68]:
+        ax.fill_between(zs, np.exp(fz_log_mean - sigma*fz_log_std),
+                        np.exp(fz_log_mean + sigma*fz_log_std), alpha=alpha, color=c)
+    ax.set_ylabel(r'$f_0(z)$')
+    ax.set_xlabel(r'$z$ [km/s]')
+    ax.set_xlim(zs.min(), zs.max())
+    if log:
+        ax.set_yscale("log")
+        ax.set_ylim(np.exp(fz_log_mean - sigma_95*fz_log_std).min(),
+                    np.exp(fz_log_mean + sigma_95*fz_log_std).max()*1.5)
+    else:
+        ax.set_ylim(0)
+    if path is not None:
+        fig.savefig(path, dpi=dpi)
+    plt.show()
+
+def plot_fit_w(flat_chain: np.ndarray, wdata: Tuple[np.ndarray, np.ndarray, np.ndarray], **options: dict):
+    """required: 
+            flat_chain: `ndarray(shape=(nsample, nparam))`\n
+            wdata: `Tuple[np.ndarray, np.ndarray, np.ndarray]` (w data)\n
+        options:
+            res: `int` = 100 \n
+            nsample: `int` = 5_000 \n
+            figsize: `Tuple[int, int]` = (10, 10) \n
+            alpha: `float` = 0.1 \n
+            c: `str` = C0 \n
+            log: `bool` = False \n
+            dpi: `int` = 70 \n
+            path: `str` = None \n
+            fig_kw: `Dict` = All additional keyword arguments for `.pyplot.figure`.
+            """
+    res = options.get('res', 100)
+    nsample = options.get('nsample', 5_000)
+    figsize = options.get('figsize', (10, 6))
+    alpha = options.get('alpha', 0.1)
+    c = options.get('c', "C0")
+    log = options.get('log', False)
+    dpi = options.get('dpi', 70)
+    path = options.get('path', None)
+    fig_kw  = options.get('fig_kw', {})
+
+    wmid, wnum, werr = wdata
+    ws: np.ndarray[np.float64] = np.linspace(wmid.min()*1.1, wmid.max()*1.1, res)
+    log_fws = np.empty((nsample, len(ws)))
+    for i in tqdm(range(nsample)):
+        ind = np.random.randint(len(flat_chain))
+        theta = flat_chain[ind]
+        log_fws[i] = np.log(vel.fw(ws, theta))
+
+    fw_log_mean = log_fws.mean(axis=0)
+    fw_log_std = log_fws.std(axis=0)
+
+    fig, ax = plt.subplots(1, 1, figsize=figsize, **fig_kw)
+    ax.errorbar(wmid, wnum, yerr=werr, color='k',
+                alpha=1, capsize=2, fmt=".")
+    ax.plot(ws, np.exp(fw_log_mean), c=c, ls="--")
+    for sigma in [sigma_95, sigma_90, sigma_68]:
+        ax.fill_between(ws, np.exp(fw_log_mean - sigma*fw_log_std),
+                        np.exp(fw_log_mean + sigma*fw_log_std), alpha=alpha, color=c)
+    ax.set_ylabel(r'$f_0({})$'.format("w"))
+    ax.set_xlabel(r'${}$ [km/s]'.format("w"))
+    ax.set_xlim(ws.min(), ws.max())
+    if log:
+        ax.set_yscale("log")
+        ax.set_ylim(np.exp(fw_log_mean - sigma_95*fw_log_std).min(),
+                    np.exp(fw_log_mean + sigma_95*fw_log_std).max()*1.5)
+    else:
+        ax.set_ylim(0)
     if path is not None:
         fig.savefig(path, dpi=dpi)
     plt.show()

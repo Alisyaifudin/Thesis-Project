@@ -1,19 +1,30 @@
+from .plot_mcmc import plot_chain, plot_corner, plot_fit_z
+from .mcmc import mcmc_parallel_z, get_data, get_params, generate_init, calculate_prob
+from .concat import concat
 from datetime import datetime
 from glob import glob
-import sys
+from tqdm import tqdm
 import pathlib
 from os.path import abspath, join
 from time import time
 import argparse
-import numpy as np 
-import sys
+import numpy as np
+from hammer import Model as Model_MCMC
+import vaex
 current = pathlib.Path(__file__).parent.resolve()
 root_dir = abspath(join(current, '..'))
-sys.path.append(root_dir)
-from .mcmc import mcmc, get_data, Model, get_params, generate_init, calculate_prob
-from .plot_mcmc import plot_chain, plot_corner, plot_fit
+root_data_dir = join(root_dir, 'Data')
 # initilization
 parser = argparse.ArgumentParser(description='Run mcmc in seperate process')
+
+name = "Baryon"
+baryon_dir = join(root_data_dir, name)
+# load baryons components
+df_baryon = vaex.open(join(baryon_dir, "baryon.hdf5"))
+rhob_mean = df_baryon['rho'].to_numpy()
+rhob_err = df_baryon['e_rho'].to_numpy()
+sigmaz_mean = df_baryon['sigma_z'].to_numpy()
+sigmaz_err = df_baryon['e_sigma_z'].to_numpy()
 
 
 def validate_args(args):
@@ -24,6 +35,57 @@ def validate_args(args):
         raise ValueError('data must be integer')
     return i
 
+
+def get_pars(vel, mask):
+    nsample = vel[mask, 0].shape[0]
+    psi = np.empty((nsample, 30))
+
+    rhob = np.random.normal(rhob_mean, rhob_err, size=(nsample, 12))
+    sigmaz = np.random.normal(sigmaz_mean, sigmaz_err, size=(nsample, 12))
+    r = np.random.normal(3.4E-3, 0.6E-3, size=(nsample))
+    # random_indices = np.random.choice(np.arange(len(psi)), size=nsample, replace=False)
+    w0 = vel[mask, 0]
+    log_sigmaw = vel[mask, 1]
+    q_sigmaw = vel[mask, 2]
+    log_a = vel[mask, 3]
+    q_a = vel[mask, 4]
+
+    # combine
+    psi[:, :12] = rhob
+    psi[:, 12:24] = sigmaz
+    psi[:, 24] = r
+    psi[:, 25] = w0
+    psi[:, 26] = log_sigmaw
+    psi[:, 27] = q_sigmaw
+    psi[:, 28] = log_a
+    psi[:, 29] = q_a
+
+    kin = np.empty((nsample, 4))
+    kin[:, 0] = np.exp(log_sigmaw)
+    kin[:, 1] = kin[:, 0] / q_sigmaw
+    kin[:, 2] = np.exp(log_a)
+    kin[:, 3] = kin[:, 2] * q_a
+    atot = kin[:, 2] + kin[:, 3]
+    kin[:, 2] = kin[:, 2] / atot
+    kin[:, 3] = kin[:, 3] / atot
+    return psi, kin
+
+def get_pot_b(zdata, nsample, psi):
+    rhoDM = 0.
+    log_nu0 = 0.
+    zsun = 0.
+
+    theta = concat(rhoDM, log_nu0, zsun)
+    zmid = zdata[0]
+    zrange = zmid.max() - zmid.min()
+    z_b = np.linspace(zmid.min()-zrange/2, zmid.max()+zrange/2, 3000)
+
+    pot_b = np.empty((nsample, len(z_b)))
+
+    for i in tqdm(range(nsample)):
+        ps = psi[i]
+        pot_b[i] = Model_MCMC.DM.potential(z_b, theta, ps, dz=0.5)
+    return pot_b, z_b
 
 def timestamp_decorator(func):
     def wrapper(*args, **kwargs):
@@ -38,25 +100,20 @@ def timestamp_decorator(func):
 
 
 default_props = {
-    'burn': 1000,
-    'step0': 500,
-    'step': 2000,
-    'it': 3,
-    'thin': 20,
+    'burn': 100,
+    'step0': 100,
+    'step': 100,
+    'it': 1,
+    'thin': 2,
     'm': 10,
     'log': True,
     'result_path': None,
     'z_dir_path': None,
-    'w_dir_path': None,
+    'vel_dir_path': None,
     'alpha': 0.01,
     'model': None,
-    'nsample': 5_000,
-}
-
-bs =  {
-    'DM': 5,
-    'DDDM': 7,
-    'NO': 4
+    'nsample': 10_000,
+    'mask': range(0, 60_000, 100),
 }
 
 class Program:
@@ -76,17 +133,25 @@ class Program:
         z_dir_path = self.props['z_dir_path']
         z_files = glob(join(z_dir_path, "z*"))
         z_files.sort()
-        w_dir_path = self.props['w_dir_path']
-        w_files = glob(join(w_dir_path, "w*"))
-        w_files.sort()
-        name = z_files[index].split("/")[-1].replace(".hdf5", "").replace("z_", "")
-        w_dir_path = self.props['w_dir_path']
+        zdata = get_data(z_files[index])
+        vel_dir_path = self.props['vel_dir_path']
+        vel_files = glob(join(vel_dir_path, "*.npy"))
+        vel_files.sort()
+        vel = np.load(vel_files[index])
+        name = z_files[index].split(
+            "/")[-1].replace(".hdf5", "").replace("z_", "")
         output_path = join(self.props['result_path'],
                            'data', f'chain-{name}.npy')
-        result = mcmc(
+        
+        psi, kin = get_pars(vel, self.props['mask'])
+        nsample = len(self.props['mask'])
+        pot_b, z_b = get_pot_b(zdata, nsample, psi)
+        result = mcmc_parallel_z(
             model=self.props['model'],
             z_path=z_files[index],
-            w_path=w_files[index],
+            kin=kin,
+            pot_b=pot_b,
+            z_b=z_b,
             step0=self.props['step0'],
             step=self.props['step'],
             burn=self.props['burn'],
@@ -103,10 +168,13 @@ class Program:
         z_dir_path = self.props['z_dir_path']
         z_files = glob(join(z_dir_path, "z*"))
         z_files.sort()
-        name = z_files[index].split("/")[-1].replace(".hdf5", "").replace("z_", "")
+        name = z_files[index].split(
+            "/")[-1].replace(".hdf5", "").replace("z_", "")
         chain_path = join(self.props['result_path'],
                           'data', f'chain-{name}.npy')
-        chain = np.load(chain_path)
+        chains = np.load(chain_path)
+        _, step, _, ndim = chains.shape
+        chain = np.transpose(chains, (1, 0, 2, 3)).reshape((step, -1, ndim))
         print(f'\tLoading chain from\n\t{chain_path}')
         output_path = join(self.props['result_path'],
                            'plots', f'chain-{name}.pdf')
@@ -114,13 +182,15 @@ class Program:
         indexes = init['indexes']
         labs = init['labs']
         labels = init['labels']
+
         params = get_params(chain, indexes, labs)
 
         plot_chain(
-            params=params,
+            params=params[:, ::10],
             labels=labels,
-            alpha=0.01, 
-            path=output_path
+            alpha=0.01,
+            path=output_path,
+            figsize=(10, ndim*2)
         )
         print(f'\tChain plot saved to {output_path}')
 
@@ -130,34 +200,27 @@ class Program:
         z_dir_path = self.props['z_dir_path']
         z_files = glob(join(z_dir_path, "z*"))
         z_files.sort()
-        name = z_files[index].split("/")[-1].replace(".hdf5", "").replace("z_", "")
+        name = z_files[index].split(
+            "/")[-1].replace(".hdf5", "").replace("z_", "")
         chain_path = join(self.props['result_path'],
                           'data', f'chain-{name}.npy')
-        chain = np.load(chain_path)
+        chains = np.load(chain_path)
+        _, step, _, ndim = chains.shape
+        chain = np.transpose(chains, (1, 0, 2, 3)).reshape((step, -1, ndim))
         print(f'\tLoading chain from\n\t{chain_path}')
-        output_z_path = join(self.props['result_path'],
-                           'plots', f'corner-z-{name}.pdf')
-        output_w_path = join(self.props['result_path'],
-                           'plots', f'corner-w-{name}.pdf')
+        output_path = join(self.props['result_path'],
+                             'plots', f'corner-{name}.pdf')
         init = generate_init(self.props['model'])
         indexes = init['indexes']
         labs = init['labs']
         labels = init['labels']
         params = get_params(chain, indexes, labs)
-        b = bs[self.props['model'].value]
-        # z
         plot_corner(
-            params=params[:,:,:b],
-            labels=labels[:b],
-            path=output_z_path
+            params=params,
+            labels=labels,
+            path=output_path
         )
-        # w
-        plot_corner(
-            params=params[:,:,b:-1],
-            labels=labels[b:-1],
-            path=output_w_path
-        )
-        print(f'\tCorner plot saved to {output_z_path} and {output_w_path}')
+        print(f'\tCorner plot saved to {output_path}')
 
     @timestamp_decorator
     def plot_fit(self, args):
@@ -165,24 +228,31 @@ class Program:
         z_dir_path = self.props['z_dir_path']
         z_files = glob(join(z_dir_path, "z*"))
         z_files.sort()
-        w_dir_path = self.props['w_dir_path']
-        w_files = glob(join(w_dir_path, "w*"))
-        w_files.sort()
-        name = z_files[index].split("/")[-1].replace(".hdf5", "").replace("z_", "")
+        zdata = get_data(z_files[index])
+        vel_dir_path = self.props['vel_dir_path']
+        vel_files = glob(join(vel_dir_path, "*.npy"))
+        vel_files.sort()
+        vel = np.load(vel_files[index])
+        name = z_files[index].split(
+            "/")[-1].replace(".hdf5", "").replace("z_", "")
+        output_path = join(self.props['result_path'],
+                           'data', f'chain-{name}.npy')
+        
+        psi, _ = get_pars(vel, self.props['mask'])
         chain_path = join(self.props['result_path'],
                           'data', f'chain-{name}.npy')
         output_path = join(self.props['result_path'],
                            'plots', f'fit-{name}.pdf')
-        chain = np.load(chain_path)
+        chains = np.load(chain_path)
+        n_mcmc, _, _, ndim = chains.shape
+        flat_chains = chains.reshape(n_mcmc, -1, ndim)
         print(f'\tLoading chain from\n\t{chain_path}')
-        ndim = chain.shape[2]
-        flat_chain = chain.reshape((-1, ndim))
 
-        plot_fit(
+        plot_fit_z(
             model=self.props['model'],
-            flat_chain=flat_chain,
-            z_path=z_files[index],
-            w_path=w_files[index],
+            flat_chains=flat_chains,
+            zdata=zdata,
+            psi=psi,
             log=self.props['log'],
             nsample=self.props['nsample'],
             res=100,
@@ -196,28 +266,33 @@ class Program:
         z_dir_path = self.props['z_dir_path']
         z_files = glob(join(z_dir_path, "z*"))
         z_files.sort()
-        w_dir_path = self.props['w_dir_path']
-        w_files = glob(join(w_dir_path, "w*"))
-        w_files.sort()
-        name = z_files[index].split("/")[-1].replace(".hdf5", "").replace("z_", "")
+        zdata = get_data(z_files[index])
+        vel_dir_path = self.props['vel_dir_path']
+        vel_files = glob(join(vel_dir_path, "*.npy"))
+        vel_files.sort()
+        vel = np.load(vel_files[index])
+        psi, kin = get_pars(vel, self.props['mask'])
+        nsample = len(self.props['mask'])
+        pot_b, z_b = get_pot_b(zdata, nsample, psi)
+        name = z_files[index].split(
+            "/")[-1].replace(".hdf5", "").replace("z_", "")
         chain_path = join(self.props['result_path'],
                           'data', f'chain-{name}.npy')
-        chain = np.load(chain_path)
+        chains = np.load(chain_path)
+        n_mcmc, _, _, ndim = chains.shape
+        flat_chains = chains.reshape(n_mcmc, -1, ndim)
         print(f'\tLoading chain from\n\t{chain_path}')
-        output_file = join(self.props['result_path'], f'stats.txt')
-        ndim = chain.shape[2]
-        flat_chain = chain.reshape((-1, ndim))
-        zdata = get_data(z_files[index])
-        wdata = get_data(w_files[index])
+        output_file = join(self.props['result_path'], 'data', f'prob-{name}.hdf5')
 
-        calculate_prob(
-            model=self.props['model'], 
+        df = calculate_prob(
+            model=self.props['model'],
             zdata=zdata,
-            wdata=wdata,
-            flat_chain=flat_chain,
-            name=name,
-            path=output_file,
+            flat_chains=flat_chains,
+            kin=kin,
+            pot_b=pot_b,
+            z_b=z_b,
         )
+        df.export(output_file, progress=True)
         print(f'\tProbabilities saved to {output_file}')
 
     @timestamp_decorator
@@ -271,5 +346,5 @@ class Program:
         try:
             args.func(args)
         except AttributeError:
-            parser.error("You need to choose a subcommand: run_mcmc, plot_chain, plot_corner, plot_fit, calculate_prob, all")
-        
+            parser.error(
+                "You need to choose a subcommand: run_mcmc, plot_chain, plot_corner, plot_fit, calculate_prob, all")

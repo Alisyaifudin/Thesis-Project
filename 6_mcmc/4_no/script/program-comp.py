@@ -4,7 +4,7 @@ from os.path import abspath, join
 current = pathlib.Path(__file__).parent.resolve()
 root_dir = abspath(join(current, '..', '..', '..'))
 root_data_path = join(root_dir, 'Data')
-sys.path.append(root_dir)egg
+sys.path.append(root_dir)
 from utils import Program, Model
 
 default_props = {
