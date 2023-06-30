@@ -1,0 +1,15 @@
+Acceptance rate: 0.1779313725490196
+Acceptance rate: 0.17240196078431372
+Acceptance rate: 0.15680661764705883
+[2023-05-20 17:19:07.179045] Starting all
+[2023-05-20 17:19:07.179064] Starting run_mcmc
+reading data
+Generating initial position
+Running first MCMC, 1500 steps
+9.771045923233032 s
+Running second MCMC 1500 steps
+9.545860290527344 s
+Running long MCMC, 20000 steps
+130.35826539993286 s
+[2023-05-20 17:21:38.389908] Finished run_mcmc in 151.21 seconds
+[2023-05-20 17:21:38.390065] Starting plot_chain

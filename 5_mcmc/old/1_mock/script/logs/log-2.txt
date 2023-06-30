@@ -1,0 +1,261 @@
+Running z 0 at 2023-05-21T11:15:34
+Acceptance rate: 0.16997058823529412
+Acceptance rate: 0.16812745098039217
+Acceptance rate: 0.14337867647058825
+Program initilized
+[2023-05-21 11:15:38.587812] Starting all for index 0
+[2023-05-21 11:15:38.587838] Starting run_mcmc for index 0
+	Loading data for from
+	zpath: /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/mock/z
+	wpath: /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/mock/z
+reading data
+Generating initial position
+Running first MCMC, 1500 steps
+9.505820512771606 s
+Running second MCMC 1500 steps
+9.361156463623047 s
+Running long MCMC, 20000 steps
+123.99944806098938 s
+	Chain saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-0.npy
+[2023-05-21 11:18:03.192606] Finished run_mcmc in 144.6 seconds
+[2023-05-21 11:18:03.192812] Starting plot_chain for index 0
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-0.npy
+	Chain plot saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/plots/chain-2-0.pdf
+[2023-05-21 11:18:29.105419] Finished plot_chain in 25.91 seconds
+[2023-05-21 11:18:29.105551] Starting plot_corner for index 0
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-0.npy
+	Corner plot saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/plots/corner-2-0.pdf
+[2023-05-21 11:20:45.440969] Finished plot_corner in 136.34 seconds
+[2023-05-21 11:20:45.441062] Starting plot_fit for index 0
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-0.npy
+reading data
+(1360000, 33)
+	Fit plot saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/plots/fit-2-0.pdf
+[2023-05-21 11:21:27.598599] Finished plot_fit in 42.16 seconds
+[2023-05-21 11:21:27.598678] Starting calculate_prob for index 0
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-0.npy
+reading data
+Calculating likelihood
+BIC: -61.67375650448761
+AIC: -151.96830530150598
+	Probabilities saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/stats.txt
+[2023-05-21 11:24:03.522718] Finished calculate_prob in 155.92 seconds
+[2023-05-21 11:24:03.522813] Finished all in 504.94 seconds
+Finished z 0 at 2023-05-21T11:24:04
+Running z 1 at 2023-05-21T11:24:04
+Acceptance rate: 0.18734313725490195
+Acceptance rate: 0.1955392156862745
+Acceptance rate: 0.1640470588235294
+Program initilized
+[2023-05-21 11:24:08.696966] Starting all for index 1
+[2023-05-21 11:24:08.696996] Starting run_mcmc for index 1
+	Loading data for from
+	zpath: /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/mock/z
+	wpath: /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/mock/z
+reading data
+Generating initial position
+Running first MCMC, 1500 steps
+21.01167869567871 s
+Running second MCMC 1500 steps
+20.984709978103638 s
+Running long MCMC, 20000 steps
+218.72476816177368 s
+	Chain saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-1.npy
+[2023-05-21 11:28:31.253798] Finished run_mcmc in 262.78 seconds
+[2023-05-21 11:28:31.474625] Starting plot_chain for index 1
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-1.npy
+	Chain plot saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/plots/chain-2-1.pdf
+[2023-05-21 11:28:48.461731] Finished plot_chain in 16.99 seconds
+[2023-05-21 11:28:48.461818] Starting plot_corner for index 1
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-1.npy
+	Corner plot saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/plots/corner-2-1.pdf
+[2023-05-21 11:29:58.757484] Finished plot_corner in 70.3 seconds
+[2023-05-21 11:29:58.757574] Starting plot_fit for index 1
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-1.npy
+reading data
+(1360000, 33)
+	Fit plot saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/plots/fit-2-1.pdf
+[2023-05-21 11:30:57.317649] Finished plot_fit in 58.56 seconds
+[2023-05-21 11:30:57.317765] Starting calculate_prob for index 1
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-1.npy
+reading data
+Calculating likelihood
+BIC: -39.31481225524794
+AIC: -128.72930889855496
+	Probabilities saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/stats.txt
+[2023-05-21 11:34:52.546455] Finished calculate_prob in 235.23 seconds
+[2023-05-21 11:34:52.546675] Finished all in 643.85 seconds
+Finished z 1 at 2023-05-21T11:34:53
+Running z 2 at 2023-05-21T11:34:53
+Acceptance rate: 0.1792549019607843
+Acceptance rate: 0.1838921568627451
+Acceptance rate: 0.16395367647058823
+Program initilized
+[2023-05-21 11:34:57.191707] Starting all for index 2
+[2023-05-21 11:34:57.191742] Starting run_mcmc for index 2
+	Loading data for from
+	zpath: /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/mock/z
+	wpath: /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/mock/z
+reading data
+Generating initial position
+Running first MCMC, 1500 steps
+22.735928297042847 s
+Running second MCMC 1500 steps
+22.00441312789917 s
+Running long MCMC, 20000 steps
+303.9247028827667 s
+	Chain saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-2.npy
+[2023-05-21 11:40:48.047213] Finished run_mcmc in 350.86 seconds
+[2023-05-21 11:40:48.047364] Starting plot_chain for index 2
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-2.npy
+	Chain plot saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/plots/chain-2-2.pdf
+[2023-05-21 11:41:01.884853] Finished plot_chain in 13.84 seconds
+[2023-05-21 11:41:01.884942] Starting plot_corner for index 2
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-2.npy
+	Corner plot saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/plots/corner-2-2.pdf
+[2023-05-21 11:41:49.333349] Finished plot_corner in 47.45 seconds
+[2023-05-21 11:41:49.333449] Starting plot_fit for index 2
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-2.npy
+reading data
+(1360000, 33)
+	Fit plot saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/plots/fit-2-2.pdf
+[2023-05-21 11:42:33.775091] Finished plot_fit in 44.44 seconds
+[2023-05-21 11:42:33.775191] Starting calculate_prob for index 2
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-2.npy
+reading data
+Calculating likelihood
+BIC: -53.349854749235305
+AIC: -142.76435139254232
+	Probabilities saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/stats.txt
+[2023-05-21 11:44:53.634763] Finished calculate_prob in 139.86 seconds
+[2023-05-21 11:44:53.634859] Finished all in 596.44 seconds
+Finished z 2 at 2023-05-21T11:44:57
+Running z 3 at 2023-05-21T11:44:57
+Acceptance rate: 0.16629411764705881
+Acceptance rate: 0.1785
+Acceptance rate: 0.14904926470588234
+Program initilized
+[2023-05-21 11:45:14.321447] Starting all for index 3
+[2023-05-21 11:45:14.321477] Starting run_mcmc for index 3
+	Loading data for from
+	zpath: /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/mock/z
+	wpath: /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/mock/z
+reading data
+Generating initial position
+Running first MCMC, 1500 steps
+30.409565210342407 s
+Running second MCMC 1500 steps
+29.98496127128601 s
+Running long MCMC, 20000 steps
+335.4768006801605 s
+	Chain saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-3.npy
+[2023-05-21 11:51:52.283817] Finished run_mcmc in 397.96 seconds
+[2023-05-21 11:51:52.283954] Starting plot_chain for index 3
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-3.npy
+	Chain plot saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/plots/chain-2-3.pdf
+[2023-05-21 11:52:07.299349] Finished plot_chain in 15.02 seconds
+[2023-05-21 11:52:07.299462] Starting plot_corner for index 3
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-3.npy
+	Corner plot saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/plots/corner-2-3.pdf
+[2023-05-21 11:53:23.131699] Finished plot_corner in 75.83 seconds
+[2023-05-21 11:53:23.131817] Starting plot_fit for index 3
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-3.npy
+reading data
+(1360000, 33)
+	Fit plot saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/plots/fit-2-3.pdf
+[2023-05-21 11:54:18.591815] Finished plot_fit in 55.46 seconds
+[2023-05-21 11:54:18.591887] Starting calculate_prob for index 3
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-3.npy
+reading data
+Calculating likelihood
+BIC: -103.29648894600976
+AIC: -195.28371645781726
+	Probabilities saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/stats.txt
+[2023-05-21 11:56:35.249206] Finished calculate_prob in 136.66 seconds
+[2023-05-21 11:56:35.249318] Finished all in 680.93 seconds
+Finished z 3 at 2023-05-21T11:56:38
+Running z 4 at 2023-05-21T11:56:38
+Acceptance rate: 0.1773235294117647
+Acceptance rate: 0.17618627450980393
+Acceptance rate: 0.1469580882352941
+Program initilized
+[2023-05-21 11:56:53.602595] Starting all for index 4
+[2023-05-21 11:56:53.602629] Starting run_mcmc for index 4
+	Loading data for from
+	zpath: /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/mock/z
+	wpath: /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/mock/z
+reading data
+Generating initial position
+Running first MCMC, 1500 steps
+12.88049030303955 s
+Running second MCMC 1500 steps
+13.086536169052124 s
+Running long MCMC, 20000 steps
+331.9559154510498 s
+	Chain saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-4.npy
+[2023-05-21 12:02:54.050640] Finished run_mcmc in 360.45 seconds
+[2023-05-21 12:02:54.050801] Starting plot_chain for index 4
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-4.npy
+	Chain plot saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/plots/chain-2-4.pdf
+[2023-05-21 12:03:08.706939] Finished plot_chain in 14.66 seconds
+[2023-05-21 12:03:08.707025] Starting plot_corner for index 4
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-4.npy
+	Corner plot saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/plots/corner-2-4.pdf
+[2023-05-21 12:04:24.104718] Finished plot_corner in 75.4 seconds
+[2023-05-21 12:04:24.104822] Starting plot_fit for index 4
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-4.npy
+reading data
+(1360000, 33)
+	Fit plot saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/plots/fit-2-4.pdf
+[2023-05-21 12:05:37.261379] Finished plot_fit in 73.16 seconds
+[2023-05-21 12:05:37.261482] Starting calculate_prob for index 4
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/data/chain-2-4.npy
+reading data
+Calculating likelihood
+BIC: -93.25455734873793
+AIC: -183.5491061457563
+	Probabilities saved to /home2/s20321005/Thesis-Project/Data/MCMC/dm_mock/z/stats.txt
+[2023-05-21 12:08:50.519539] Finished calculate_prob in 193.26 seconds
+[2023-05-21 12:08:50.519604] Finished all in 716.92 seconds
+Finished z 4 at 2023-05-21T12:08:51
+Running n 0 at 2023-05-21T12:08:51
+Program initilized
+Finished n 0 at 2023-05-21T12:09:02
+Running n 1 at 2023-05-21T12:09:02
+Program initilized
+Finished n 1 at 2023-05-21T12:09:05
+Running n 2 at 2023-05-21T12:09:05
+Program initilized
+Finished n 2 at 2023-05-21T12:09:21
+Running n 3 at 2023-05-21T12:09:21
+Program initilized
+Finished n 3 at 2023-05-21T12:09:32
+Running n 4 at 2023-05-21T12:09:32
+Program initilized
+Finished n 4 at 2023-05-21T12:09:36
+Running n 5 at 2023-05-21T12:09:36
+Program initilized
+Finished n 5 at 2023-05-21T12:09:39
+Running n 6 at 2023-05-21T12:09:39
+Program initilized
+Finished n 6 at 2023-05-21T12:09:42

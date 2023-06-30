@@ -1,0 +1,403 @@
+Running 0 at 2023-05-20T19:43:02
+Acceptance rate: 0.15200925925925926
+Acceptance rate: 0.1389351851851852
+Acceptance rate: 0.1277090277777778
+[2023-05-20 19:43:05.816787] Starting all for index 0
+[2023-05-20 19:43:05.816808] Starting run_mcmc for index 0
+reading data
+Generating initial position
+Running first MCMC, 1500 steps
+11.057449102401733 s
+Running second MCMC 1500 steps
+11.716772317886353 s
+Running long MCMC, 20000 steps
+145.8394730091095 s
+[2023-05-20 19:45:56.500610] Finished run_mcmc in 170.68 seconds
+[2023-05-20 19:45:56.500716] Starting plot_chain for index 0
+[2023-05-20 19:46:06.320086] Finished plot_chain in 9.82 seconds
+[2023-05-20 19:46:06.320176] Starting plot_corner for index 0
+[2023-05-20 19:47:08.362800] Finished plot_corner in 62.04 seconds
+[2023-05-20 19:47:08.362874] Starting plot_fit for index 0
+reading data
+(1440000, 35)
+[2023-05-20 19:47:44.217670] Finished plot_fit in 35.85 seconds
+[2023-05-20 19:47:44.217729] Starting calculate_prob for index 0
+reading data
+Calculating likelihood
+BIC: -4.76248501955277
+AIC: -94.51467172092703
+[2023-05-20 19:49:42.451602] Finished calculate_prob in 118.23 seconds
+[2023-05-20 19:49:42.451665] Finished all in 396.63 seconds
+Finished 0 at 2023-05-20T19:49:43
+Running 1 at 2023-05-20T19:49:43
+Acceptance rate: 0.1384537037037037
+Acceptance rate: 0.15334259259259259
+Acceptance rate: 0.13571458333333333
+[2023-05-20 19:49:55.337954] Starting all for index 1
+[2023-05-20 19:49:55.337976] Starting run_mcmc for index 1
+reading data
+Generating initial position
+Running first MCMC, 1500 steps
+12.058268070220947 s
+Running second MCMC 1500 steps
+11.800008773803711 s
+Running long MCMC, 20000 steps
+148.6846625804901 s
+[2023-05-20 19:52:48.467150] Finished run_mcmc in 173.13 seconds
+[2023-05-20 19:52:48.467260] Starting plot_chain for index 1
+[2023-05-20 19:52:59.768886] Finished plot_chain in 11.3 seconds
+[2023-05-20 19:52:59.768973] Starting plot_corner for index 1
+[2023-05-20 19:54:03.056436] Finished plot_corner in 63.29 seconds
+[2023-05-20 19:54:03.056513] Starting plot_fit for index 1
+reading data
+(1440000, 35)
+[2023-05-20 19:54:37.722999] Finished plot_fit in 34.67 seconds
+[2023-05-20 19:54:37.723059] Starting calculate_prob for index 1
+reading data
+Calculating likelihood
+BIC: 1.9342862543923331
+AIC: -88.89490850031831
+[2023-05-20 19:56:37.754777] Finished calculate_prob in 120.03 seconds
+[2023-05-20 19:56:37.754837] Finished all in 402.42 seconds
+Finished 1 at 2023-05-20T19:56:38
+Running 2 at 2023-05-20T19:56:38
+Acceptance rate: 0.14880555555555555
+Acceptance rate: 0.17007407407407407
+Acceptance rate: 0.140525
+[2023-05-20 19:56:41.791791] Starting all for index 2
+[2023-05-20 19:56:41.791812] Starting run_mcmc for index 2
+reading data
+Generating initial position
+Running first MCMC, 1500 steps
+12.277910470962524 s
+Running second MCMC 1500 steps
+11.779569149017334 s
+Running long MCMC, 20000 steps
+147.77327370643616 s
+[2023-05-20 19:59:34.181735] Finished run_mcmc in 172.39 seconds
+[2023-05-20 19:59:34.181851] Starting plot_chain for index 2
+[2023-05-20 19:59:44.764978] Finished plot_chain in 10.58 seconds
+[2023-05-20 19:59:44.765062] Starting plot_corner for index 2
+[2023-05-20 20:00:48.314484] Finished plot_corner in 63.55 seconds
+[2023-05-20 20:00:48.314556] Starting plot_fit for index 2
+reading data
+(1440000, 35)
+[2023-05-20 20:01:22.658492] Finished plot_fit in 34.34 seconds
+[2023-05-20 20:01:22.658548] Starting calculate_prob for index 2
+reading data
+Calculating likelihood
+BIC: -51.076046184454185
+AIC: -143.96465843996748
+[2023-05-20 20:03:20.754534] Finished calculate_prob in 118.1 seconds
+[2023-05-20 20:03:20.754608] Finished all in 398.96 seconds
+Finished 2 at 2023-05-20T20:03:21
+Running 3 at 2023-05-20T20:03:21
+Acceptance rate: 0.12687037037037038
+Acceptance rate: 0.15739814814814815
+Acceptance rate: 0.12791666666666668
+[2023-05-20 20:03:24.808342] Starting all for index 3
+[2023-05-20 20:03:24.808365] Starting run_mcmc for index 3
+reading data
+Generating initial position
+Running first MCMC, 1500 steps
+12.829917669296265 s
+Running second MCMC 1500 steps
+12.22366738319397 s
+Running long MCMC, 20000 steps
+158.0033140182495 s
+[2023-05-20 20:06:28.407238] Finished run_mcmc in 183.6 seconds
+[2023-05-20 20:06:28.407349] Starting plot_chain for index 3
+[2023-05-20 20:06:38.074795] Finished plot_chain in 9.67 seconds
+[2023-05-20 20:06:38.074880] Starting plot_corner for index 3
+[2023-05-20 20:07:42.289630] Finished plot_corner in 64.21 seconds
+[2023-05-20 20:07:42.289710] Starting plot_fit for index 3
+reading data
+(1440000, 35)
+[2023-05-20 20:08:17.631631] Finished plot_fit in 35.34 seconds
+[2023-05-20 20:08:17.631694] Starting calculate_prob for index 3
+reading data
+Calculating likelihood
+BIC: -110.30601001957257
+AIC: -207.86822101694418
+[2023-05-20 20:10:23.467524] Finished calculate_prob in 125.84 seconds
+[2023-05-20 20:10:23.467588] Finished all in 418.66 seconds
+Finished 3 at 2023-05-20T20:10:24
+Running 4 at 2023-05-20T20:10:24
+Acceptance rate: 0.13985185185185184
+Acceptance rate: 0.14182407407407407
+Acceptance rate: 0.11492916666666667
+[2023-05-20 20:10:27.644493] Starting all for index 4
+[2023-05-20 20:10:27.644514] Starting run_mcmc for index 4
+reading data
+Generating initial position
+Running first MCMC, 1500 steps
+13.012574195861816 s
+Running second MCMC 1500 steps
+13.210086107254028 s
+Running long MCMC, 20000 steps
+166.22188234329224 s
+[2023-05-20 20:13:40.648497] Finished run_mcmc in 193.0 seconds
+[2023-05-20 20:13:40.648607] Starting plot_chain for index 4
+[2023-05-20 20:13:49.841116] Finished plot_chain in 9.19 seconds
+[2023-05-20 20:13:49.841198] Starting plot_corner for index 4
+[2023-05-20 20:14:52.811904] Finished plot_corner in 62.97 seconds
+[2023-05-20 20:14:52.811982] Starting plot_fit for index 4
+reading data
+(1440000, 35)
+[2023-05-20 20:15:30.565671] Finished plot_fit in 37.75 seconds
+[2023-05-20 20:15:30.565728] Starting calculate_prob for index 4
+reading data
+Calculating likelihood
+BIC: -122.74886974893147
+AIC: -221.17532218696607
+[2023-05-20 20:17:43.052785] Finished calculate_prob in 132.49 seconds
+[2023-05-20 20:17:43.052853] Finished all in 435.41 seconds
+Finished 4 at 2023-05-20T20:17:43
+Running 5 at 2023-05-20T20:17:43
+Acceptance rate: 0.13335185185185186
+Acceptance rate: 0.1662685185185185
+Acceptance rate: 0.12853958333333335
+[2023-05-20 20:17:47.081434] Starting all for index 5
+[2023-05-20 20:17:47.081456] Starting run_mcmc for index 5
+reading data
+Generating initial position
+Running first MCMC, 1500 steps
+13.65971565246582 s
+Running second MCMC 1500 steps
+13.073405742645264 s
+Running long MCMC, 20000 steps
+173.37759399414062 s
+[2023-05-20 20:21:07.722061] Finished run_mcmc in 200.64 seconds
+[2023-05-20 20:21:07.722175] Starting plot_chain for index 5
+[2023-05-20 20:21:17.646287] Finished plot_chain in 9.92 seconds
+[2023-05-20 20:21:17.646370] Starting plot_corner for index 5
+[2023-05-20 20:22:20.415904] Finished plot_corner in 62.77 seconds
+[2023-05-20 20:22:20.415978] Starting plot_fit for index 5
+reading data
+(1440000, 35)
+[2023-05-20 20:23:03.518094] Finished plot_fit in 43.1 seconds
+[2023-05-20 20:23:03.518153] Starting calculate_prob for index 5
+reading data
+Calculating likelihood
+BIC: -124.61528650997153
+AIC: -223.04173894800613
+[2023-05-20 20:25:23.030452] Finished calculate_prob in 139.51 seconds
+[2023-05-20 20:25:23.030513] Finished all in 455.95 seconds
+Finished 5 at 2023-05-20T20:25:23
+Running 6 at 2023-05-20T20:25:23
+Acceptance rate: 0.11716666666666667
+Acceptance rate: 0.16290740740740742
+Acceptance rate: 0.13489444444444446
+[2023-05-20 20:25:27.067486] Starting all for index 6
+[2023-05-20 20:25:27.067512] Starting run_mcmc for index 6
+reading data
+Generating initial position
+Running first MCMC, 1500 steps
+13.918731451034546 s
+Running second MCMC 1500 steps
+14.221808195114136 s
+Running long MCMC, 20000 steps
+183.72730350494385 s
+[2023-05-20 20:28:59.520601] Finished run_mcmc in 212.45 seconds
+[2023-05-20 20:28:59.520727] Starting plot_chain for index 6
+[2023-05-20 20:29:09.645064] Finished plot_chain in 10.12 seconds
+[2023-05-20 20:29:09.645151] Starting plot_corner for index 6
+[2023-05-20 20:30:11.905640] Finished plot_corner in 62.26 seconds
+[2023-05-20 20:30:11.905721] Starting plot_fit for index 6
+reading data
+(1440000, 35)
+[2023-05-20 20:30:53.551916] Finished plot_fit in 41.65 seconds
+[2023-05-20 20:30:53.551978] Starting calculate_prob for index 6
+reading data
+Calculating likelihood
+BIC: -81.81279741439346
+AIC: -178.48888513231492
+[2023-05-20 20:33:21.990360] Finished calculate_prob in 148.44 seconds
+[2023-05-20 20:33:21.990418] Finished all in 474.92 seconds
+Finished 6 at 2023-05-20T20:33:22
+Running 7 at 2023-05-20T20:33:22
+Acceptance rate: 0.12304629629629629
+Acceptance rate: 0.15728703703703703
+Acceptance rate: 0.1368888888888889
+[2023-05-20 20:33:26.047215] Starting all for index 7
+[2023-05-20 20:33:26.047236] Starting run_mcmc for index 7
+reading data
+Generating initial position
+Running first MCMC, 1500 steps
+13.934341430664062 s
+Running second MCMC 1500 steps
+14.311851978302002 s
+Running long MCMC, 20000 steps
+186.00620341300964 s
+[2023-05-20 20:37:00.834834] Finished run_mcmc in 214.79 seconds
+[2023-05-20 20:37:00.834943] Starting plot_chain for index 7
+[2023-05-20 20:37:11.154045] Finished plot_chain in 10.32 seconds
+[2023-05-20 20:37:11.154129] Starting plot_corner for index 7
+[2023-05-20 20:38:14.131619] Finished plot_corner in 62.98 seconds
+[2023-05-20 20:38:14.131696] Starting plot_fit for index 7
+reading data
+(1440000, 35)
+[2023-05-20 20:38:57.112805] Finished plot_fit in 42.98 seconds
+[2023-05-20 20:38:57.112870] Starting calculate_prob for index 7
+reading data
+Calculating likelihood
+BIC: -107.71988265723715
+AIC: -208.6179499477601
+[2023-05-20 20:41:26.568646] Finished calculate_prob in 149.46 seconds
+[2023-05-20 20:41:26.568716] Finished all in 480.52 seconds
+Finished 7 at 2023-05-20T20:41:27
+Running 8 at 2023-05-20T20:41:27
+Acceptance rate: 0.10556481481481482
+Acceptance rate: 0.14094444444444446
+Acceptance rate: 0.11646805555555556
+[2023-05-20 20:41:30.573461] Starting all for index 8
+[2023-05-20 20:41:30.573482] Starting run_mcmc for index 8
+reading data
+Generating initial position
+Running first MCMC, 1500 steps
+15.681724786758423 s
+Running second MCMC 1500 steps
+15.030752182006836 s
+Running long MCMC, 20000 steps
+196.1054801940918 s
+[2023-05-20 20:45:17.935386] Finished run_mcmc in 227.36 seconds
+[2023-05-20 20:45:17.935498] Starting plot_chain for index 8
+[2023-05-20 20:45:27.127415] Finished plot_chain in 9.19 seconds
+[2023-05-20 20:45:27.127500] Starting plot_corner for index 8
+[2023-05-20 20:46:30.197894] Finished plot_corner in 63.07 seconds
+[2023-05-20 20:46:30.197966] Starting plot_fit for index 8
+reading data
+(1440000, 35)
+[2023-05-20 20:47:14.556418] Finished plot_fit in 44.36 seconds
+[2023-05-20 20:47:14.556479] Starting calculate_prob for index 8
+reading data
+Calculating likelihood
+BIC: -100.15718441867045
+AIC: -200.25061857132897
+[2023-05-20 20:49:51.908971] Finished calculate_prob in 157.35 seconds
+[2023-05-20 20:49:51.909037] Finished all in 501.34 seconds
+Finished 8 at 2023-05-20T20:49:52
+Running 9 at 2023-05-20T20:49:52
+Acceptance rate: 0.11473148148148148
+Acceptance rate: 0.13049074074074074
+Acceptance rate: 0.11060902777777777
+[2023-05-20 20:49:56.065950] Starting all for index 9
+[2023-05-20 20:49:56.065977] Starting run_mcmc for index 9
+reading data
+Generating initial position
+Running first MCMC, 1500 steps
+15.636193752288818 s
+Running second MCMC 1500 steps
+15.925672054290771 s
+Running long MCMC, 20000 steps
+206.04600310325623 s
+[2023-05-20 20:53:54.183023] Finished run_mcmc in 238.12 seconds
+[2023-05-20 20:53:54.183130] Starting plot_chain for index 9
+[2023-05-20 20:54:03.029665] Finished plot_chain in 8.85 seconds
+[2023-05-20 20:54:03.029750] Starting plot_corner for index 9
+[2023-05-20 20:55:05.079152] Finished plot_corner in 62.05 seconds
+[2023-05-20 20:55:05.079233] Starting plot_fit for index 9
+reading data
+(1440000, 35)
+[2023-05-20 20:55:52.274792] Finished plot_fit in 47.2 seconds
+[2023-05-20 20:55:52.274853] Starting calculate_prob for index 9
+reading data
+Calculating likelihood
+BIC: -158.9988273784937
+AIC: -259.89689466901666
+[2023-05-20 20:58:37.288955] Finished calculate_prob in 165.01 seconds
+[2023-05-20 20:58:37.289019] Finished all in 521.22 seconds
+Finished 9 at 2023-05-20T20:58:38
+Running 10 at 2023-05-20T20:58:38
+Acceptance rate: 0.11848148148148148
+Acceptance rate: 0.14135185185185184
+Acceptance rate: 0.10830972222222222
+[2023-05-20 20:58:41.334110] Starting all for index 10
+[2023-05-20 20:58:41.334131] Starting run_mcmc for index 10
+reading data
+Generating initial position
+Running first MCMC, 1500 steps
+15.376720666885376 s
+Running second MCMC 1500 steps
+15.758024215698242 s
+Running long MCMC, 20000 steps
+201.97928309440613 s
+[2023-05-20 21:02:34.994431] Finished run_mcmc in 233.66 seconds
+[2023-05-20 21:02:34.994541] Starting plot_chain for index 10
+[2023-05-20 21:02:43.723350] Finished plot_chain in 8.73 seconds
+[2023-05-20 21:02:43.723430] Starting plot_corner for index 10
+[2023-05-20 21:03:45.960773] Finished plot_corner in 62.24 seconds
+[2023-05-20 21:03:45.960849] Starting plot_fit for index 10
+reading data
+(1440000, 35)
+[2023-05-20 21:04:31.850110] Finished plot_fit in 45.89 seconds
+[2023-05-20 21:04:31.850171] Starting calculate_prob for index 10
+reading data
+Calculating likelihood
+BIC: -176.89727770800604
+AIC: -277.795344998529
+[2023-05-20 21:07:13.484172] Finished calculate_prob in 161.63 seconds
+[2023-05-20 21:07:13.484240] Finished all in 512.15 seconds
+Finished 10 at 2023-05-20T21:07:14
+Running 11 at 2023-05-20T21:07:14
+Acceptance rate: 0.106
+Acceptance rate: 0.1312222222222222
+Acceptance rate: 0.09457638888888889
+[2023-05-20 21:07:17.564085] Starting all for index 11
+[2023-05-20 21:07:17.564107] Starting run_mcmc for index 11
+reading data
+Generating initial position
+Running first MCMC, 1500 steps
+15.784152507781982 s
+Running second MCMC 1500 steps
+15.81088900566101 s
+Running long MCMC, 20000 steps
+206.90535521507263 s
+[2023-05-20 21:11:16.674490] Finished run_mcmc in 239.11 seconds
+[2023-05-20 21:11:16.674606] Starting plot_chain for index 11
+[2023-05-20 21:11:24.820984] Finished plot_chain in 8.15 seconds
+[2023-05-20 21:11:24.821068] Starting plot_corner for index 11
+[2023-05-20 21:12:27.194891] Finished plot_corner in 62.37 seconds
+[2023-05-20 21:12:27.194965] Starting plot_fit for index 11
+reading data
+(1440000, 35)
+[2023-05-20 21:13:16.897722] Finished plot_fit in 49.7 seconds
+[2023-05-20 21:13:16.897783] Starting calculate_prob for index 11
+reading data
+Calculating likelihood
+BIC: -98.41761177761498
+AIC: -195.09369949553644
+[2023-05-20 21:16:02.796226] Finished calculate_prob in 165.9 seconds
+[2023-05-20 21:16:02.796305] Finished all in 525.23 seconds
+Finished 11 at 2023-05-20T21:16:03
+Running 12 at 2023-05-20T21:16:03
+Acceptance rate: 0.10069444444444445
+Acceptance rate: 0.14322222222222222
+Acceptance rate: 0.13246944444444445
+[2023-05-20 21:16:06.731997] Starting all for index 12
+[2023-05-20 21:16:06.732018] Starting run_mcmc for index 12
+reading data
+Generating initial position
+Running first MCMC, 1500 steps
+16.14879608154297 s
+Running second MCMC 1500 steps
+15.928418397903442 s
+Running long MCMC, 20000 steps
+207.91829752922058 s
+[2023-05-20 21:20:07.288419] Finished run_mcmc in 240.56 seconds
+[2023-05-20 21:20:07.288532] Starting plot_chain for index 12
+[2023-05-20 21:20:16.780778] Finished plot_chain in 9.49 seconds
+[2023-05-20 21:20:16.780860] Starting plot_corner for index 12
+[2023-05-20 21:21:19.862079] Finished plot_corner in 63.08 seconds
+[2023-05-20 21:21:19.862161] Starting plot_fit for index 12
+reading data
+(1440000, 35)
+[2023-05-20 21:22:07.288669] Finished plot_fit in 47.43 seconds
+[2023-05-20 21:22:07.288731] Starting calculate_prob for index 12
+reading data
+Calculating likelihood
+BIC: -123.04523440092291
+AIC: -222.31510114422463
+[2023-05-20 21:24:53.232489] Finished calculate_prob in 165.94 seconds
+[2023-05-20 21:24:53.232553] Finished all in 526.5 seconds
+Finished 12 at 2023-05-20T21:24:53

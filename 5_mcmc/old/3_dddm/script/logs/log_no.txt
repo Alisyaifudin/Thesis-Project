@@ -1,0 +1,696 @@
+Running 0 at 2023-06-15T11:12:02
+Program initilized
+[2023-06-15 11:12:06.093669] Starting all for index 0
+[2023-06-15 11:12:06.093688] Starting run_mcmc for index 0
+running...
+mcmc... (-0.10)_(0.11)
+Acceptance rate: 0.22843888888888889
+Acceptance rate: 0.19848333333333334
+Acceptance rate: 0.17290555555555556
+Acceptance rate: 0.19325555555555557
+Acceptance rate: 0.17421666666666666
+Acceptance rate: 0.19007222222222223
+Acceptance rate: 0.17428333333333335
+Acceptance rate: 0.1882
+Acceptance rate: 0.17408333333333334
+Acceptance rate: 0.19369444444444445
+Acceptance rate: 0.17583888888888888
+Acceptance rate: 0.16662583333333333
+0: first half mcmc done 10.64 s
+0: second half mcmc done 10.58 s
+1: first half mcmc done 10.75 s
+1: second half mcmc done 10.65 s
+2: first half mcmc done 10.7 s
+2: second half mcmc done 10.72 s
+3: first half mcmc done 10.8 s
+3: second half mcmc done 10.71 s
+4: first half mcmc done 10.9 s
+4: second half mcmc done 10.76 s
+	Chain saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(-0.10)_(0.11).npy
+[2023-06-15 11:17:47.475852] Finished run_mcmc in 341.38 seconds
+[2023-06-15 11:17:47.475962] Starting plot_chain for index 0
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(-0.10)_(0.11).npy
+	Chain plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/chain-(-0.10)_(0.11).pdf
+[2023-06-15 11:17:53.323002] Finished plot_chain in 5.85 seconds
+[2023-06-15 11:17:53.323071] Starting plot_corner for index 0
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(-0.10)_(0.11).npy
+	Corner plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-z-(-0.10)_(0.11).pdf and /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-w-(-0.10)_(0.11).pdf
+[2023-06-15 11:18:05.280090] Finished plot_corner in 11.96 seconds
+[2023-06-15 11:18:05.280153] Starting plot_fit for index 0
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(-0.10)_(0.11).npy
+	Fit plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/fit-(-0.10)_(0.11).pdf
+[2023-06-15 11:18:30.975374] Finished plot_fit in 25.7 seconds
+[2023-06-15 11:18:30.975429] Starting calculate_prob for index 0
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(-0.10)_(0.11).npy
+Opening the data
+Opening the chain
+Calculating likelihood
+max log-likelihood: 101.36467920388363
+BIC: -33.18627116052323
+AIC: -130.72935840776725
+	Probabilities saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/stats.txt
+[2023-06-15 11:18:32.160520] Finished calculate_prob in 1.19 seconds
+[2023-06-15 11:18:32.160585] Finished all in 386.07 seconds
+Finished 0 at 2023-06-15T11:18:33
+Running 1 at 2023-06-15T11:18:33
+Program initilized
+[2023-06-15 11:18:36.522442] Starting all for index 1
+[2023-06-15 11:18:36.522464] Starting run_mcmc for index 1
+running...
+mcmc... (0.11)_(0.16)
+Acceptance rate: 0.23315555555555556
+Acceptance rate: 0.19904444444444444
+Acceptance rate: 0.1784888888888889
+Acceptance rate: 0.1936388888888889
+Acceptance rate: 0.17735
+Acceptance rate: 0.1909611111111111
+Acceptance rate: 0.17683888888888888
+Acceptance rate: 0.1946388888888889
+Acceptance rate: 0.17702222222222222
+Acceptance rate: 0.19039444444444445
+Acceptance rate: 0.17265277777777777
+Acceptance rate: 0.16560472222222222
+0: first half mcmc done 11.0 s
+0: second half mcmc done 11.08 s
+1: first half mcmc done 11.06 s
+1: second half mcmc done 11.06 s
+2: first half mcmc done 11.05 s
+2: second half mcmc done 11.05 s
+3: first half mcmc done 11.2 s
+3: second half mcmc done 11.08 s
+4: first half mcmc done 11.07 s
+4: second half mcmc done 11.08 s
+	Chain saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.11)_(0.16).npy
+[2023-06-15 11:24:28.601553] Finished run_mcmc in 352.08 seconds
+[2023-06-15 11:24:28.601660] Starting plot_chain for index 1
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.11)_(0.16).npy
+	Chain plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/chain-(0.11)_(0.16).pdf
+[2023-06-15 11:24:34.429324] Finished plot_chain in 5.83 seconds
+[2023-06-15 11:24:34.429403] Starting plot_corner for index 1
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.11)_(0.16).npy
+	Corner plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-z-(0.11)_(0.16).pdf and /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-w-(0.11)_(0.16).pdf
+[2023-06-15 11:24:47.325167] Finished plot_corner in 12.9 seconds
+[2023-06-15 11:24:47.325234] Starting plot_fit for index 1
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.11)_(0.16).npy
+	Fit plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/fit-(0.11)_(0.16).pdf
+[2023-06-15 11:25:13.870637] Finished plot_fit in 26.55 seconds
+[2023-06-15 11:25:13.870691] Starting calculate_prob for index 1
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.11)_(0.16).npy
+Opening the data
+Opening the chain
+Calculating likelihood
+max log-likelihood: 75.19438432227271
+BIC: 18.16795553192648
+AIC: -78.38876864454542
+	Probabilities saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/stats.txt
+[2023-06-15 11:25:15.093760] Finished calculate_prob in 1.22 seconds
+[2023-06-15 11:25:15.093839] Finished all in 398.57 seconds
+Finished 1 at 2023-06-15T11:25:15
+Running 2 at 2023-06-15T11:25:15
+Program initilized
+[2023-06-15 11:25:19.266968] Starting all for index 2
+[2023-06-15 11:25:19.266989] Starting run_mcmc for index 2
+running...
+mcmc... (0.16)_(0.20)
+Acceptance rate: 0.2293
+Acceptance rate: 0.19797777777777778
+Acceptance rate: 0.17378888888888888
+Acceptance rate: 0.19177222222222223
+Acceptance rate: 0.1741388888888889
+Acceptance rate: 0.19375
+Acceptance rate: 0.17607777777777778
+Acceptance rate: 0.18929444444444443
+Acceptance rate: 0.17307777777777777
+Acceptance rate: 0.19119444444444444
+Acceptance rate: 0.176575
+Acceptance rate: 0.15675916666666667
+0: first half mcmc done 10.75 s
+0: second half mcmc done 10.85 s
+1: first half mcmc done 10.85 s
+1: second half mcmc done 11.0 s
+2: first half mcmc done 10.88 s
+2: second half mcmc done 10.87 s
+3: first half mcmc done 10.87 s
+3: second half mcmc done 10.89 s
+4: first half mcmc done 11.01 s
+4: second half mcmc done 11.01 s
+	Chain saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.16)_(0.20).npy
+[2023-06-15 11:31:05.437891] Finished run_mcmc in 346.17 seconds
+[2023-06-15 11:31:05.438002] Starting plot_chain for index 2
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.16)_(0.20).npy
+	Chain plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/chain-(0.16)_(0.20).pdf
+[2023-06-15 11:31:11.170436] Finished plot_chain in 5.73 seconds
+[2023-06-15 11:31:11.170554] Starting plot_corner for index 2
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.16)_(0.20).npy
+	Corner plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-z-(0.16)_(0.20).pdf and /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-w-(0.16)_(0.20).pdf
+[2023-06-15 11:31:23.352086] Finished plot_corner in 12.18 seconds
+[2023-06-15 11:31:23.352156] Starting plot_fit for index 2
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.16)_(0.20).npy
+	Fit plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/fit-(0.16)_(0.20).pdf
+[2023-06-15 11:31:49.784402] Finished plot_fit in 26.43 seconds
+[2023-06-15 11:31:49.784458] Starting calculate_prob for index 2
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.16)_(0.20).npy
+Opening the data
+Opening the chain
+Calculating likelihood
+max log-likelihood: 79.66789480420434
+BIC: 9.220934568063228
+AIC: -87.33578960840867
+	Probabilities saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/stats.txt
+[2023-06-15 11:31:50.978479] Finished calculate_prob in 1.19 seconds
+[2023-06-15 11:31:50.978543] Finished all in 391.71 seconds
+Finished 2 at 2023-06-15T11:31:51
+Running 3 at 2023-06-15T11:31:51
+Program initilized
+[2023-06-15 11:31:55.196085] Starting all for index 3
+[2023-06-15 11:31:55.196105] Starting run_mcmc for index 3
+running...
+mcmc... (0.20)_(0.24)
+Acceptance rate: 0.22642222222222222
+Acceptance rate: 0.18987222222222222
+Acceptance rate: 0.16537222222222223
+Acceptance rate: 0.18439444444444444
+Acceptance rate: 0.16601666666666667
+Acceptance rate: 0.18520555555555557
+Acceptance rate: 0.16944444444444445
+Acceptance rate: 0.1869111111111111
+Acceptance rate: 0.16715555555555556
+Acceptance rate: 0.18572777777777777
+Acceptance rate: 0.16745
+Acceptance rate: 0.1370377777777778
+0: first half mcmc done 11.01 s
+0: second half mcmc done 11.01 s
+1: first half mcmc done 10.89 s
+1: second half mcmc done 10.94 s
+2: first half mcmc done 10.86 s
+2: second half mcmc done 10.87 s
+3: first half mcmc done 10.89 s
+3: second half mcmc done 11.0 s
+4: first half mcmc done 10.89 s
+4: second half mcmc done 10.9 s
+	Chain saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.20)_(0.24).npy
+[2023-06-15 11:37:42.932015] Finished run_mcmc in 347.74 seconds
+[2023-06-15 11:37:42.932123] Starting plot_chain for index 3
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.20)_(0.24).npy
+	Chain plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/chain-(0.20)_(0.24).pdf
+[2023-06-15 11:37:48.761258] Finished plot_chain in 5.83 seconds
+[2023-06-15 11:37:48.761351] Starting plot_corner for index 3
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.20)_(0.24).npy
+	Corner plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-z-(0.20)_(0.24).pdf and /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-w-(0.20)_(0.24).pdf
+[2023-06-15 11:38:01.173516] Finished plot_corner in 12.41 seconds
+[2023-06-15 11:38:01.173585] Starting plot_fit for index 3
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.20)_(0.24).npy
+	Fit plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/fit-(0.20)_(0.24).pdf
+[2023-06-15 11:38:27.436759] Finished plot_fit in 26.26 seconds
+[2023-06-15 11:38:27.436816] Starting calculate_prob for index 3
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.20)_(0.24).npy
+Opening the data
+Opening the chain
+Calculating likelihood
+max log-likelihood: 74.77386800357863
+BIC: 20.955408135044593
+AIC: -77.54773600715725
+	Probabilities saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/stats.txt
+[2023-06-15 11:38:28.635492] Finished calculate_prob in 1.2 seconds
+[2023-06-15 11:38:28.635555] Finished all in 393.44 seconds
+Finished 3 at 2023-06-15T11:38:29
+Running 4 at 2023-06-15T11:38:29
+Program initilized
+[2023-06-15 11:38:32.825422] Starting all for index 4
+[2023-06-15 11:38:32.825443] Starting run_mcmc for index 4
+running...
+mcmc... (0.24)_(0.27)
+Acceptance rate: 0.21786111111111112
+Acceptance rate: 0.18507222222222222
+Acceptance rate: 0.1553277777777778
+Acceptance rate: 0.18643333333333334
+Acceptance rate: 0.1573277777777778
+Acceptance rate: 0.18433333333333332
+Acceptance rate: 0.1620388888888889
+Acceptance rate: 0.18372777777777777
+Acceptance rate: 0.1644611111111111
+Acceptance rate: 0.17920555555555556
+Acceptance rate: 0.15756111111111112
+Acceptance rate: 0.13797416666666668
+0: first half mcmc done 10.68 s
+0: second half mcmc done 10.63 s
+1: first half mcmc done 10.62 s
+1: second half mcmc done 10.63 s
+2: first half mcmc done 10.64 s
+2: second half mcmc done 10.71 s
+3: first half mcmc done 10.7 s
+3: second half mcmc done 10.63 s
+4: first half mcmc done 10.66 s
+4: second half mcmc done 10.61 s
+	Chain saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.24)_(0.27).npy
+[2023-06-15 11:44:15.057207] Finished run_mcmc in 342.23 seconds
+[2023-06-15 11:44:15.057313] Starting plot_chain for index 4
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.24)_(0.27).npy
+	Chain plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/chain-(0.24)_(0.27).pdf
+[2023-06-15 11:44:20.716904] Finished plot_chain in 5.66 seconds
+[2023-06-15 11:44:20.716987] Starting plot_corner for index 4
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.24)_(0.27).npy
+	Corner plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-z-(0.24)_(0.27).pdf and /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-w-(0.24)_(0.27).pdf
+[2023-06-15 11:44:33.088124] Finished plot_corner in 12.37 seconds
+[2023-06-15 11:44:33.088190] Starting plot_fit for index 4
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.24)_(0.27).npy
+	Fit plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/fit-(0.24)_(0.27).pdf
+[2023-06-15 11:44:58.639771] Finished plot_fit in 25.55 seconds
+[2023-06-15 11:44:58.639822] Starting calculate_prob for index 4
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.24)_(0.27).npy
+Opening the data
+Opening the chain
+Calculating likelihood
+max log-likelihood: 69.98029309225691
+BIC: 31.477675468205405
+AIC: -67.96058618451383
+	Probabilities saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/stats.txt
+[2023-06-15 11:44:59.823965] Finished calculate_prob in 1.18 seconds
+[2023-06-15 11:44:59.824027] Finished all in 387.0 seconds
+Finished 4 at 2023-06-15T11:45:00
+Running 5 at 2023-06-15T11:45:00
+Program initilized
+[2023-06-15 11:45:04.078953] Starting all for index 5
+[2023-06-15 11:45:04.078972] Starting run_mcmc for index 5
+running...
+mcmc... (0.27)_(0.29)
+Acceptance rate: 0.21864444444444445
+Acceptance rate: 0.18593888888888888
+Acceptance rate: 0.15596666666666667
+Acceptance rate: 0.17232777777777777
+Acceptance rate: 0.15161666666666668
+Acceptance rate: 0.17581666666666668
+Acceptance rate: 0.1524222222222222
+Acceptance rate: 0.17796666666666666
+Acceptance rate: 0.15711666666666665
+Acceptance rate: 0.1784388888888889
+Acceptance rate: 0.15456944444444445
+Acceptance rate: 0.13232083333333333
+0: first half mcmc done 10.73 s
+0: second half mcmc done 10.65 s
+1: first half mcmc done 10.72 s
+1: second half mcmc done 10.78 s
+2: first half mcmc done 10.68 s
+2: second half mcmc done 10.63 s
+3: first half mcmc done 10.65 s
+3: second half mcmc done 10.65 s
+4: first half mcmc done 10.74 s
+4: second half mcmc done 10.67 s
+	Chain saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.27)_(0.29).npy
+[2023-06-15 11:50:44.747567] Finished run_mcmc in 340.67 seconds
+[2023-06-15 11:50:44.747672] Starting plot_chain for index 5
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.27)_(0.29).npy
+	Chain plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/chain-(0.27)_(0.29).pdf
+[2023-06-15 11:50:50.636383] Finished plot_chain in 5.89 seconds
+[2023-06-15 11:50:50.636465] Starting plot_corner for index 5
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.27)_(0.29).npy
+	Corner plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-z-(0.27)_(0.29).pdf and /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-w-(0.27)_(0.29).pdf
+[2023-06-15 11:51:02.982367] Finished plot_corner in 12.35 seconds
+[2023-06-15 11:51:02.982434] Starting plot_fit for index 5
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.27)_(0.29).npy
+	Fit plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/fit-(0.27)_(0.29).pdf
+[2023-06-15 11:51:29.261037] Finished plot_fit in 26.28 seconds
+[2023-06-15 11:51:29.261098] Starting calculate_prob for index 5
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.27)_(0.29).npy
+Opening the data
+Opening the chain
+Calculating likelihood
+max log-likelihood: 72.24839603630913
+BIC: 26.006352069583585
+AIC: -72.49679207261826
+	Probabilities saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/stats.txt
+[2023-06-15 11:51:30.458637] Finished calculate_prob in 1.2 seconds
+[2023-06-15 11:51:30.458695] Finished all in 386.38 seconds
+Finished 5 at 2023-06-15T11:51:31
+Running 6 at 2023-06-15T11:51:31
+Program initilized
+[2023-06-15 11:51:34.365354] Starting all for index 6
+[2023-06-15 11:51:34.365374] Starting run_mcmc for index 6
+running...
+mcmc... (0.29)_(0.31)
+Acceptance rate: 0.22838333333333333
+Acceptance rate: 0.19923888888888888
+Acceptance rate: 0.17503333333333335
+Acceptance rate: 0.19118333333333334
+Acceptance rate: 0.17006666666666667
+Acceptance rate: 0.18714444444444445
+Acceptance rate: 0.16605
+Acceptance rate: 0.18437222222222222
+Acceptance rate: 0.16553333333333334
+Acceptance rate: 0.18313888888888888
+Acceptance rate: 0.16588055555555556
+Acceptance rate: 0.1550211111111111
+0: first half mcmc done 10.54 s
+0: second half mcmc done 10.56 s
+1: first half mcmc done 10.5 s
+1: second half mcmc done 10.53 s
+2: first half mcmc done 10.53 s
+2: second half mcmc done 10.65 s
+3: first half mcmc done 10.56 s
+3: second half mcmc done 10.71 s
+4: first half mcmc done 10.6 s
+4: second half mcmc done 10.58 s
+	Chain saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.29)_(0.31).npy
+[2023-06-15 11:57:10.959107] Finished run_mcmc in 336.59 seconds
+[2023-06-15 11:57:10.959212] Starting plot_chain for index 6
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.29)_(0.31).npy
+	Chain plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/chain-(0.29)_(0.31).pdf
+[2023-06-15 11:57:16.643371] Finished plot_chain in 5.68 seconds
+[2023-06-15 11:57:16.643444] Starting plot_corner for index 6
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.29)_(0.31).npy
+	Corner plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-z-(0.29)_(0.31).pdf and /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-w-(0.29)_(0.31).pdf
+[2023-06-15 11:57:28.815176] Finished plot_corner in 12.17 seconds
+[2023-06-15 11:57:28.815240] Starting plot_fit for index 6
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.29)_(0.31).npy
+	Fit plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/fit-(0.29)_(0.31).pdf
+[2023-06-15 11:57:54.154061] Finished plot_fit in 25.34 seconds
+[2023-06-15 11:57:54.154114] Starting calculate_prob for index 6
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.29)_(0.31).npy
+Opening the data
+Opening the chain
+Calculating likelihood
+max log-likelihood: 70.0698393360402
+BIC: 30.36346547012144
+AIC: -68.13967867208041
+	Probabilities saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/stats.txt
+[2023-06-15 11:57:55.332341] Finished calculate_prob in 1.18 seconds
+[2023-06-15 11:57:55.332422] Finished all in 380.97 seconds
+Finished 6 at 2023-06-15T11:57:56
+Running 7 at 2023-06-15T11:57:56
+Program initilized
+[2023-06-15 11:57:59.552127] Starting all for index 7
+[2023-06-15 11:57:59.552147] Starting run_mcmc for index 7
+running...
+mcmc... (0.31)_(0.33)
+Acceptance rate: 0.2308
+Acceptance rate: 0.20208333333333334
+Acceptance rate: 0.17718333333333333
+Acceptance rate: 0.19794444444444445
+Acceptance rate: 0.17703333333333332
+Acceptance rate: 0.19618888888888888
+Acceptance rate: 0.17565555555555556
+Acceptance rate: 0.19642777777777778
+Acceptance rate: 0.17360555555555557
+Acceptance rate: 0.19565
+Acceptance rate: 0.17650555555555555
+Acceptance rate: 0.171785
+0: first half mcmc done 10.63 s
+0: second half mcmc done 10.41 s
+1: first half mcmc done 10.41 s
+1: second half mcmc done 10.43 s
+2: first half mcmc done 10.47 s
+2: second half mcmc done 10.5 s
+3: first half mcmc done 10.51 s
+3: second half mcmc done 10.45 s
+4: first half mcmc done 10.44 s
+4: second half mcmc done 10.44 s
+	Chain saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.31)_(0.33).npy
+[2023-06-15 12:03:32.754929] Finished run_mcmc in 333.2 seconds
+[2023-06-15 12:03:32.755034] Starting plot_chain for index 7
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.31)_(0.33).npy
+	Chain plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/chain-(0.31)_(0.33).pdf
+[2023-06-15 12:03:38.347703] Finished plot_chain in 5.59 seconds
+[2023-06-15 12:03:38.347780] Starting plot_corner for index 7
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.31)_(0.33).npy
+	Corner plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-z-(0.31)_(0.33).pdf and /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-w-(0.31)_(0.33).pdf
+[2023-06-15 12:03:50.234279] Finished plot_corner in 11.89 seconds
+[2023-06-15 12:03:50.234347] Starting plot_fit for index 7
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.31)_(0.33).npy
+	Fit plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/fit-(0.31)_(0.33).pdf
+[2023-06-15 12:04:15.726142] Finished plot_fit in 25.49 seconds
+[2023-06-15 12:04:15.726200] Starting calculate_prob for index 7
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.31)_(0.33).npy
+Opening the data
+Opening the chain
+Calculating likelihood
+max log-likelihood: 73.0380029739332
+BIC: 25.362255704852828
+AIC: -74.0760059478664
+	Probabilities saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/stats.txt
+[2023-06-15 12:04:16.883136] Finished calculate_prob in 1.16 seconds
+[2023-06-15 12:04:16.883210] Finished all in 377.33 seconds
+Finished 7 at 2023-06-15T12:04:17
+Running 8 at 2023-06-15T12:04:17
+Program initilized
+[2023-06-15 12:04:21.196899] Starting all for index 8
+[2023-06-15 12:04:21.196919] Starting run_mcmc for index 8
+running...
+mcmc... (0.33)_(0.35)
+Acceptance rate: 0.2311888888888889
+Acceptance rate: 0.1988388888888889
+Acceptance rate: 0.17148333333333332
+Acceptance rate: 0.1886
+Acceptance rate: 0.1665111111111111
+Acceptance rate: 0.19218888888888888
+Acceptance rate: 0.1675611111111111
+Acceptance rate: 0.1852
+Acceptance rate: 0.16451666666666667
+Acceptance rate: 0.18351666666666666
+Acceptance rate: 0.1665
+Acceptance rate: 0.152895
+0: first half mcmc done 10.65 s
+0: second half mcmc done 10.6 s
+1: first half mcmc done 10.56 s
+1: second half mcmc done 10.59 s
+2: first half mcmc done 10.62 s
+2: second half mcmc done 10.65 s
+3: first half mcmc done 10.6 s
+3: second half mcmc done 10.56 s
+4: first half mcmc done 10.55 s
+4: second half mcmc done 10.57 s
+	Chain saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.33)_(0.35).npy
+[2023-06-15 12:09:58.820474] Finished run_mcmc in 337.62 seconds
+[2023-06-15 12:09:58.820584] Starting plot_chain for index 8
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.33)_(0.35).npy
+	Chain plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/chain-(0.33)_(0.35).pdf
+[2023-06-15 12:10:04.696215] Finished plot_chain in 5.88 seconds
+[2023-06-15 12:10:04.696296] Starting plot_corner for index 8
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.33)_(0.35).npy
+	Corner plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-z-(0.33)_(0.35).pdf and /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-w-(0.33)_(0.35).pdf
+[2023-06-15 12:10:17.233026] Finished plot_corner in 12.54 seconds
+[2023-06-15 12:10:17.233092] Starting plot_fit for index 8
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.33)_(0.35).npy
+	Fit plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/fit-(0.33)_(0.35).pdf
+[2023-06-15 12:10:42.627524] Finished plot_fit in 25.39 seconds
+[2023-06-15 12:10:42.627575] Starting calculate_prob for index 8
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.33)_(0.35).npy
+Opening the data
+Opening the chain
+Calculating likelihood
+max log-likelihood: 82.49429267169965
+BIC: 6.449676309319926
+AIC: -92.98858534339931
+	Probabilities saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/stats.txt
+[2023-06-15 12:10:43.799203] Finished calculate_prob in 1.17 seconds
+[2023-06-15 12:10:43.799265] Finished all in 382.6 seconds
+Finished 8 at 2023-06-15T12:10:44
+Running 9 at 2023-06-15T12:10:44
+Program initilized
+[2023-06-15 12:10:47.924508] Starting all for index 9
+[2023-06-15 12:10:47.924533] Starting run_mcmc for index 9
+running...
+mcmc... (0.35)_(0.37)
+Acceptance rate: 0.22891111111111112
+Acceptance rate: 0.19445
+Acceptance rate: 0.16972222222222222
+Acceptance rate: 0.19318333333333335
+Acceptance rate: 0.17297222222222222
+Acceptance rate: 0.19410555555555556
+Acceptance rate: 0.17701111111111112
+Acceptance rate: 0.19550555555555554
+Acceptance rate: 0.17708888888888888
+Acceptance rate: 0.19826666666666667
+Acceptance rate: 0.18280555555555555
+Acceptance rate: 0.17261055555555554
+0: first half mcmc done 10.63 s
+0: second half mcmc done 10.62 s
+1: first half mcmc done 10.53 s
+1: second half mcmc done 10.62 s
+2: first half mcmc done 10.49 s
+2: second half mcmc done 10.45 s
+3: first half mcmc done 10.48 s
+3: second half mcmc done 10.42 s
+4: first half mcmc done 10.41 s
+4: second half mcmc done 10.57 s
+	Chain saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.35)_(0.37).npy
+[2023-06-15 12:16:20.661447] Finished run_mcmc in 332.74 seconds
+[2023-06-15 12:16:20.661561] Starting plot_chain for index 9
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.35)_(0.37).npy
+	Chain plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/chain-(0.35)_(0.37).pdf
+[2023-06-15 12:16:26.448568] Finished plot_chain in 5.79 seconds
+[2023-06-15 12:16:26.448647] Starting plot_corner for index 9
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.35)_(0.37).npy
+	Corner plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-z-(0.35)_(0.37).pdf and /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-w-(0.35)_(0.37).pdf
+[2023-06-15 12:16:38.068543] Finished plot_corner in 11.62 seconds
+[2023-06-15 12:16:38.068616] Starting plot_fit for index 9
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.35)_(0.37).npy
+	Fit plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/fit-(0.35)_(0.37).pdf
+[2023-06-15 12:17:02.980201] Finished plot_fit in 24.91 seconds
+[2023-06-15 12:17:02.980258] Starting calculate_prob for index 9
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.35)_(0.37).npy
+Opening the data
+Opening the chain
+Calculating likelihood
+max log-likelihood: 92.71917485497886
+BIC: -14.000088057238486
+AIC: -113.43834970995772
+	Probabilities saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/stats.txt
+[2023-06-15 12:17:04.127505] Finished calculate_prob in 1.15 seconds
+[2023-06-15 12:17:04.127572] Finished all in 376.2 seconds
+Finished 9 at 2023-06-15T12:17:04
+Running 10 at 2023-06-15T12:17:04
+Program initilized
+[2023-06-15 12:17:08.175985] Starting all for index 10
+[2023-06-15 12:17:08.176004] Starting run_mcmc for index 10
+running...
+mcmc... (0.37)_(0.38)
+Acceptance rate: 0.23046111111111112
+Acceptance rate: 0.2036888888888889
+Acceptance rate: 0.18266666666666667
+Acceptance rate: 0.19712222222222223
+Acceptance rate: 0.17390555555555556
+Acceptance rate: 0.19448888888888888
+Acceptance rate: 0.1740611111111111
+Acceptance rate: 0.19136111111111112
+Acceptance rate: 0.1724388888888889
+Acceptance rate: 0.1882611111111111
+Acceptance rate: 0.16977777777777778
+Acceptance rate: 0.16324444444444444
+0: first half mcmc done 10.7 s
+0: second half mcmc done 10.64 s
+1: first half mcmc done 10.8 s
+1: second half mcmc done 10.72 s
+2: first half mcmc done 10.7 s
+2: second half mcmc done 10.8 s
+3: first half mcmc done 10.72 s
+3: second half mcmc done 10.71 s
+4: first half mcmc done 10.87 s
+4: second half mcmc done 10.76 s
+	Chain saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.37)_(0.38).npy
+[2023-06-15 12:22:50.947935] Finished run_mcmc in 342.77 seconds
+[2023-06-15 12:22:50.948042] Starting plot_chain for index 10
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.37)_(0.38).npy
+	Chain plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/chain-(0.37)_(0.38).pdf
+[2023-06-15 12:22:56.654948] Finished plot_chain in 5.71 seconds
+[2023-06-15 12:22:56.655020] Starting plot_corner for index 10
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.37)_(0.38).npy
+	Corner plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-z-(0.37)_(0.38).pdf and /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-w-(0.37)_(0.38).pdf
+[2023-06-15 12:23:08.751431] Finished plot_corner in 12.1 seconds
+[2023-06-15 12:23:08.751507] Starting plot_fit for index 10
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.37)_(0.38).npy
+	Fit plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/fit-(0.37)_(0.38).pdf
+[2023-06-15 12:23:35.345819] Finished plot_fit in 26.59 seconds
+[2023-06-15 12:23:35.345875] Starting calculate_prob for index 10
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.37)_(0.38).npy
+Opening the data
+Opening the chain
+Calculating likelihood
+max log-likelihood: 85.59082959317675
+BIC: 0.25660246636573447
+AIC: -99.1816591863535
+	Probabilities saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/stats.txt
+[2023-06-15 12:23:36.535428] Finished calculate_prob in 1.19 seconds
+[2023-06-15 12:23:36.535477] Finished all in 388.36 seconds
+Finished 10 at 2023-06-15T12:23:37
+Running 11 at 2023-06-15T12:23:37
+Program initilized
+[2023-06-15 12:23:40.779839] Starting all for index 11
+[2023-06-15 12:23:40.779860] Starting run_mcmc for index 11
+running...
+mcmc... (0.38)_(0.40)
+Acceptance rate: 0.23411666666666667
+Acceptance rate: 0.20396111111111112
+Acceptance rate: 0.1808
+Acceptance rate: 0.19585
+Acceptance rate: 0.17737777777777777
+Acceptance rate: 0.19564444444444445
+Acceptance rate: 0.17822222222222223
+Acceptance rate: 0.19411666666666666
+Acceptance rate: 0.17637777777777777
+Acceptance rate: 0.19065
+Acceptance rate: 0.17673055555555556
+Acceptance rate: 0.17149805555555556
+0: first half mcmc done 10.67 s
+0: second half mcmc done 10.36 s
+1: first half mcmc done 10.4 s
+1: second half mcmc done 10.39 s
+2: first half mcmc done 10.41 s
+2: second half mcmc done 10.39 s
+3: first half mcmc done 10.56 s
+3: second half mcmc done 10.42 s
+4: first half mcmc done 10.4 s
+4: second half mcmc done 10.42 s
+	Chain saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.38)_(0.40).npy
+[2023-06-15 12:29:12.622460] Finished run_mcmc in 331.84 seconds
+[2023-06-15 12:29:12.622567] Starting plot_chain for index 11
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.38)_(0.40).npy
+	Chain plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/chain-(0.38)_(0.40).pdf
+[2023-06-15 12:29:18.413205] Finished plot_chain in 5.79 seconds
+[2023-06-15 12:29:18.413287] Starting plot_corner for index 11
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.38)_(0.40).npy
+	Corner plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-z-(0.38)_(0.40).pdf and /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/corner-w-(0.38)_(0.40).pdf
+[2023-06-15 12:29:30.600964] Finished plot_corner in 12.19 seconds
+[2023-06-15 12:29:30.601031] Starting plot_fit for index 11
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.38)_(0.40).npy
+	Fit plot saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/plots/fit-(0.38)_(0.40).pdf
+[2023-06-15 12:29:56.111280] Finished plot_fit in 25.51 seconds
+[2023-06-15 12:29:56.111336] Starting calculate_prob for index 11
+	Loading chain from
+	/home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/data/chain-(0.38)_(0.40).npy
+Opening the data
+Opening the chain
+Calculating likelihood
+max log-likelihood: 84.0178408732603
+BIC: 3.402579906198639
+AIC: -96.0356817465206
+	Probabilities saved to /home2/s20321005/Thesis-Project/Data/MCMC-no/dddm/stats.txt
+[2023-06-15 12:29:57.252911] Finished calculate_prob in 1.14 seconds
+[2023-06-15 12:29:57.252976] Finished all in 376.47 seconds
+Finished 11 at 2023-06-15T12:29:58

@@ -8,9 +8,9 @@ from .runcmd import runcmd
 from .style import style
 from .load_spectral_types import load_spectral_types
 from .completeness import compjk
-from .plot_mcmc import plot_chain, plot_corner, plot_fit, plot_fit_w, plot_fit_z
-from .mcmc import generate_init, get_data, get_params, get_initial_position_normal, mcmc_z, mcmc_parallel_z, mcmc_w, calculate_prob, Model
-from .program import Program
-from .hdi import hdi, find_max
+from .plot_mcmc import plot_chain, plot_corner, plot_fit
+from .mcmc import mcmc, generate_init, get_data_z, get_data_w, get_params, get_initial_position_normal, predictive_posterior, Model, bayes_factor
+# from .program import Program
+from .hdi import hdi
 from .interpolation_function import simple, standard, inv_simple, inv_standard
 from .concat import concat
