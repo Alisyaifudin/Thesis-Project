@@ -21,8 +21,7 @@ root_data_dir = abspath(join(root_dir, "Data"))
 name = "Best-Pars"
 data_dir = join(root_data_dir, name)
 # load combined data
-name = "GAIA"
-combine_data_dir = join(root_data_dir, name)
+combine_data_dir = join(root_data_dir, "Combine", "combine_gaia")
 # see the data
 files = glob(join(combine_data_dir, "*.hdf5"))
 files.sort()

@@ -43,11 +43,11 @@ sigmaz_std = df_baryon["e_sigma_z"].to_numpy() # km/s
 # init dynamics
 sigmaz_init = {'mean_arr': sigmaz_mean, 'sigma_arr': sigmaz_std, 'value': sigmaz_mean, 'label': r'$\sigma_{z}$', 'lab': 'sigmaz'}
 rhob_init = {'mean_arr': rhob_mean, 'sigma_arr': rhob_std, 'value': rhob_mean, 'label': r'$\rho_{\textup{b}}$', 'lab': 'rhob'}
-rhoDM_init = {'low': -0.05, 'high': 0.1, 'value': 0.016,
+rhoDM_init = {'low': -0.05, 'high': 0.15, 'value': 0.016,
               'label': r'$\rho_{\textup{DM}}$', 'lab': 'rhoDM'}
 sigmaDD_init = {'low': 0., 'high': 30., 'value': 7.,
                 'label': r'$\sigma_{\textup{DD}}$', 'lab': 'sigmaDD'}
-hDD_init = {'low': 1., 'high': 1000., 'value': 30.,
+hDD_init = {'low': 1., 'high': 150., 'value': 30.,
             'label': r'$h_{\textup{DD}}$', 'lab': 'hDD'}
 log_nu0_init = {'mean': 0, 'sigma': 3, 'value': 0.,
                 'label': r'$\log \nu_0$', 'lab': 'log_nu0'}
@@ -56,21 +56,18 @@ R_init = {'mean': 3.4E-3, 'sigma': 0.6E-3,
 zsun_init = {'low': -150, 'high': 150, 'value': 0.,
              'label': r'$z_{\odot}$', 'lab': 'zsun'}
 # init kinematic
-w0_init = {'low': -15, 'high': 0., 'value': -
-           7., 'label': r'$w_0$', 'lab': 'w0'}
+w0_init = {'low': -15, 'high': 0., 'value': -7., 'label': r'$w_0$', 'lab': 'w0'}
 log_sigmaw_init = {'low': np.log(3), 'high': np.log(50), 'value': np.log(
     5), 'label': r'$\log \sigma_{w}$', 'lab': 'log_sigmaw'}
 q_sigmaw_init = {'low': 0, 'high': 1, 'value': 0.5, 'label': r'$q_{w}$', 'lab': 'q_sigmaw'}
 log_a_init = {'mean': 0., 'sigma': 2., 'value': 0.,
                'label': r'$\log a$', 'lab': 'log_a'}
-q_a_init = {'low': 0.01, 'high': 1., 'value': 0.5,
+q_a_init = {'low': 0.5, 'high': 1., 'value': 0.75,
                'label': r'$q_a$', 'lab': 'q_a'}
-log_phi_b_init = {'low': 0., 'high': 10., 'value': 2.,
-                'label': r'$\log \Phi_b$', 'lab': 'log_phi_b'}
 
-init_DM = [sigmaz_init, rhob_init, rhoDM_init, log_nu0_init, zsun_init, R_init, w0_init, log_sigmaw_init, q_sigmaw_init, log_a_init, q_a_init, log_phi_b_init]
-init_DDDM = [sigmaz_init, rhob_init, rhoDM_init, sigmaDD_init, hDD_init, log_nu0_init, zsun_init, R_init, w0_init, log_sigmaw_init, q_sigmaw_init, log_a_init, q_a_init, log_phi_b_init]
-init_no = [sigmaz_init, rhob_init, log_nu0_init, zsun_init, R_init, w0_init, log_sigmaw_init, q_sigmaw_init, log_a_init, q_a_init, log_phi_b_init]
+init_DM = [sigmaz_init, rhob_init, rhoDM_init, log_nu0_init, zsun_init, R_init, w0_init, log_sigmaw_init, q_sigmaw_init, log_a_init, q_a_init]
+init_DDDM = [sigmaz_init, rhob_init, rhoDM_init, sigmaDD_init, hDD_init, log_nu0_init, zsun_init, R_init, w0_init, log_sigmaw_init, q_sigmaw_init, log_a_init, q_a_init]
+init_no = [sigmaz_init, rhob_init, log_nu0_init, zsun_init, R_init, w0_init, log_sigmaw_init, q_sigmaw_init, log_a_init, q_a_init]
 
 init_dict = {
     Model.DM.name: init_DM,
@@ -412,50 +409,36 @@ def bayes_factor(
     ):
     """
     Calculate the bayes factor of the model
-
-    Parameters
-    ----------
-    model: `Model` = `Model.DM`, `Model.DDDM`, or `Model.NO` \n
-    flat_chain: ndarray(shape=(length, ndim)) \n
-    zdata: ndarray = (zmid, znum, comp) \n
-    wdata: ndarray = (wmid, wnum) \n
-    options:
-        nsample: `int` = 10_000 \n
-        alpha: 'float' = 5 (alpha-level)\n
-        batch: `int` = 1000 \n
-
-    Result
-    -----------
-    logZ: float
-        log marginal likelihood
     """
     nsample = options.get("nsample", 5_000)
     alpha = options.get("alpha", 5)
-    batch = options.get("batch", 1000)
+    batch = options.get("batch", 10)
+    run = options.get("run", 10)
     
     length, ndim = flat_chain.shape
-    ind = np.random.choice(np.arange(length), size=nsample, replace=False)
-    theta = flat_chain[ind]
-    
-    vol = 1
-    for i in range(ndim):
-        l, u = np.percentile(theta[:, i], [alpha/2, 100-alpha/2])
-        mask = (theta[:, i] > l)*(theta[:, i] < u)
-        theta = theta[mask]
-        vol *= u-l
-    length, _ = theta.shape
-    batch = np.minimum(batch, length-1)
-    log_nu0_max = np.log(zdata[1].max())
-    log_a_max = np.log(wdata[1].max())
-    init = generate_init(model, log_nu0_max, log_a_max)
-    locs = init['locs']
-    scales = init['scales']    
-    log_prob = -1*model.log_prob_par(theta, zdata, wdata, locs, scales, batch=batch)
-    log_max = np.max(log_prob)
-    log_prob -= log_max
-    log_sum = log_max + np.log(np.sum(np.exp(log_prob)))
-    logZ = np.log(vol) - log_sum
-    return logZ
+    res = []
+    for i in tqdm(range(run)):
+        ind = np.random.choice(np.arange(length), size=nsample)
+        theta = flat_chain[ind]
+        vol = 1
+        for i in range(ndim):
+            l, u = np.percentile(theta[:, i], [alpha/2, 100-alpha/2])
+            mask = (theta[:, i] > l)*(theta[:, i] < u)
+            theta = theta[mask]
+            vol *= u-l
+        # print(theta.shape)
+        log_nu0_max = np.log(zdata[1].max())
+        log_a_max = np.log(wdata[1].max())
+        init = generate_init(model, log_nu0_max, log_a_max)
+        locs = init['locs']
+        scales = init['scales']    
+        log_prob = -1*model.log_prob_par(theta, zdata, wdata, locs, scales, batch=batch)
+        log_max = np.max(log_prob)
+        log_prob -= log_max
+        log_sum = log_max + np.log(np.sum(np.exp(log_prob)))
+        logZ = np.log(vol) - log_sum
+        res.append(logZ*np.log10(np.e))
+    return np.mean(res), np.std(res)
 
 # def mcmc_z(model: Model, z_path: str, psi: np.ndarray, **options):
 #     """

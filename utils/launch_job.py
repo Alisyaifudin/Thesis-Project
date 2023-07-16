@@ -15,7 +15,9 @@ def launch_job(job_func, query, cols="", duration=10):
         df (vaex.dataframe): The dataframe or None.
     """
     # run the job and wrap in timeout
+    
     job = timeout(job_func, args=(query,), duration=duration)
+    
     df = None
     # print error if job failed
     if job['data'] == None:
@@ -27,4 +29,6 @@ def launch_job(job_func, query, cols="", duration=10):
         if cols != "":
             df.columns = cols
         df = vaex.from_pandas(df)
+    # print(df)
+    # raise NotImplementedError
     return df

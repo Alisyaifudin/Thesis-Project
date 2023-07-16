@@ -22,11 +22,11 @@ from utils import (launch_job, append_name, safe_mkdir,
 # get the root of data directory
 root_data_dir = abspath(join(root_dir, "Data"))
 # Create a directory for Gaia DR3 and 2MASS data or if it already exists, just move on
-ra_name = "Gaia-2MASS"
+ra_name = "Gaia-all"
 gaia_data_dir = join(root_data_dir, ra_name)
 safe_mkdir(gaia_data_dir)
 # Do the same for 2MASS data
-ra_name = "TWOMASS"
+ra_name = "twomass-all"
 tmass_data_dir = join(root_data_dir, ra_name)
 safe_mkdir(tmass_data_dir)
 ###################################################################
@@ -71,10 +71,10 @@ columns = column_gaia + column_astrophysical + column_join
 # 2MASS tap endpoint
 tap_tmass = Tap(url="https://irsa.ipac.caltech.edu/TAP/sync")
 
-columns_tmass = ["ra", "dec", "j_m", "k_m", "designation", "ph_qual"]
+columns_tmass = ["ra", "dec","j_m", "k_m", "designation", "ph_qual", "use_src", "rd_flg"]
 
-# rename the table columns as
-columns_tmass_names = ["ra", "dec", "Jmag", "Kmag", "designation", "ph_qual"]
+# rename the table columns as 
+columns_tmass_names = ["ra", "dec","Jmag", "Kmag", "designation", "ph_qual", "use_src", "rd_flg"]
 
 tmass_table = "fp_psc"
 column_tmass = list(map(lambda x: append_name(x, tmass_table), columns_tmass))
@@ -210,6 +210,9 @@ def iterate_job(ras, decs, gen_gaia_query, gen_tmass_query, path_gaia, path_tmas
                     df_tmass, right_on="designation", left_on="tmass", how="left")
                 # delete the columns that are not needed
                 df_join.drop(columns=["designation", "tmass"], inplace=True)
+                # filtered nan in joining
+                df_join = df_join.filter("ra > 0.")
+                df_join = df_join.extract()
                 # save the result to the disk
                 df_join.export(
                     join(path_gaia, ra_name, f"dec_({dec0})-({dec1}).hdf5"))
@@ -281,6 +284,7 @@ def gen_gaia_query(ra0, ra1, dec0, dec1, top):
     RIGHT JOIN gaiadr3.tmass_psc_xsc_join as {join_alias} ON join_table.clean_tmass_psc_xsc_oid = tmass.clean_tmass_psc_xsc_oid
     WHERE ra BETWEEN {ra0} AND {ra1} 
     AND dec BETWEEN {dec0} AND {dec1}
+    AND parallax is not null
     """
 
 
@@ -289,11 +293,17 @@ def gen_tmass_query(ra0, ra1, dec0, dec1, top):
     FROM {tmass_table}
     WHERE ra BETWEEN {ra0-0.5} AND {ra1+0.5}
     AND dec BETWEEN {dec0-0.5} AND {dec1+0.5}
+    AND (ph_qual like 'A__' OR (rd_flg like '1__' OR rd_flg like '3__'))
+    AND (ph_qual like '__A' OR (rd_flg like '__1' OR rd_flg like '__3')) 
+    AND use_src='1' AND ext_key is null
+    AND (j_m-k_m) > -0.05
+    AND (j_m-k_m) < 1.0
+    AND j_m < 13.5 AND j_m > 2
     """
 
 
 print(ras, decs)
 ############################################################################################################
 iterate_job(ras, decs, gen_gaia_query, gen_tmass_query, gaia_data_dir, tmass_data_dir,
-            columns_tmass_names, gaia_top=100_000, tmass_top=100_000, timeout=300,
+            columns_tmass_names, gaia_top=100_000, tmass_top=100_000, timeout=600,
             start_dec=start_dec, num_tries=10)

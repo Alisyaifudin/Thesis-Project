@@ -7,8 +7,8 @@ rust/*
 2_Cleaning/**/*.txt
 undefined_Gravity/**/*.txt
 undefined_Gravity/logs
-6_mcmc/**/*.pdf
-6_mcmc/**/*.txt
+5_mcmc/**/*.pdf
+5_mcmc/**/*.txt
 *.pdf
 *.png
 *.pkl
