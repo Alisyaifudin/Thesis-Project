@@ -50,11 +50,12 @@ def timestamp_decorator(func):
 
 
 default_props = {
-    'burn': 1_000,
+    'burn': 3_500,
     'step0': 500,
-    'step': 10_000,
+    'step': 50_000,
     'it': 2,
     'thin': 20,
+    'chain_long': 100,
     'm': 10,
     'log': True,
     'alpha': 0.01,
@@ -138,6 +139,16 @@ def get_props(args):
     else:
         raise ValueError("invalid type")
 
+def get_name(name, args):
+    name = name.split("_")[-1]
+    if args.type == "n":
+        name = int(name)
+        name = f"$N = {name}$"
+    elif args.type == "z":
+        name = float(name)
+        name = r"$\eta = {name}$".format(name=name)
+    return name
+
 class Program:
     def __init__(self):
         pass
@@ -177,6 +188,10 @@ class Program:
         wdata = get_data_w(self.props['w_path'])
         chain_path = join(self.props['result_path'], 'data', f'chain-{name}.npy')
         chain = np.load(chain_path)
+        length = chain.shape[0]
+        m = length//self.props['chain_long']
+        m = max(m, 1)
+        chain = chain[::m]
         print(f'\tLoading chain from\n\t{chain_path}')
         output_path = join(self.props['result_path'],
                             'plots', f'chain-{name}.pdf')
@@ -186,9 +201,9 @@ class Program:
         indexes = init['indexes']
         labs = init['labs']
         labels = init['labels']
-
+        name = get_name(name, args)
+    
         params, labels = get_params(chain, indexes, labs, labels)
-
         plot_chain(
             name=name,
             params=params,
@@ -216,6 +231,7 @@ class Program:
         indexes = init['indexes']
         labs = init['labs']
         labels = init['labels']
+        name = get_name(name, args)
         params, labels = get_params(chain, indexes, labs, labels)
         b = bs[self.props['model'].name]
 
@@ -246,6 +262,7 @@ class Program:
         ndim = chain.shape[-1]
         flat_chain = chain.reshape(-1, ndim)
         nsample = np.minimum(self.props['nsample'], flat_chain.shape[0])
+        name = get_name(name, args)
         print(f'\tLoading chain from\n\t{chain_path}')
 
         plot_fit(
@@ -292,7 +309,7 @@ class Program:
             nsample=flat_chain.shape[0]
         )
         prob = np.sum(probs*np.log10(np.exp(1)))
-        log_bf_dm = bayes_factor(
+        log_bf_dm, e_log_bf_dm = bayes_factor(
             model=self.props['model'], 
             flat_chain=flat_chain, 
             zdata=zdata_in,
@@ -302,7 +319,7 @@ class Program:
         )
         
         with open(output_file, 'a') as f:
-            f.write(f'{name},{prob},{log_bf_dm},{datetime.now()}\n')
+            f.write(f'{name},{prob},{log_bf_dm},{e_log_bf_dm},{datetime.now()}\n')
         print(f'\tProbabilities saved to {output_file}')
 
     @timestamp_decorator

@@ -18,7 +18,7 @@ sigmaz = df_baryon["sigma_z"].to_numpy() # km/s
 rhob = np.array(df_baryon["rho"].to_numpy())  # Msun/pc^3
 rhoDM = 0.02
 log_nu0 = 0
-zsun = 30
+zsun = 10
 R = 3.4E-3
 w0 = -7
 sigmaw1 = 5
@@ -27,14 +27,10 @@ log_sigmaw = np.log(sigmaw1)
 q_sigmaw = sigmaw1/sigmaw2
 a1 = 1
 a2 = 0.1
-log_a = np.log(a1)
-q_a = a2/a1
-log_phi = 3
-theta = concat(sigmaz, rhob, rhoDM, log_nu0, zsun, R, w0, log_sigmaw, q_sigmaw, log_a, q_a, log_phi)
-phi = Model.DM.potential(np.array([50.+zsun]), theta, dz=0.5)
-log_phi = np.log(phi)
-theta[-1] = log_phi
-
+a = a1+a2
+log_a = np.log(a)
+q_a = a1/a
+theta = concat(sigmaz, rhob, rhoDM, log_nu0, zsun, R, w0, log_sigmaw, q_sigmaw, log_a, q_a)
 # number of walkers
 N = 16
 
@@ -50,4 +46,4 @@ t0 = time()
 chain = Model.DM.sample(1_001_000, nwalkers, pos, theta,
                   dz=dz, verbose=True, parallel=True)
 print(time() - t0, "s")
-np.save(join(root_dir, 'Data', 'MCMC-mock', 'sample', 'chain.npy'), chain[1000:, :, :])
+np.save(join(root_dir, 'Data', 'MCMC-mock', 'chain.npy'), chain[1000:, :, :])

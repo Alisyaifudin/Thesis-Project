@@ -6,6 +6,7 @@ from time import time
 import argparse
 import numpy as np
 import vaex
+import re
 import sys
 current = pathlib.Path(__file__).parent.resolve()
 root_dir = abspath(join(current, '..', '..'))
@@ -86,6 +87,17 @@ HammerModel = {
     'DDDM': Model.DDDM,
     'NO': Model.NO,
 }
+
+def extract_c(name):
+    pattern = r"\((-?\d+\.\d+)\)_\((-?\d+\.\d+)\)"
+    match = re.match(pattern, name)
+    c0, c1 = None, None
+    if match:
+        c0 = match.group(1)
+        c1 = match.group(2)
+        c0 = float(c0)  # Convert to float if desired
+        c1 = float(c1)  # Convert to float if desired
+    return c0, c1
 
 zb = 200
 
@@ -169,6 +181,8 @@ class Program:
         indexes = init['indexes']
         labs = init['labs']
         labels = init['labels']
+        c0, c1 = extract_c(name)
+        name = r"${c0}<J-K_s<{c1}$".format(c0=c0, c1=c1)
 
         params, labels = get_params(chain, indexes, labs, labels)
         plot_chain(
@@ -200,6 +214,8 @@ class Program:
         labels = init['labels']
         params, labels = get_params(chain, indexes, labs, labels)
         b = bs[self.props['model'].name]
+        c0, c1 = extract_c(name)
+        name = r"${c0}<J-K_s<{c1}$".format(c0=c0, c1=c1)
 
         plot_corner(
             name=name,
@@ -228,8 +244,10 @@ class Program:
         ndim = chain.shape[-1]
         flat_chain = chain.reshape(-1, ndim)
         nsample = np.minimum(self.props['nsample'], flat_chain.shape[0])
+        c0, c1 = extract_c(name)
+        name = r"${c0}<J-K_s<{c1}$".format(c0=c0, c1=c1)
         print(f'\tLoading chain from\n\t{chain_path}')
-
+        
         plot_fit(
             name=name,
             model=self.props['model'],
