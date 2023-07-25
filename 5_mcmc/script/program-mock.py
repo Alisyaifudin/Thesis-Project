@@ -7,10 +7,11 @@ import argparse
 import numpy as np
 import vaex
 import sys
+import json
 current = pathlib.Path(__file__).parent.resolve()
 root_dir = abspath(join(current, '..', '..'))
 sys.path.append(root_dir)
-from utils import plot_chain, plot_corner, plot_fit, mcmc, get_data_w, get_data_z, get_params, generate_init, predictive_posterior, Model, concat, bayes_factor
+from utils import plot_chain, plot_corner, plot_fit, mcmc, get_data_w, get_data_z, get_params, generate_init, predictive_posterior, Model, concat, bayes_factor, bic_aic
 root_data_dir = join(root_dir, 'Data')
 # initilization
 parser = argparse.ArgumentParser(description='Run mcmc in seperate process')
@@ -74,27 +75,27 @@ bs = {
 
 result_paths = {
     'DM': {
-        'n': join(root_data_dir, 'MCMC-mock', 'n', 'dm'),
-        'z': join(root_data_dir, 'MCMC-mock', 'z', 'dm'),
+        'thic': join(root_data_dir, 'MCMC-mock', 'thic', 'dm'),
+        'thin': join(root_data_dir, 'MCMC-mock', 'thin', 'dm'),
     },
     'DDDM': {
-        'n': join(root_data_dir, 'MCMC-mock', 'n', 'dddm'),
-        'z': join(root_data_dir, 'MCMC-mock', 'z', 'dddm'),
+        'thic': join(root_data_dir, 'MCMC-mock', 'thic', 'dddm'),
+        'thin': join(root_data_dir, 'MCMC-mock', 'thin', 'dddm'),
     },
     'NO': {
-        'n': join(root_data_dir, 'MCMC-mock', 'n', 'no'),
-        'z': join(root_data_dir, 'MCMC-mock', 'z', 'no'),
+        'thic': join(root_data_dir, 'MCMC-mock', 'thic', 'no'),
+        'thin': join(root_data_dir, 'MCMC-mock', 'thin', 'no'),
     }
 }
 
 z_dir_paths = {
-    'n': join(root_data_dir, 'MCMC-mock', 'n'),
-    'z': join(root_data_dir, 'MCMC-mock', 'z'),
+    'thic': join(root_data_dir, 'MCMC-mock', 'thic'),
+    'thin': join(root_data_dir, 'MCMC-mock', 'thin'),
 }
 
 w_dir_paths = {
-    'n': join(root_data_dir, 'MCMC-mock', 'n'),
-    'z': join(root_data_dir, 'MCMC-mock', 'z'),
+    'thic': join(root_data_dir, 'MCMC-mock', 'thic'),
+    'thin': join(root_data_dir, 'MCMC-mock', 'thin'),
 }
 
 HammerModel = {
@@ -114,7 +115,7 @@ def get_props(args):
     except:
         raise ValueError('data must be integer')
     props = default_props.copy()
-    if type in ['n', 'z']: 
+    if type in ['thic', 'thin']: 
         if model in ['DM', 'DDDM', 'NO']:
             props['result_path'] = result_paths[model][type]
         else:
@@ -139,14 +140,10 @@ def get_props(args):
     else:
         raise ValueError("invalid type")
 
-def get_name(name, args):
+def get_name(name):
     name = name.split("_")[-1]
-    if args.type == "n":
-        name = int(name)
-        name = f"$N = {name}$"
-    elif args.type == "z":
-        name = float(name)
-        name = r"$\eta = {name}$".format(name=name)
+    name = int(name)
+    name = f"$N = {name}$"
     return name
 
 class Program:
@@ -201,7 +198,7 @@ class Program:
         indexes = init['indexes']
         labs = init['labs']
         labels = init['labels']
-        name = get_name(name, args)
+        name = get_name(name)
     
         params, labels = get_params(chain, indexes, labs, labels)
         plot_chain(
@@ -231,7 +228,7 @@ class Program:
         indexes = init['indexes']
         labs = init['labs']
         labels = init['labels']
-        name = get_name(name, args)
+        name = get_name(name)
         params, labels = get_params(chain, indexes, labs, labels)
         b = bs[self.props['model'].name]
 
@@ -262,7 +259,7 @@ class Program:
         ndim = chain.shape[-1]
         flat_chain = chain.reshape(-1, ndim)
         nsample = np.minimum(self.props['nsample'], flat_chain.shape[0])
-        name = get_name(name, args)
+        name = get_name(name)
         print(f'\tLoading chain from\n\t{chain_path}')
 
         plot_fit(
@@ -282,15 +279,6 @@ class Program:
     def calculate_prob(self, args):
         zdata = get_data_z(self.props["z_path"])
         zmid, znum, comp = zdata
-        mask = np.abs(zmid) > zb
-        zmid_out = zmid[mask]
-        znum_out = znum[mask]
-        comp_out = comp[mask]
-        zdata_out = (zmid_out, znum_out, comp_out)
-        zmid_in = zmid[~mask]
-        znum_in = znum[~mask]
-        comp_in = comp[~mask]
-        zdata_in = (zmid_in, znum_in, comp_in)
         wdata = get_data_w(self.props["w_path"])
         name = self.props["z_path"].split(
             "/")[-1].replace(".hdf5", "").replace("z_", "")
@@ -300,15 +288,12 @@ class Program:
         ndim = chain.shape[-1]
         flat_chain = chain.reshape(-1, ndim)
         print(f'\tLoading chain from\n\t{chain_path}')
-        output_file = join(self.props['result_path'], 'stats.txt')
-
-        probs = predictive_posterior(
-            model=self.props['model'],
-            flat_chain=flat_chain,
-            zdata=zdata_out,
-            nsample=flat_chain.shape[0]
-        )
-        prob = np.sum(probs*np.log10(np.exp(1)))
+        output_dir = join(self.props['result_path'], 'stats')
+        mask = np.abs(zmid) < zb
+        zmid_in = zmid[mask]
+        znum_in = znum[mask]
+        comp_in = comp[mask]
+        zdata_in = (zmid_in, znum_in, comp_in)
         log_bf_dm, e_log_bf_dm = bayes_factor(
             model=self.props['model'], 
             flat_chain=flat_chain, 
@@ -317,10 +302,41 @@ class Program:
             nsample=flat_chain.shape[0],
             batch=100
         )
-        
-        with open(output_file, 'a') as f:
-            f.write(f'{name},{prob},{log_bf_dm},{e_log_bf_dm},{datetime.now()}\n')
-        print(f'\tProbabilities saved to {output_file}')
+        bic, aic = bic_aic(
+            model=self.props['model'], 
+            flat_chain=flat_chain, 
+            zdata=zdata_in,
+            wdata=wdata,
+            batch=100
+        )
+        stats = {
+            'name': name,
+            'log_bf': log_bf_dm,
+            'e_log_bf': e_log_bf_dm,
+            'bic': bic,
+            'aic': aic,
+            'datetime': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'predictive_posterior': []
+        }
+        for zi in [300, 350, 400, 450, 500]:
+            mask = (np.abs(zmid) > zb)*(np.abs(zmid) < zi)
+            zmid_out = zmid[mask]
+            znum_out = znum[mask]
+            comp_out = comp[mask]
+            zdata_out = (zmid_out, znum_out, comp_out)
+            
+            probs = predictive_posterior(
+                model=self.props['model'],
+                flat_chain=flat_chain,
+                zdata=zdata_out,
+                nsample=flat_chain.shape[0]
+            )
+            prob = np.sum(probs*np.log10(np.e))
+            stats['predictive_posterior'].append([zi, prob])
+        stat_file = join(output_dir, f'stats-{name}.json')
+        with open(stat_file, "w+") as outfile:
+            json.dump(stats, outfile)
+        print(f'\tProbabilities saved to {output_dir}')
 
     @timestamp_decorator
     def all(self, args):

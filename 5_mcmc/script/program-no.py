@@ -7,11 +7,12 @@ import argparse
 import numpy as np
 import vaex
 import re
+import json
 import sys
 current = pathlib.Path(__file__).parent.resolve()
 root_dir = abspath(join(current, '..', '..'))
 sys.path.append(root_dir)
-from utils import plot_chain, plot_corner, plot_fit, mcmc, get_data_w, get_data_z, get_params, generate_init, predictive_posterior, Model, concat, bayes_factor
+from utils import plot_chain, plot_corner, plot_fit, mcmc, get_data_w, get_data_z, get_params, generate_init, predictive_posterior, Model, concat, bayes_factor, bic_aic
 root_data_dir = join(root_dir, 'Data')
 # initilization
 parser = argparse.ArgumentParser(description='Run mcmc in seperate process')
@@ -200,7 +201,7 @@ class Program:
         name = z_path.split("/")[-1].replace(".hdf5", "").replace("z_", "")
         chain_path = join(self.props['result_path'],
                             'data', f'chain-{name}.npy')
-        chain = np.load(chain_path)
+        chain = np.load(chain_path) 
         zdata = get_data_z(self.props['z_path'])
         wdata = get_data_w(self.props['w_path'])
         log_z_max = np.log(zdata[1].max())
@@ -283,16 +284,13 @@ class Program:
         ndim = chain.shape[-1]
         flat_chain = chain.reshape(-1, ndim)
         print(f'\tLoading chain from\n\t{chain_path}')
-        output_file = join(self.props['result_path'], 'stats.txt')
-
-        probs = predictive_posterior(
-            model=self.props['model'],
-            flat_chain=flat_chain,
-            zdata=zdata_out,
-            nsample=flat_chain.shape[0]
-        )
-        prob = np.sum(probs*np.log10(np.exp(1)))
-        log_bf_dm = bayes_factor(
+        output_dir = join(self.props['result_path'], 'stats')
+        mask = np.abs(zmid) < zb
+        zmid_in = zmid[mask]
+        znum_in = znum[mask]
+        comp_in = comp[mask]
+        zdata_in = (zmid_in, znum_in, comp_in)
+        log_bf_dm, e_log_bf_dm = bayes_factor(
             model=self.props['model'], 
             flat_chain=flat_chain, 
             zdata=zdata_in,
@@ -300,10 +298,40 @@ class Program:
             nsample=flat_chain.shape[0],
             batch=100
         )
+        bic, aic = bic_aic(
+            model=self.props['model'], 
+            flat_chain=flat_chain, 
+            zdata=zdata_in,
+            wdata=wdata,
+            batch=100
+        )
+        stats = {
+            'name': name,
+            'log_bf': log_bf_dm,
+            'e_log_bf': e_log_bf_dm,
+            'bic': bic,
+            'aic': aic,
+            'datetime': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'predictive_posterior': None
+        }
+        mask = (np.abs(zmid) > zb)
+        zmid_out = zmid[mask]
+        znum_out = znum[mask]
+        comp_out = comp[mask]
+        zdata_out = (zmid_out, znum_out, comp_out)
         
-        with open(output_file, 'a') as f:
-            f.write(f'{name},{prob},{log_bf_dm},{datetime.now()}\n')
-        print(f'\tProbabilities saved to {output_file}')
+        probs = predictive_posterior(
+            model=self.props['model'],
+            flat_chain=flat_chain,
+            zdata=zdata_out,
+            nsample=flat_chain.shape[0]
+        )
+        prob = np.sum(probs*np.log10(np.e))
+        stats['predictive_posterior'] = prob
+        stat_file = join(output_dir, f'stats-{name}.json')
+        with open(stat_file, "w+") as outfile:
+            json.dump(stats, outfile)
+        print(f'\tProbabilities saved to {stat_file}')
 
     @timestamp_decorator
     def all(self, args):

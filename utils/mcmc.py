@@ -416,16 +416,52 @@ def bayes_factor(
     run = options.get("run", 10)
     
     length, ndim = flat_chain.shape
+
+    dm_label = ['dm', 'log_nu0', 'zsun', 'R', 'w0', 'log_sigmaw', 'q_sigmaw', 'log_a', 'q_a']
+    dddm_label = ['dm', 'sigmaDD', 'hDD', 'log_nu0', 'zsun', 'R', 'w0', 'log_sigmaw', 'q_sigmaw', 'log_a', 'q_a']
+    no_label = ['log_nu0', 'zsun', 'R', 'w0', 'log_sigmaw', 'q_sigmaw', 'log_a', 'q_a']
+    labels = dm_label
+    if ndim == 35:
+        labels = dddm_label
+    elif ndim == 32:
+        labels = no_label
+
     res = []
     for i in tqdm(range(run)):
         ind = np.random.choice(np.arange(length), size=nsample)
         theta = flat_chain[ind]
         vol = 1
-        for i in range(ndim):
+        for i in range(24):
             l, u = np.percentile(theta[:, i], [alpha/2, 100-alpha/2])
             mask = (theta[:, i] > l)*(theta[:, i] < u)
             theta = theta[mask]
             vol *= u-l
+        for i, label in enumerate(labels):
+            if label in ['dm', 'log_nu0', 'zsun', 'R', 'w0', 'sigmaDD', 'hDD']:
+                l, u = np.percentile(theta[:, i+24], [alpha/2, 100-alpha/2])
+                mask = (theta[:, i+24] > l)*(theta[:, i+24] < u)
+                theta = theta[mask]
+                vol *= u-l
+            if label == 'log_sigmaw':
+                log_sigmaw = theta[:, i+24]
+                q_sigmaw = theta[:, i+25]
+                log_sigmaw2 = log_sigmaw - np.log(q_sigmaw)
+                log_sigmaw_low, log_sigmaw_up = np.percentile(log_sigmaw, [alpha/2, 100-alpha/2])
+                log_sigmaw2_low, log_sigmaw2_up = np.percentile(log_sigmaw2, [alpha/2, 100-alpha/2])
+                mask = (log_sigmaw > log_sigmaw_low)*(log_sigmaw < log_sigmaw_up)*(log_sigmaw2 > log_sigmaw2_low)*(log_sigmaw2 < log_sigmaw2_up)
+                theta = theta[mask]
+                vol *= log_sigmaw_up-log_sigmaw_low
+                vol *= log_sigmaw2_up-log_sigmaw2_low
+            if label == 'log_a':
+                log_a = theta[:, i+24]
+                q_a = theta[:, i+25]
+                log_a2 = log_a + np.log(1-q_a)
+                log_a_low, log_a_up = np.percentile(log_a, [alpha/2, 100-alpha/2])
+                log_a2_low, log_a2_up = np.percentile(log_a2, [alpha/2, 100-alpha/2])
+                mask = (log_a > log_a_low)*(log_a < log_a_up)*(log_a2 > log_a2_low)*(log_a2 < log_a2_up)
+                theta = theta[mask]
+                vol *= log_a_up-log_a_low
+                vol *= log_a2_up-log_a2_low
         # print(theta.shape)
         log_nu0_max = np.log(zdata[1].max())
         log_a_max = np.log(wdata[1].max())
@@ -433,12 +469,42 @@ def bayes_factor(
         locs = init['locs']
         scales = init['scales']    
         log_prob = -1*model.log_prob_par(theta, zdata, wdata, locs, scales, batch=batch)
-        log_max = np.max(log_prob)
-        log_prob -= log_max
-        log_sum = log_max + np.log(np.sum(np.exp(log_prob)))
+        log_post = log_prob[:, 2]
+        log_max = np.max(log_post)
+        log_post -= log_max
+        log_sum = log_max + np.log(np.sum(np.exp(log_post)))
         logZ = np.log(vol) - log_sum
         res.append(logZ*np.log10(np.e))
     return np.mean(res), np.std(res)
+
+def bic_aic(
+        model: Model, 
+        flat_chain: np.ndarray, 
+        zdata,
+        wdata,
+        **options: dict
+    ):
+    """
+    Calculate the bayes factor of the model
+    """
+    batch = options.get("batch", 10)
+    
+    length, ndim = flat_chain.shape
+    theta = flat_chain
+
+    zmid, znum, comp = zdata
+    wmid, wnum = wdata
+    log_nu0_max = np.log(znum.max())
+    log_a_max = np.log(wnum.max())
+    init = generate_init(model, log_nu0_max, log_a_max)
+    locs = init['locs']
+    scales = init['scales']    
+    log_prob = np.log10(np.e)*model.log_prob_par(theta, zdata, wdata, locs, scales, batch=batch)
+    log_likelihood = log_prob[:, 1]
+    log_max = np.max(log_likelihood)
+    bic = -2*log_max + ndim*np.log10(len(zmid)*3)
+    aic = -2*log_max + 2*ndim
+    return bic, aic
 
 # def mcmc_z(model: Model, z_path: str, psi: np.ndarray, **options):
 #     """

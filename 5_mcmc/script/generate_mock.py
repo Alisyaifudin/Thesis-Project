@@ -21,8 +21,10 @@ log_nu0 = 0
 zsun = 10
 R = 3.4E-3
 w0 = -7
-sigmaw1 = 5
-sigmaw2 = 10
+# sigmaw1 = 5 # thin
+# sigmaw2 = 10
+sigmaw1 = 12 # thick
+sigmaw2 = 20 
 log_sigmaw = np.log(sigmaw1)
 q_sigmaw = sigmaw1/sigmaw2
 a1 = 1
@@ -46,4 +48,4 @@ t0 = time()
 chain = Model.DM.sample(1_001_000, nwalkers, pos, theta,
                   dz=dz, verbose=True, parallel=True)
 print(time() - t0, "s")
-np.save(join(root_dir, 'Data', 'MCMC-mock', 'chain.npy'), chain[1000:, :, :])
+np.save(join(root_dir, 'Data', 'MCMC-mock', 'thic', 'chain.npy'), chain[1000:, :, :])
