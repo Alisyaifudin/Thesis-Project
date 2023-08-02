@@ -1,1 +1,0 @@
-For this module, we use `Rust` to get the most optimize solutions. Check out the `rust/hammer-python` folder for more details.

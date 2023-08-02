@@ -3,12 +3,17 @@ __pycache__/
 note.md
 Intro_to_Deep/
 rust/*
+**/*/img/
+**/*/log/
+**/*/*.sh
 1_Collecting_Data/**/*.txt
+1_Collecting_Data/**/*.sh
 2_Cleaning/**/*.txt
 undefined_Gravity/**/*.txt
 undefined_Gravity/logs
 5_mcmc/**/*.pdf
 5_mcmc/**/*.txt
+
 *.pdf
 *.png
 *.pkl
