@@ -1,5 +1,5 @@
 from .plot_mcmc import plot_chain, plot_corner, plot_fit
-from .mcmc import mcmc, get_data, get_params, generate_init, predictive_posterior, Model
+from .mcmc import mcmc, get_data_z, get_data_w, get_params, generate_init, predictive_posterior, Model
 from .concat import concat
 from datetime import datetime
 from glob import glob

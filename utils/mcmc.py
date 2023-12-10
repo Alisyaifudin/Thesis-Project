@@ -1,31 +1,14 @@
 import numpy as np
-import vaex 
+import vaex
 from time import time
 from os.path import join
 from scipy.stats import median_abs_deviation as mad
 from .style import style
-from datetime import datetime
 from tqdm import tqdm
 import pathlib
 from hammer import Model
 from typing import Tuple
-# from abc import ABC, abstractmethod
-
-# class Model(Enum):
-#     DM = HammerModel.DM
-#     DDDM = HammerModel.DDDM
-#     NO = HammerModel.NO
-
-# class Model(ABC):
-#     @abstractmethod
-#     def generate(self):
-#         pass
-
-# func_dict = {
-#     Model.DM.value: HammerModel.DM,
-#     Model.DDDM.value: HammerModel.DDDM,
-#     Model.NO.value: HammerModel.NO,
-# }
+import sys
 
 style()
 
@@ -36,44 +19,57 @@ baryon_dir = join(root_data_dir, "Baryon")
 # load baryons components
 df_baryon = vaex.open(join(baryon_dir, "baryon.hdf5"))
 rhob_mean = np.array(df_baryon["rho"].to_numpy())  # Msun/pc^3
-sigmaz_mean = df_baryon["sigma_z"].to_numpy() # km/s
+sigmaz_mean = df_baryon["sigma_z"].to_numpy()  # km/s
 rhob_std = np.array(df_baryon["e_rho"].to_numpy())  # Msun/pc^3
-sigmaz_std = df_baryon["e_sigma_z"].to_numpy() # km/s
+sigmaz_std = df_baryon["e_sigma_z"].to_numpy()  # km/s
 
 # init dynamics
-sigmaz_init = {'mean_arr': sigmaz_mean, 'sigma_arr': sigmaz_std, 'value': sigmaz_mean, 'label': r'$\sigma_{z}$', 'lab': 'sigmaz'}
-rhob_init = {'mean_arr': rhob_mean, 'sigma_arr': rhob_std, 'value': rhob_mean, 'label': r'$\rho_{\textup{b}}$', 'lab': 'rhob'}
+sigmaz_init = {'mean_arr': sigmaz_mean, 'sigma_arr': sigmaz_std,
+               'value': sigmaz_mean, 'label': r'$\sigma_{z}$', 'lab': 'sigmaz'}
+rhob_init = {'mean_arr': rhob_mean, 'sigma_arr': rhob_std,
+             'value': rhob_mean, 'label': r'$\rho_{\textup{b}}$', 'lab': 'rhob'}
 rhoDM_init = {'low': -0.05, 'high': 0.15, 'value': 0.016,
               'label': r'$\rho_{\textup{DM}}$', 'lab': 'rhoDM'}
 sigmaDD_init = {'low': 0., 'high': 30., 'value': 7.,
                 'label': r'$\sigma_{\textup{DD}}$', 'lab': 'sigmaDD'}
 hDD_init = {'low': 1., 'high': 150., 'value': 30.,
             'label': r'$h_{\textup{DD}}$', 'lab': 'hDD'}
-log_nu0_init = {'mean': 0, 'sigma': 3, 'value': 0.,
-                'label': r'$\log \nu_0$', 'lab': 'log_nu0'}
+ln_mu0_init = {'low': np.log(0.1), 'high': np.log(2), 'value': np.log(0.7),
+               'label': r'$\ln \mu_0$', 'lab': 'ln_mu0'}
+ln_nu0_init = {'mean': 0, 'sigma': 3, 'value': 0.,
+               'label': r'$\ln \nu_0$', 'lab': 'ln_nu0'}
 R_init = {'mean': 3.4E-3, 'sigma': 0.6E-3,
           'value': 3.4E-3, 'label': r'$R$', 'lab': 'R'}
 zsun_init = {'low': -150, 'high': 150, 'value': 0.,
              'label': r'$z_{\odot}$', 'lab': 'zsun'}
-# init kinematic
-w0_init = {'low': -15, 'high': 0., 'value': -7., 'label': r'$w_0$', 'lab': 'w0'}
-log_sigmaw_init = {'low': np.log(3), 'high': np.log(50), 'value': np.log(
-    5), 'label': r'$\log \sigma_{w}$', 'lab': 'log_sigmaw'}
-q_sigmaw_init = {'low': 0, 'high': 1, 'value': 0.5, 'label': r'$q_{w}$', 'lab': 'q_sigmaw'}
-log_a_init = {'mean': 0., 'sigma': 2., 'value': 0.,
-               'label': r'$\log a$', 'lab': 'log_a'}
-q_a_init = {'low': 0.5, 'high': 1., 'value': 0.75,
-               'label': r'$q_a$', 'lab': 'q_a'}
+# init kinematic 
+w0_init = {'low': -15, 'high': 0., 'value': -
+           7., 'label': r'$w_0$', 'lab': 'w0'}
+ln_sigmaw_init = {'low': np.log(3), 'high': np.log(50), 'value': np.log(
+    5), 'label': r'$\log \sigma_{w}$', 'lab': 'ln_sigmaw'}
+q_sigmaw_init = {'low': 0, 'high': 1, 'value': 0.5,
+                 'label': r'$q_{w}$', 'lab': 'q_sigmaw'}
+ln_a_init = {'mean': 0., 'sigma': 2., 'value': 0.,
+             'label': r'$\ln a$', 'lab': 'ln_a'}
+q_a_init = {'low': 0.5, 'high': 0.99, 'value': 0.75,
+            'label': r'$q_a$', 'lab': 'q_a'}
 
-init_DM = [sigmaz_init, rhob_init, rhoDM_init, log_nu0_init, zsun_init, R_init, w0_init, log_sigmaw_init, q_sigmaw_init, log_a_init, q_a_init]
-init_DDDM = [sigmaz_init, rhob_init, rhoDM_init, sigmaDD_init, hDD_init, log_nu0_init, zsun_init, R_init, w0_init, log_sigmaw_init, q_sigmaw_init, log_a_init, q_a_init]
-init_no = [sigmaz_init, rhob_init, log_nu0_init, zsun_init, R_init, w0_init, log_sigmaw_init, q_sigmaw_init, log_a_init, q_a_init]
+init_DM = [sigmaz_init, rhob_init, rhoDM_init, ln_nu0_init, zsun_init,
+           R_init, w0_init, ln_sigmaw_init, q_sigmaw_init, ln_a_init, q_a_init]
+init_DDDM = [sigmaz_init, rhob_init, rhoDM_init, sigmaDD_init, hDD_init, ln_nu0_init,
+             zsun_init, R_init, w0_init, ln_sigmaw_init, q_sigmaw_init, ln_a_init, q_a_init]
+init_mond = [sigmaz_init, rhob_init, ln_mu0_init, ln_nu0_init, zsun_init,
+             R_init, w0_init, ln_sigmaw_init, q_sigmaw_init, ln_a_init, q_a_init]
+init_no = [sigmaz_init, rhob_init, ln_nu0_init, zsun_init, R_init,
+           w0_init, ln_sigmaw_init, q_sigmaw_init, ln_a_init, q_a_init]
 
 init_dict = {
     Model.DM.name: init_DM,
     Model.DDDM.name: init_DDDM,
     Model.NO.name: init_no,
+    Model.MOND.name: init_mond
 }
+
 
 def flatten_array(arr: np.ndarray):
     flattened = []
@@ -85,10 +81,10 @@ def flatten_array(arr: np.ndarray):
     return np.array(flattened)
 
 
-def generate_init(model: Model, log_nu0_max: float, log_a_max: float):
+def generate_init(model: Model, ln_nu0_max: float, ln_a_max: float):
     """
     Generate initial values for the model
-    
+
     Parameters
     ----------
     model: `Model` = `Model.DM`, `Model.DDDM`, `Model.NO`
@@ -111,8 +107,8 @@ def generate_init(model: Model, log_nu0_max: float, log_a_max: float):
     theta = np.array([])
     locs = np.array([])
     scales = np.array([])
-    labs= np.array([])
-    labels= np.array([])
+    labs = np.array([])
+    labels = np.array([])
     indexes = np.array([], dtype=int)
     i = 0
     for init_i in init:
@@ -133,15 +129,15 @@ def generate_init(model: Model, log_nu0_max: float, log_a_max: float):
             scales = np.append(scales, init_i['high'] - init_i['low'])
             theta = np.append(theta, init_i['value'])
         elif 'mean' in init_i.keys():
-            if init_i['lab'] == 'log_a':
-                locs = np.append(locs, log_a_max + init_i['mean'])
+            if init_i['lab'] == 'ln_a':
+                locs = np.append(locs, ln_a_max + init_i['mean'])
                 scales = np.append(scales, init_i['sigma'])
-                theta = np.append(theta, log_a_max + init_i['value'])
-            elif init_i['lab'] == 'log_nu0':
-                locs = np.append(locs, log_nu0_max + init_i['mean'])
+                theta = np.append(theta, ln_a_max + init_i['value'])
+            elif init_i['lab'] == 'ln_nu0':
+                locs = np.append(locs, ln_nu0_max + init_i['mean'])
                 scales = np.append(scales, init_i['sigma'])
-                theta = np.append(theta, log_nu0_max + init_i['value'])
-            else:    
+                theta = np.append(theta, ln_nu0_max + init_i['value'])
+            else:
                 locs = np.append(locs, init_i['mean'])
                 scales = np.append(scales, init_i['sigma'])
                 theta = np.append(theta, init_i['value'])
@@ -154,11 +150,11 @@ def generate_init(model: Model, log_nu0_max: float, log_a_max: float):
     theta = flatten_array(theta)
     locs = flatten_array(locs)
     scales = flatten_array(scales)
-    
+
     return dict(
-        theta=theta, 
-        locs=locs, 
-        scales=scales, 
+        theta=theta,
+        locs=locs,
+        scales=scales,
         labels=labels,
         labs=labs,
         indexes=indexes
@@ -185,6 +181,7 @@ def get_data_w(path: str):
 
     data = (mid, num)
     return data
+
 
 def get_data_z(path: str):
     """
@@ -224,7 +221,7 @@ def get_params(chain: np.ndarray, indexes: np.ndarray, labs: np.ndarray, labels:
     params: `ndarray(shape(nstep,nwalker,nparam))`
     """
     params = []
-    
+
     for lab, index in zip(labs, indexes):
         if lab == 'rhob':
             params.append(chain[:, :, index].T/1E-2)
@@ -234,7 +231,7 @@ def get_params(chain: np.ndarray, indexes: np.ndarray, labs: np.ndarray, labels:
             params.append(chain[:, :, index].T/1E-3)
         else:
             params.append(chain[:, :, index].T)
-    
+
     params = np.array(params).T
     rhob = params[:, :, 12:24]
     sigmaz = params[:, :, :12]
@@ -247,7 +244,7 @@ def get_params(chain: np.ndarray, indexes: np.ndarray, labs: np.ndarray, labels:
     return params, labels
 
 
-def get_initial_position_normal(model, log_nu0_max, log_a_max, chain: np.ndarray):
+def get_initial_position_normal(model, ln_nu0_max, ln_a_max, chain: np.ndarray):
     """
     Get initial position for the next run in normalized form
 
@@ -260,7 +257,7 @@ def get_initial_position_normal(model, log_nu0_max, log_a_max, chain: np.ndarray
     -------
     init: `tuple` = (locs: `ndarray`, scales: `ndarray`)
     """
-    init = generate_init(model, log_nu0_max, log_a_max)
+    init = generate_init(model, ln_nu0_max, ln_a_max)
     labs = init['labs']
     locs = init['locs']
     scales = init['scales']
@@ -276,9 +273,10 @@ def get_initial_position_normal(model, log_nu0_max, log_a_max, chain: np.ndarray
         scales[index] = mad_v
     return locs, scales
 
+
 def mcmc(
-        model: Model, 
-        zdata: Tuple[np.ndarray, np.ndarray], 
+        model: Model,
+        zdata: Tuple[np.ndarray, np.ndarray],
         wdata: Tuple[np.ndarray, np.ndarray],
         **options):
     """
@@ -290,7 +288,7 @@ def mcmc(
     zdata: `Tuple[np.ndarray, np.ndarray]` = (zmid, znum) \n
     wdata: `Tuple[np.ndarray, np.ndarray]` = (wmid, wnum) \n
     baryon: `np.ndarray` = [...rhob, ...sigmaz] \n
-    
+
     options:
         step0: `int` = 500 \n
         step: `int` = 2000 \n
@@ -299,7 +297,7 @@ def mcmc(
         thin: `int` = 20 \n
         verbose: `bool` = True \n
         m: `int` = 10 (multiplier, `nwalker = m*ndim`)
-        
+
     Returns
     -------
     result: `dict` = { \n
@@ -316,19 +314,21 @@ def mcmc(
     thin = options.get("thin", 20)
     verbose = options.get("verbose", True)
     m = options.get("m", 10)
-    if verbose: print("running...")
-    log_nu0_max = np.log(zdata[1].max())
-    log_a_max = np.log(wdata[1].max())
-    init = generate_init(model, log_nu0_max, log_a_max)
+    if verbose:
+        print("running...")
+    ln_nu0_max = np.log(zdata[1].max())
+    ln_a_max = np.log(wdata[1].max())
+    init = generate_init(model, ln_nu0_max, ln_a_max)
     locs = init['locs']
-    scales = init['scales']    
+    scales = init['scales']
     indexes = init['indexes']
     labs = init['labs']
     labels = init['labels']
     # raise NotImplementedError()
     ndim = len(locs)
     nwalker = m*ndim
-    if verbose: print(f"mcmc...")
+    if verbose:
+        print(f"mcmc...")
     p0 = model.generate_p0(nwalker*2, locs, scales)
     prob = model.log_prob_par(p0, zdata, wdata, locs, scales)
     mask = np.isinf(prob[:, 0])
@@ -338,15 +338,20 @@ def mcmc(
     print(p0.shape)
     for i in tqdm(range(it), desc="mcmc"):
         t0 = time()
-        chain = model.mcmc(step0, p0, zdata, wdata, locs, scales,  parallel=True, verbose=verbose)
+        chain = model.mcmc(step0, p0, zdata, wdata, locs,
+                           scales,  parallel=True, verbose=verbose)
         t1 = time()
-        if verbose: print(f"{i}: first half mcmc done {np.round(t1-t0, 2)} s")
-        locs_normal, scales_normal = get_initial_position_normal(model, log_nu0_max, log_a_max, chain=chain[int(step0/2):])
+        if verbose:
+            print(f"{i}: first half mcmc done {np.round(t1-t0, 2)} s")
+        locs_normal, scales_normal = get_initial_position_normal(
+            model, ln_nu0_max, ln_a_max, chain=chain[int(step0/2):])
         p0 = model.generate_p0(nwalker, locs_normal, scales_normal, norm=True)
         t0 = time()
-        chain = model.mcmc(step0, p0, zdata, wdata, locs, scales,  parallel=True, verbose=verbose)
+        chain = model.mcmc(step0, p0, zdata, wdata, locs,
+                           scales,  parallel=True, verbose=verbose)
         t1 = time()
-        if verbose: print(f"{i}: second half mcmc done {np.round(t1-t0, 2)} s")
+        if verbose:
+            print(f"{i}: second half mcmc done {np.round(t1-t0, 2)} s")
         p0 = chain[-1]
         prob = model.log_prob_par(p0, zdata, wdata, locs, scales)
         mask = np.isinf(prob[:, 0])
@@ -354,28 +359,33 @@ def mcmc(
         if len(p0) % 2 != 0:
             p0 = p0[:-1]
     t0 = time()
-    chain = model.mcmc(burn, p0, zdata, wdata, locs, scales,  parallel=True, verbose=verbose)
+    chain = model.mcmc(burn, p0, zdata, wdata, locs, scales,
+                       parallel=True, verbose=verbose)
     t1 = time()
-    if verbose: print(f"burn done {np.round(t1-t0, 2)} s")
+    if verbose:
+        print(f"burn done {np.round(t1-t0, 2)} s")
     p0 = chain[-1]
     t0 = time()
-    chain = model.mcmc(step, p0, zdata, wdata, locs, scales,  parallel=True, verbose=verbose)
+    chain = model.mcmc(step, p0, zdata, wdata, locs, scales,
+                       parallel=True, verbose=verbose)
     t1 = time()
-    if verbose: print(f"mcmc done {np.round(t1-t0, 2)} s")
+    if verbose:
+        print(f"mcmc done {np.round(t1-t0, 2)} s")
     chain_thin = chain[::thin]
     return {
         "indexes": indexes,
         "labs": labs,
         "labels": labels,
         "chain": chain_thin
-        }
+    }
+
 
 def predictive_posterior(
-        model: Model, 
-        flat_chain: np.ndarray, 
-        zdata: Tuple[np.ndarray, np.ndarray], 
-        **options: dict
-    ):
+    model: Model,
+    flat_chain: np.ndarray,
+    zdata: Tuple[np.ndarray, np.ndarray],
+    **options: dict
+):
     """
     Calculate the predictive posterior of new data
 
@@ -394,19 +404,21 @@ def predictive_posterior(
     verbose = options.get("verbose", True)
     batch = options.get("batch", 1000)
     length, _ = flat_chain.shape
-    if verbose: print("Calculating...")
+    if verbose:
+        print("Calculating...")
     inds = np.random.choice(np.arange(length), size=nsample, replace=False)
     theta = flat_chain[inds]
     prob = model.predictive_posterior(theta, zdata, batch=batch)
     return prob
 
+
 def bayes_factor(
-        model: Model, 
-        flat_chain: np.ndarray, 
-        zdata: Tuple[np.ndarray, np.ndarray, np.ndarray],
-        wdata:Tuple[np.ndarray, np.ndarray],
-        **options: dict
-    ):
+    model: Model,
+    flat_chain: np.ndarray,
+    zdata: Tuple[np.ndarray, np.ndarray, np.ndarray],
+    wdata: Tuple[np.ndarray, np.ndarray],
+    **options: dict
+):
     """
     Calculate the bayes factor of the model
     """
@@ -414,22 +426,30 @@ def bayes_factor(
     alpha = options.get("alpha", 5)
     batch = options.get("batch", 10)
     run = options.get("run", 10)
-    
-    length, ndim = flat_chain.shape
 
-    dm_label = ['dm', 'log_nu0', 'zsun', 'R', 'w0', 'log_sigmaw', 'q_sigmaw', 'log_a', 'q_a']
-    dddm_label = ['dm', 'sigmaDD', 'hDD', 'log_nu0', 'zsun', 'R', 'w0', 'log_sigmaw', 'q_sigmaw', 'log_a', 'q_a']
-    no_label = ['log_nu0', 'zsun', 'R', 'w0', 'log_sigmaw', 'q_sigmaw', 'log_a', 'q_a']
+    length, _ = flat_chain.shape
+
+    dm_label = ['dm', 'ln_nu0', 'zsun', 'R', 'w0',
+                'ln_sigmaw', 'q_sigmaw', 'ln_a', 'q_a']
+    dddm_label = ['dm', 'sigmaDD', 'hDD', 'ln_nu0', 'zsun',
+                  'R', 'w0', 'ln_sigmaw', 'q_sigmaw', 'ln_a', 'q_a']
+    no_label = ['ln_nu0', 'zsun', 'R', 'w0',
+                'ln_sigmaw', 'q_sigmaw', 'ln_a', 'q_a']
+    mond_label = ['ln_mu0', 'ln_nu0', 'zsun', 'R', 'w0',
+                  'ln_sigmaw', 'q_sigmaw', 'ln_a', 'q_a']
     labels = dm_label
-    if ndim == 35:
+    if model.name == Model.DDDM.name:
         labels = dddm_label
-    elif ndim == 32:
+    elif model.name == Model.NO.name:
         labels = no_label
+    elif model.name == Model.MOND.name:
+        labels = mond_label
 
     res = []
     for i in tqdm(range(run)):
         ind = np.random.choice(np.arange(length), size=nsample)
         theta = flat_chain[ind]
+        print("before", theta.shape)
         vol = 1
         for i in range(24):
             l, u = np.percentile(theta[:, i], [alpha/2, 100-alpha/2])
@@ -437,361 +457,86 @@ def bayes_factor(
             theta = theta[mask]
             vol *= u-l
         for i, label in enumerate(labels):
-            if label in ['dm', 'log_nu0', 'zsun', 'R', 'w0', 'sigmaDD', 'hDD']:
+            if label in ['dm', 'ln_mu0', 'ln_nu0', 'zsun', 'R', 'w0', 'sigmaDD', 'hDD']:
                 l, u = np.percentile(theta[:, i+24], [alpha/2, 100-alpha/2])
                 mask = (theta[:, i+24] > l)*(theta[:, i+24] < u)
                 theta = theta[mask]
                 vol *= u-l
-            if label == 'log_sigmaw':
-                log_sigmaw = theta[:, i+24]
+            if label == 'ln_sigmaw':
+                ln_sigmaw = theta[:, i+24]
                 q_sigmaw = theta[:, i+25]
-                log_sigmaw2 = log_sigmaw - np.log(q_sigmaw)
-                log_sigmaw_low, log_sigmaw_up = np.percentile(log_sigmaw, [alpha/2, 100-alpha/2])
-                log_sigmaw2_low, log_sigmaw2_up = np.percentile(log_sigmaw2, [alpha/2, 100-alpha/2])
-                mask = (log_sigmaw > log_sigmaw_low)*(log_sigmaw < log_sigmaw_up)*(log_sigmaw2 > log_sigmaw2_low)*(log_sigmaw2 < log_sigmaw2_up)
+                ln_sigmaw2 = ln_sigmaw - np.log(q_sigmaw)
+                ln_sigmaw_low, ln_sigmaw_up = np.percentile(
+                    ln_sigmaw, [alpha/2, 100-alpha/2])
+                ln_sigmaw2_low, ln_sigmaw2_up = np.percentile(
+                    ln_sigmaw2, [alpha/2, 100-alpha/2])
+                mask = (ln_sigmaw > ln_sigmaw_low)*(ln_sigmaw < ln_sigmaw_up) * \
+                    (ln_sigmaw2 > ln_sigmaw2_low) * \
+                    (ln_sigmaw2 < ln_sigmaw2_up)
                 theta = theta[mask]
-                vol *= log_sigmaw_up-log_sigmaw_low
-                vol *= log_sigmaw2_up-log_sigmaw2_low
-            if label == 'log_a':
-                log_a = theta[:, i+24]
+                vol *= ln_sigmaw_up-ln_sigmaw_low
+                vol *= ln_sigmaw2_up-ln_sigmaw2_low
+            if label == 'ln_a':
+                ln_a = theta[:, i+24]
                 q_a = theta[:, i+25]
-                log_a2 = log_a + np.log(1-q_a)
-                log_a_low, log_a_up = np.percentile(log_a, [alpha/2, 100-alpha/2])
-                log_a2_low, log_a2_up = np.percentile(log_a2, [alpha/2, 100-alpha/2])
-                mask = (log_a > log_a_low)*(log_a < log_a_up)*(log_a2 > log_a2_low)*(log_a2 < log_a2_up)
+                ln_a2 = ln_a + np.log(1-q_a)
+                ln_a_low, ln_a_up = np.percentile(
+                    ln_a, [alpha/2, 100-alpha/2])
+                ln_a2_low, ln_a2_up = np.percentile(
+                    ln_a2, [alpha/2, 100-alpha/2])
+                mask = (ln_a > ln_a_low)*(ln_a < ln_a_up) * \
+                    (ln_a2 > ln_a2_low)*(ln_a2 < ln_a2_up)
                 theta = theta[mask]
-                vol *= log_a_up-log_a_low
-                vol *= log_a2_up-log_a2_low
-        # print(theta.shape)
-        log_nu0_max = np.log(zdata[1].max())
-        log_a_max = np.log(wdata[1].max())
-        init = generate_init(model, log_nu0_max, log_a_max)
+                vol *= ln_a_up-ln_a_low
+                vol *= ln_a2_up-ln_a2_low
+        ln_nu0_max = np.log(zdata[1].max())
+        ln_a_max = np.log(wdata[1].max())
+        init = generate_init(model, ln_nu0_max, ln_a_max)
         locs = init['locs']
-        scales = init['scales']    
-        log_prob = -1*model.log_prob_par(theta, zdata, wdata, locs, scales, batch=batch)
-        log_post = log_prob[:, 2]
-        log_max = np.max(log_post)
-        log_post -= log_max
-        log_sum = log_max + np.log(np.sum(np.exp(log_post)))
-        logZ = np.log(vol) - log_sum
-        res.append(logZ*np.log10(np.e))
+        scales = init['scales']
+        ln_prob = -1 * \
+            model.log_prob_par(theta, zdata, wdata, locs,
+                               scales, batch=1)
+        ln_post = ln_prob[:, 2]
+        # print("ln_prob =", ln_prob.shape)
+        # print(ln_prob)
+        # sys.exit(1)
+        # print(ln_post)
+        # sys.exit(1)
+        ln_max = np.max(ln_post)
+        ln_post -= ln_max
+        ln_sum = ln_max + np.log(np.sum(np.exp(ln_post)))
+        lnZ = np.log(vol) - ln_sum
+        res.append(lnZ*np.log10(np.e))
     return np.mean(res), np.std(res)
 
+
 def bic_aic(
-        model: Model, 
-        flat_chain: np.ndarray, 
-        zdata,
-        wdata,
-        **options: dict
-    ):
+    model: Model,
+    flat_chain: np.ndarray,
+    zdata,
+    wdata,
+    **options: dict
+):
     """
     Calculate the bayes factor of the model
     """
     batch = options.get("batch", 10)
-    
+
     length, ndim = flat_chain.shape
     theta = flat_chain
 
     zmid, znum, comp = zdata
     wmid, wnum = wdata
-    log_nu0_max = np.log(znum.max())
-    log_a_max = np.log(wnum.max())
-    init = generate_init(model, log_nu0_max, log_a_max)
+    ln_nu0_max = np.log(znum.max())
+    ln_a_max = np.log(wnum.max())
+    init = generate_init(model, ln_nu0_max, ln_a_max)
     locs = init['locs']
-    scales = init['scales']    
-    log_prob = np.log10(np.e)*model.log_prob_par(theta, zdata, wdata, locs, scales, batch=batch)
-    log_likelihood = log_prob[:, 1]
-    log_max = np.max(log_likelihood)
-    bic = -2*log_max + ndim*np.log10(len(zmid)*3)
-    aic = -2*log_max + 2*ndim
+    scales = init['scales']
+    ln_prob = np.log10(np.e)*model.log_prob_par(theta,
+                                                zdata, wdata, locs, scales, batch=batch)
+    ln_likelihood = ln_prob[:, 1]
+    ln_max = np.max(ln_likelihood)
+    bic = -2*ln_max + ndim*np.log10(len(zmid)*3)
+    aic = -2*ln_max + 2*ndim
     return bic, aic
-
-# def mcmc_z(model: Model, z_path: str, psi: np.ndarray, **options):
-#     """
-#     Run MCMC
-
-#     Parameters
-#     ----------
-#     model: `Model` = `Model.DM`, `Model.DDDM`, or `Model.NO` \n
-#     z_path: `str` = path to z file \n
-#     psi: `np.ndarray` = shape(4) \n
-
-#     options:
-#         step0: `int` = 500 \n
-#         step: `int` = 2000 \n
-#         burn: `int` = 1000 \n
-#         it: `int` = 3 \n
-#         thin: `int` = 20 \n
-#         verbose: `bool` = True \n
-#         m: `int` = 10 (multiplier, `nwalker = m*ndim`)
-        
-#     Returns
-#     -------
-#     result: `dict` = { \n
-#         indexes: `ndarray(shape(nparam))`, \n
-#         labs: `ndarray(shape(nparam))`, \n
-#         labels: `ndarray(shape(nparam))`, \n
-#         chain: `ndarray(shape(nstep,nwalker,nparam))` \n
-#     }
-#     """
-#     step0 = options.get("step0", 100)
-#     step = options.get("step", 2000)
-#     burn = options.get("burn", 1000)
-#     it = options.get("it", 3)
-#     thin = options.get("thin", 20)
-#     verbose = options.get("verbose", True)
-#     m = options.get("m", 10)
-#     func = func_dict[model.value]
-#     if verbose: print("running...")
-#     name = z_path.split("/")[-1].replace(".hdf5", "").replace("z_", "")
-#     zdata = get_data(z_path)
-    
-#     init = generate_init(model)
-#     locs = init['locs']
-#     scales = init['scales']    
-#     indexes = init['indexes']
-#     labs = init['labs']
-#     labels = init['labels']
-
-#     ndim = len(locs)
-#     nwalker = m*ndim
-#     if verbose: print(f"mcmc... {name}")
-#     p0 = func.generate_p0(nwalker, locs, scales)
-#     for i in tqdm(range(it), desc="mcmc"):
-#         t0 = time()
-#         chain = func.mcmc(step0, p0, psi, zdata, locs, scales,  parallel=True, verbose=verbose)
-#         t1 = time()
-#         if verbose: print(f"{i}: first half mcmc done {np.round(t1-t0, 2)} s")
-#         locs_normal, scales_normal = get_initial_position_normal(model, chain=chain[int(step0/2):])
-#         p0 = func.generate_p0(nwalker, locs_normal, scales_normal, norm=True)
-#         t0 = time()
-#         chain = func.mcmc(step0, p0, psi, zdata, locs, scales,  parallel=True, verbose=verbose)
-#         t1 = time()
-#         if verbose: print(f"{i}: second half mcmc done {np.round(t1-t0, 2)} s")
-#         p0 = chain[-1]
-#     t0 = time()
-#     chain = func.mcmc(burn, p0, psi, zdata, locs, scales,  parallel=True, verbose=verbose)
-#     t1 = time()
-#     if verbose: print(f"burn done {np.round(t1-t0, 2)} s")
-#     p0 = chain[-1]
-#     t0 = time()
-#     chain = func.mcmc(step, p0, psi, zdata, locs, scales,  parallel=True, verbose=verbose)
-#     t1 = time()
-#     if verbose: print(f"mcmc done {np.round(t1-t0, 2)} s")
-#     chain_thin = chain[::thin]
-#     return {
-#         "indexes": indexes,
-#         "labs": labs,
-#         "labels": labels,
-#         "chain": chain_thin
-#         }
-
-# def mcmc_parallel_z(model: Model, z_path: str, psi: np.ndarray, **options):
-#     """
-#     Run MCMC
-
-#     Parameters
-#     ----------
-#     model: `Model` = `Model.DM`, `Model.DDDM`, or `Model.NO` \n
-#     z_path: `str` = path to z file \n
-#     psi: `np.ndarray` = shape(nmcmc, 4) \n
-
-#     options:
-#         step0: `int` = 500 \n
-#         step: `int` = 2000 \n
-#         burn: `int` = 1000 \n
-#         it: `int` = 3 \n
-#         thin: `int` = 20 \n
-#         verbose: `bool` = True \n
-#         m: `int` = 10 (multiplier, `nwalker = m*ndim`)
-        
-#     Returns
-#     -------
-#     result: `dict` = { \n
-#         indexes: `ndarray(shape(nparam))`, \n
-#         labs: `ndarray(shape(nparam))`, \n
-#         labels: `ndarray(shape(nparam))`, \n
-#         chain: `ndarray(shape(nstep,nwalker,nparam))` \n
-#     }
-#     """
-#     step0 = options.get("step0", 100)
-#     step = options.get("step", 2000)
-#     burn = options.get("burn", 1000)
-#     it = options.get("it", 3)
-#     thin = options.get("thin", 20)
-#     verbose = options.get("verbose", True)
-#     m = options.get("m", 10)
-#     func = func_dict[model.value]
-#     if verbose: print("running...")
-#     name = z_path.split("/")[-1].replace(".hdf5", "").replace("z_", "")
-#     zdata = get_data(z_path)
-    
-#     init = generate_init(model)
-#     locs = init['locs']
-#     scales = init['scales']    
-#     indexes = init['indexes']
-#     labs = init['labs']
-#     labels = init['labels']
-
-#     ndim = len(locs)
-#     nwalker = m*ndim
-#     n_mcmc = psi.shape[0]
-#     if verbose: print(f"mcmc... {name}")
-#     p0 = func.generate_p0(nwalker, locs, scales)
-#     p0 = np.tile(p0, (n_mcmc, 1, 1))
-#     print(p0.shape)
-#     for i in tqdm(range(it), desc="mcmc"):
-#         t0 = time()
-#         chain = func.mcmc_parallel(step0, p0, psi, zdata, locs, scales,  parallel=True, verbose=verbose)
-#         t1 = time()
-#         if verbose: print(f"{i}: first half mcmc done {np.round(t1-t0, 2)} s")
-#         for j in range(n_mcmc):
-#             locs_normal, scales_normal = get_initial_position_normal(model, chain=chain[j, int(step0/2):])
-#             p0_j = func.generate_p0(nwalker, locs_normal, scales_normal, norm=True)
-#             p0[j] = p0_j
-#         t0 = time()
-#         chain = func.mcmc_parallel(step0, p0, psi, zdata, locs, scales, parallel=True, verbose=verbose)
-#         t1 = time()
-#         if verbose: print(f"{i}: second half mcmc done {np.round(t1-t0, 2)} s")
-#         p0 = chain[:, -1]
-#     t0 = time()
-#     chain = func.mcmc_parallel(burn, p0, psi, zdata, locs, scales, parallel=True, verbose=verbose)
-#     t1 = time()
-#     if verbose: print(f"burn done {np.round(t1-t0, 2)} s")
-#     p0 = chain[:, -1]
-#     t0 = time()
-#     chain = func.mcmc_parallel(step, p0, psi, zdata, locs, scales, parallel=True, verbose=verbose)
-#     t1 = time()
-#     if verbose: print(f"mcmc done {np.round(t1-t0, 2)} s")
-#     chain_thin = chain[:, ::thin]
-#     return {
-#         "indexes": indexes,
-#         "labs": labs,
-#         "labels": labels,
-#         "chain": chain_thin
-#         }
-
-# def mcmc_w(w_path: str, **options):
-#     """
-#     Run MCMC
-
-#     Parameters
-#     ----------
-#     w_path: `str` = path to w data \n
-#     options:
-#         step0: `int` = 500 \n
-#         step: `int` = 2000 \n
-#         burn: `int` = 1000 \n
-#         it: `int` = 3 \n
-#         thin: `int` = 20 \n
-#         verbose: `bool` = True \n
-#         m: `int` = 10 (multiplier, `nwalker = m*ndim`)
-        
-#     Returns
-#     -------
-#     result: `dict` = { \n
-#         indexes: `ndarray(shape(nparam))`, \n
-#         labs: `ndarray(shape(nparam))`, \n
-#         labels: `ndarray(shape(nparam))`, \n
-#         chain: `ndarray(shape(nstep,nwalker,nparam))` \n
-#     }
-#     """
-#     step0 = options.get("step0", 100)
-#     step = options.get("step", 2000)
-#     burn = options.get("burn", 1000)
-#     it = options.get("it", 3)
-#     thin = options.get("thin", 20)
-#     verbose = options.get("verbose", True)
-#     m = options.get("m", 10)
-#     if verbose: print("running...")
-#     name = w_path.split("/")[-1].replace(".hdf5", "").replace("z_", "")
-#     wdata = get_data(w_path)
-    
-#     init = generate_init(Model.KIN)
-#     locs = init['locs']
-#     scales = init['scales']    
-#     indexes = init['indexes']
-#     labs = init['labs']
-#     labels = init['labels']
-
-#     ndim = len(locs)
-#     nwalker = m*ndim
-#     if verbose: print(f"mcmc... {name}")
-#     p0 = vel.generate_p0(nwalker, locs, scales)
-#     for i in tqdm(range(it), desc="mcmc"):
-#         t0 = time()
-#         chain = vel.mcmc(step0, p0, wdata,  locs, scales, parallel=True, verbose=verbose)
-#         t1 = time()
-#         if verbose: print(f"{i}: first half mcmc done {np.round(t1-t0, 2)} s")
-#         locs_normal, scales_normal = get_initial_position_normal(Model.KIN, chain=chain[int(step0/2):])
-#         p0 = vel.generate_p0(nwalker, locs_normal, scales_normal, norm=True)
-#         t0 = time()
-#         chain = vel.mcmc(step0, p0, wdata,  locs, scales, parallel=True, verbose=verbose)
-#         t1 = time()
-#         if verbose: print(f"{i}: second half mcmc done {np.round(t1-t0, 2)} s")
-#         p0 = chain[-1]
-#     chain = vel.mcmc(burn, p0, wdata,  locs, scales, parallel=True, verbose=verbose)
-#     p0 = chain[-1]
-#     chain = vel.mcmc(step, p0, wdata,  locs, scales, parallel=True, verbose=verbose)
-#     chain_thin = chain[::thin]
-#     return {
-#         "indexes": indexes,
-#         "labs": labs,
-#         "labels": labels,
-#         "chain": chain_thin
-#         }
- 
-
-# def calculate_prob(
-#         model: Model, 
-#         flat_chains: np.ndarray, 
-#         zdata: Tuple[np.ndarray, np.ndarray, np.ndarray], 
-#         psi: np.ndarray, 
-#         **options: dict
-#     ):
-#     """
-#     Calculate maximum likelihood, BIC, and AIC, then save the result to a file
-
-#     Parameters
-#     ----------
-#     model: `Model` = `Model.DM`, `Model.DDDM`, or `Model.NO` \n
-#     flat_chain: ndarray(shape=(n_mcmc, length, ndim)) \n
-#     zdata: ndarray = (zmid, znum, zerr) \n
-#     psi: ndarray = (n_mcmc, kin) \n
-#     options:
-#         nsample: `int` = 10_000 \n
-#         verbose: `bool` = True \n
-#         batch: `int` = 1000 \n
-#     """
-#     nsample = options.get("nsample", 10_000)
-#     verbose = options.get("verbose", True)
-#     batch = options.get("batch", 1000)
-#     func = func_dict[model.value]
-#     if verbose: print("Opening the data")
-#     init = generate_init(model)
-#     locs = init['locs']
-#     scales = init['scales']
-#     if verbose: print("Opening the chain")
-#     n_mcmc, length, ndim = flat_chains.shape
-#     print(flat_chains.shape)
-#     # flat_chain = chain_thin.reshape(n_mcmc, -1, ndim)
-#     # calculate likelihood
-#     if verbose: print("Calculating likelihood")
-#     probs = func.log_prob_par(flat_chains, psi, zdata, locs, scales, batch=batch)
-#     mx_l = np.empty(n_mcmc)
-#     bics = np.empty(n_mcmc)
-#     aics = np.empty(n_mcmc)
-#     for i, prob in enumerate(tqdm(probs)):
-#         likelihood = prob[1]
-#         # remove nan from likelihood
-#         likelihood = likelihood[~np.isnan(likelihood)]
-#         max_likelihood = np.max(likelihood)
-#         # calculate BIC
-#         zmid = zdata[0]
-#         bic = -2 * max_likelihood + ndim * np.log(3*len(zmid))
-#         aic = -2 * max_likelihood + 2 * ndim
-#         mx_l[i] = max_likelihood
-#         bics[i] = bic
-#         aics[i] = aic
-#     df = vaex.from_arrays(max_likelihood=mx_l, bic=bics, aic=aics)
-#     return df
